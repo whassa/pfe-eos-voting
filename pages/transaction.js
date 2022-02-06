@@ -1,4 +1,4 @@
-import {RPC, CONTRACT_API} from "../contracts/contract";
+import setupContract from "../contracts/contract";
 
 import {
     Button,
@@ -12,16 +12,24 @@ import {
     Typography,
 } from "@mui/material";
 
-const contract = {
-    rpc: RPC,
-    api: CONTRACT_API
-};
 
+let contract
 async function doTestTransaction(){
-    //TODO:
+    //TODO: send transaction with balance
+    console.log("--------- RPC ------------")
+    console.log(contract.rpc)
+    console.log("----------- CONTRACT API ----------")
+    console.log(contract.api)
+}
+export async function getStaticProps(context) {
+    return {
+        props: {privateKey: process.env.PRIVATE_KEY}, // will be passed to the page component as props
+    }
 }
 
-export default function transactionComponent() {
+export default function transactionComponent({privateKey}) {
+    contract = setupContract(privateKey)
+    console.log(contract)
     return (
         <Grid
             container
