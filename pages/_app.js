@@ -18,8 +18,10 @@ const clientSideEmotionCache = createEmotionCache();
 function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps, router}) {
 
   const App = ({ ual }) => {
+    console.log(ual);
     useEffect(() => {
-      if (!ual.activeUser === null && router.route != "/login" ){
+      if ( ual.activeUser === null && router.route != "/login" ){
+        console.log(router)
         router.push('/login');
       }
     })
