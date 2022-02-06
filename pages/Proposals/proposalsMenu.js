@@ -14,7 +14,7 @@ async function doTestTransaction(){
     //TODO:
 }
 
-export default function votingListComponent() {
+export default function votingMenuComponent() {
     return (
         <Grid
             container
@@ -29,7 +29,7 @@ export default function votingListComponent() {
                     <Paper elevation={3} padding="dense">
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <Button onClick={doTestTransaction()} fullWidth variant="contained">
+                                <Button onClick={doTestTransaction} fullWidth variant="contained">
                                     Test Transaction
                                 </Button>
                             </Grid>
