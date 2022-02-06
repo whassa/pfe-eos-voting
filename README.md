@@ -5,6 +5,7 @@ First you need to adapt the local network with your current environnement variab
 ```bash
     cp default.env .env
 ```
+Afterwards make sure to add your private key in your .env to connect your local blockchain network to your dev environment.
 
 Then just install packages
 ```bash
