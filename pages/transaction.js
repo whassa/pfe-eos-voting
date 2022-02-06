@@ -12,15 +12,14 @@ import {
     Typography,
 } from "@mui/material";
 
-
 let contract
+
 async function doTestTransaction(){
     //TODO: send transaction with balance
-    console.log("--------- RPC ------------")
-    console.log(contract.rpc)
-    console.log("----------- CONTRACT API ----------")
-    console.log(contract.api)
+    console.log("----------- CONTRACT RPC/API OBJECT ---------------")
+    console.log(contract)
 }
+
 export async function getStaticProps(context) {
     return {
         props: {privateKey: process.env.PRIVATE_KEY}, // will be passed to the page component as props
