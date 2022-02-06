@@ -19,7 +19,6 @@ function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps, ro
 
   const App = ({ ual }) => {
     /** WE CAN REMOVE IF WE WANT TO HIDE ALL PAGES BY DEFAULT 
-    console.log(ual);
     if ( ual.activeUser === null && router.route != "/login" ){
       return null;
     } 
