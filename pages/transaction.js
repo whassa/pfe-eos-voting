@@ -14,7 +14,7 @@ import {
 
 let contract
 
-async function doTestTransaction(){
+function doTestTransaction(){
     //TODO: send transaction with balance
     console.log("----------- CONTRACT RPC/API OBJECT ---------------")
     console.log(contract)
@@ -43,7 +43,7 @@ export default function transactionComponent({privateKey}) {
                     <Paper elevation={3} padding="dense">
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <Button onClick={doTestTransaction()} fullWidth variant="contained">
+                                <Button onClick={doTestTransaction} fullWidth variant="contained">
                                     Test Transaction
                                 </Button>
                             </Grid>
