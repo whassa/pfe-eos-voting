@@ -3,7 +3,6 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
 export default function Home({ual}) {
-  console.log(ual);
   return (
     <div className={styles.container}>
       <Head>
@@ -51,6 +50,9 @@ export default function Home({ual}) {
             </p>
           </a>
         </div>
+        <button onClick={ual.logout}>
+          logout
+        </button>
       </main>
 
       <footer className={styles.footer}>
