@@ -1,18 +1,23 @@
 import {
     Button,
+    Box,
     Container,
     Divider,
     Grid,
     Icon,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
     makeStyles,
     Paper,
     TextField,
     Typography,
 } from "@mui/material";
+import ListView from "./ListViewUi/listView";
 
-async function doTestTransaction(){
-    //TODO:
-}
+//Mock data to test the frontEnd. Will have to change once we can read on the blockchain
+import resolutions from "./mockDataForTest";
 
 export default function votingMenuComponent() {
     return (
@@ -26,15 +31,7 @@ export default function votingMenuComponent() {
         >
             <Grid item md={6}>
                 <Container maxWidth="sm">
-                    <Paper elevation={3} padding="dense">
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <Button onClick={doTestTransaction} fullWidth variant="contained">
-                                    Test Transaction
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Paper>
+                    <ListView resolutions={resolutions} />
                 </Container>
             </Grid>
         </Grid>
