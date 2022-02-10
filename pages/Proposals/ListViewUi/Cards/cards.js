@@ -81,7 +81,7 @@ const Cards = (props) => {
             </Typography>
             {isMobile ? null : summary}
           </CardContent>
-          <div>
+          <div className="totalVote">
             <span>{props.resolution.votes.totalCount}</span>
           </div>
         </CardActionArea>
