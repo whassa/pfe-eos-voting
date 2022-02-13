@@ -17,7 +17,7 @@ ACTION eosvoting::vote(name from) {
   } else {
     // add a vote if it exists 
     _votes.modify(votes_itr, from, [&](auto& vote_info) {
-      vote_info.votes += 1;
+      vote_info.votes += 2;
     });
   }
 }
