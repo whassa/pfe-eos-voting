@@ -1,10 +1,17 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import Menu, {drawerWidth} from '../component/Menu'
-import styles from '../styles/Home.module.css'
-import Container from '@mui/material/Container'; 
+import Head from "next/head";
+import Image from "next/image";
+import Menu, { drawerWidth } from "../component/Menu";
+import styles from "../styles/Home.module.css";
+import { Box, Container, Grid, IconButton } from "@mui/material";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import GridViewIcon from "@mui/icons-material/GridView";
+import ListView from "../src/component/Proposals/Home/ListView/listView";
+import GridView from "../src/component/Proposals/Home/GridView/gridView";
+import resolutions from "../src/component/Proposals/mockDataForTest";
+import { useState } from "react";
 
-export default function Home({ual}) {
+export default function Home({ ual }) {
+  const [view, setView] = useState("listView");
 
   return (
     <>
@@ -14,62 +21,47 @@ export default function Home({ual}) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Menu ual={ual} />
-      <Container   sx={{ width: { xs: `calc(100% - ${drawerWidth}px)` }, paddingLeft: { xs: '240px' } }} >
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
+      <Container
+        sx={{
+          width: { xs: `calc(100% - ${drawerWidth}px)` },
+          paddingLeft: { xs: "120px" },
+          paddingTop: { xs: "40px" },
+        }}
+      >
+        <Box>
+          <IconButton
+            color={view === "gridView" ? "primary" : "secondary"}
+            aria-label="grid view button"
+            component="span"
+            sx={{ float: "right" }}
+            onClick={() => {setView('gridView')}}
           >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
+            <GridViewIcon />
+          </IconButton>
+          <IconButton
+            color={view === "listView" ? "primary" : "secondary"}
+            aria-label="List view button"
+            component="span"
+            sx={{ float: "right" }}
+            onClick={() => {setView('listView')}}
           >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-        <button onClick={ual.logout}>
-          logout
-        </button>
-      </Container>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+            <FormatListBulletedIcon />
+          </IconButton>
+        </Box>
+        <Grid
+          container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justify="center"
+          sx={{ minHeight: "100vh" }}
         >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+          <Grid item md={6} sx={{ width: 1, marginLeft: { xs: "24px" } }}>
+            {view === 'listView' && <ListView resolutions={resolutions} />}
+            {view === 'gridView' && <GridView resolutions={resolutions} />}
+          </Grid>
+        </Grid>
+      </Container>
     </>
-  )
+  );
 }

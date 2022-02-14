@@ -1,0 +1,12 @@
+mutation createVote($vote: VoteInput!) {
+  createVote(vote: $vote) {
+    vote {
+      id
+    }
+
+    errors {
+      name
+      message
+    }
+  }
+}

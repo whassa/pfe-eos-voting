@@ -1,0 +1,21 @@
+query Resolution($organizationId: ID!, $resolutionId: ID!) {
+  organization(id: $organizationId) {
+    resolution(id: $resolutionId) {
+      id
+      name
+      pictureThumbUrl
+      status {
+        id
+        name
+      }
+      author {
+        id
+        user {
+          id
+          displayName
+          pictureThumbUrl
+        }
+      }
+    }
+  }
+}

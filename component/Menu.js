@@ -18,7 +18,6 @@ export const drawerWidth = 240;
 
 export default function Menu({ ual }) {
   const router = useRouter();
-  console.log(ual);
   return (
     <Drawer
       variant="permanent"

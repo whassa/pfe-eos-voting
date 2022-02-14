@@ -1,0 +1,12 @@
+mutation CreateArgument($argument: ArgumentInput!) {
+  createArgument(argument: $argument) {
+    argument {
+      id
+    }
+
+    errors {
+      name
+      message
+    }
+  }
+}

@@ -1,0 +1,15 @@
+mutation createNews($news: NewsInput!) {
+  createNews(news: $news) {
+    news {
+      id
+      title
+      content
+      url
+    }
+
+    errors {
+      name
+      message
+    }
+  }
+}

@@ -1,0 +1,24 @@
+query News($organizationId: ID!, $id: ID!) {
+  organization(id: $organizationId) {
+    resolution(id: $id) {
+      id
+      author {
+        id
+        user {
+          displayName
+          pictureThumbUrl
+        }
+      }
+      news(all: true) {
+        items {
+          id
+          title
+          content
+          createdAt
+          updatedAt
+          url
+        }
+      }
+    }
+  }
+}
