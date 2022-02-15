@@ -10,7 +10,7 @@ CONTRACT eosvoting : public contract {
     ACTION vote(name from);
     ACTION clear();
 
-  private:
+  public:
     TABLE votes {
       name    user;
       int  votes;
