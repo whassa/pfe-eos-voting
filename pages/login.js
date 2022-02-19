@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import { Scatter } from "ual-scatter";
 import { Anchor } from "ual-anchor";
 import { UALProvider, withUAL } from "ual-reactjs-renderer";
@@ -14,6 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Header from "component/Head/Header";
 
 // import { Ledger } from 'ual-ledger';
 
@@ -28,48 +29,53 @@ const network = {
 };
 
 export default function loginComponent({ ual }) {
-  
   const router = useRouter();
-
 
   useEffect(() => {
     if (ual.activeUser) {
-      router.push('/');
+      router.push("/");
     }
   }, [ual.activeUser]);
 
   if (ual.activeUser) return null;
 
   return (
-    <Grid
+    <>
+      <Header></Header>
+      <Grid
         container
         spacing={0}
         direction="column"
         alignItems="center"
         justify="center"
-        style={{ minHeight: "100vh", padding: '16px', marginTop: '70px' }}
-    >
+        style={{ minHeight: "100vh", padding: "16px", marginTop: "70px" }}
+      >
         <Grid item md={6}>
-        <Container maxWidth="sm">
+          <Container maxWidth="sm">
             <Paper elevation={3} padding="dense">
-            <Grid container spacing={3} style={{padding: '12px'}}>
+              <Grid container spacing={3} style={{ padding: "12px" }}>
                 <Grid item xs={12}>
-                  <img alt="Cryptosys Logo" src="Login/cryptosys_logo.png" style={{ maxWidth: '100%', maxHeight: '250px'}}/>
+                  <img
+                    alt="Cryptosys Logo"
+                    src="Login/cryptosys_logo.png"
+                    style={{ maxWidth: "100%", maxHeight: "250px" }}
+                  />
                 </Grid>
                 <Grid item xs={12}>
-                <Button onClick={ual.showModal} fullWidth variant="contained">
+                  <Button onClick={ual.showModal} fullWidth variant="contained">
                     <Icon>
                       <img alt="wallet-login" src="Login/eos-logo.svg" />
                     </Icon>
                     Login
-                </Button>
+                  </Button>
                 </Grid>
-            </Grid>
+              </Grid>
             </Paper>
-        </Container>
+          </Container>
         </Grid>
-    </Grid>
-    );
+      </Grid>
+    </>
+  );
 }
 
 export function LoginWrapper({ children }) {

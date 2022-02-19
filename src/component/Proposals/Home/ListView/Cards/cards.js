@@ -1,21 +1,19 @@
-import { Card, CardContent, CardActionArea, CardMedia, Divider } from "@mui/material";
+import { Card, CardContent, CardActionArea, CardMedia, Divider, Box } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import React from "react";
 import { useRouter } from 'next/router'
-import { useTranslation } from "react-i18next";
-
-import { alpha, styled } from '@mui/material/styles';
-import { positions } from '@mui/system';
+import { styled } from '@mui/material/styles';
 
 const VotingCard = styled(Card)(({ theme }) => ({
+  diplay: 'flex',
   '& .MuiCardActionArea-root': {
     width: '100%',
     display: "flex",
     flexDirection: 'row',
-    justifyContent: "left",
+    justifyContent: "space-between",
   },
   '& .MuiCardMedia-root': {
     height: 200,
@@ -30,12 +28,9 @@ const VotingCard = styled(Card)(({ theme }) => ({
   '& .MuiCardContent-root': {
     paddingLeft: '5px',
   },
-  '& .totalVote': {
-
-  }
 }));
 
-const Cards = (props) => {
+const Cards = ({resolution, elevation, isLast, cardOnClick}) => {
   //const classes = useStyles;
 
   const theme = useTheme();
@@ -48,16 +43,11 @@ const Cards = (props) => {
       color="textSecondary"
       component="p"
     >
-      {props.resolution.summary}
+      {resolution.summary}
     </Typography>
   );
 
-  const numberOfComment = props.resolution.comments.totalCount;
-
-  const handleVoteButtonClick = (e) => {
-    //TODO changer pour push vers le show.js en passant la resolution qui contient tout
-    router.push("/Proposals/Show/show");
-  }
+  const numberOfComment = resolution.comments.totalCount;
 
   return (
     <Grid
@@ -66,35 +56,35 @@ const Cards = (props) => {
       sx={{ width: '100%'}}
     >
       <VotingCard
-        elevation={props.elevation}
+        elevation={elevation}
       >
-        <CardActionArea onClick={handleVoteButtonClick}>
-          {props.resolution.pictureThumbUrl && (
-            <CardMedia
-              image={props.resolution.pictureThumbUrl}
-            />
-          )}
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              {props.resolution.name}
-              {props.resolution.published === false ? (
-                <em> (Draft)</em>
-              ) : null}
-            </Typography>
-            <Typography variant="subtitle2" component="p">
-                swag life 
-            </Typography>
-            <Typography sx={{
-                display: "flex",
-                justifyContent: "flex-end"
-            }} component="span">
-              <span>{props.resolution.votes.totalCount}</span>
-            </Typography>
-          </CardContent>
-          
+        <CardActionArea onClick={()=> {cardOnClick(resolution.id) }}>
+          <Box sx={{ display: 'flex' }}>
+            {resolution.pictureThumbUrl && (
+              <CardMedia
+                image={resolution.pictureThumbUrl}
+              />
+            )}
+            <CardContent sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center',}}>
+              <Typography gutterBottom variant="h5" component="h2">
+                {resolution.name}
+                {resolution.published === false ? (
+                  <em> (Draft)</em>
+                ) : null}
+              </Typography>
+              <Typography variant="subtitle2" component="p">
+                  swag life 
+              </Typography>
+            </CardContent>
+          </Box>
+          <Box sx={{marginRight: '60px'}}>
+            <Typography component="span">
+                <span>{resolution.votes.totalCount}</span>
+              </Typography>
+          </Box>
         </CardActionArea>
       </VotingCard>
-      {props.isLast && props.elevation === 0 && (
+      {isLast && elevation === 0 && (
         <Divider orientation="horizontal" />
       )}
     </Grid>

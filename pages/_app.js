@@ -23,7 +23,6 @@ function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps, ro
       return null;
     } 
     */
-   console.log(ual);
     return (<Component ual={ual} {...pageProps} />)
   }
 

@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import React from "react";
 
 import Cards from "./Cards/index";
-import useStyles from "./listView.css";
 
 const propTypes = {
   resolutions: PropTypes.array.isRequired,
@@ -14,10 +13,10 @@ const defaultProps = {
   elevation: 1,
 };
 
-const ListView = ({ resolutions, elevation }) => {
-  const classes = useStyles();
+
+const ListView = ({ resolutions, elevation, cardOnClick }) => {
   return resolutions ? (
-    <Grid className={classes.root} container spacing={3}>
+    <Grid container spacing={3} sx={{marginTop: '5px', flexGrow: 1}}>
       {resolutions.map((el, index) => {
         return (
           <Cards
@@ -26,6 +25,7 @@ const ListView = ({ resolutions, elevation }) => {
             id={el.id}
             elevation={elevation}
             isLast={index !== resolutions.length - 1}
+            cardOnClick={cardOnClick}
           />
         );
       })}

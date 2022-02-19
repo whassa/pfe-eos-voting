@@ -9,27 +9,34 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import LogoutIcon from "@mui/icons-material/Logout";
+import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import { useRouter } from "next/router";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import { useTheme } from "@mui/styles";
+
 
 export const drawerWidth = 240;
 
 export default function Menu({ ual }) {
+  console.log(ual)
   const router = useRouter();
+  const theme = useTheme();
   return (
     <Drawer
       variant="permanent"
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
+        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box", backgroundColor: theme.palette.primary.main },
+        [`& .MuiListItemIcon-root`]: { color: theme.palette.colors.white, },
+        [`& .MuiTypography-root`]: { color: theme.palette.colors.white, }
       }}
     >
-      <Box>
+      <Box >
         <List>
-          <ListItem button key={"home"}>
+          <ListItem button key={"Avatar"}>
             <ListItemAvatar>
               <Avatar>
                 <AccountCircleIcon />
@@ -41,24 +48,40 @@ export default function Menu({ ual }) {
               <ListItemText primary="Anonymous" />
             )}
           </ListItem>
+
+          
         </List>
       </Box>
 
       <Box sx={{ overflow: "auto" }}>
         <List>
-          <ListItem button key={"home"}>
+          <ListItem button key={"Home"}
+            onClick={() => {
+              router.push("/");
+            }}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary={"home"} />
+            <ListItemText primary={"Home"} />
           </ListItem>
+          {ual.activeUser && (
+            
+            <ListItem button key={"Create proposal"}  onClick={() => {
+                router.push("/proposal");
+              }}>
+              <ListItemIcon>
+                <HowToVoteIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Create proposal"} />
+            </ListItem>
+          )}
         </List>
         <Divider />
         {ual.activeUser ? (
           <List>
             <ListItem
               button
-              key={"logout"}
+              key={"Logout"}
               onClick={() => {
                 ual.logout();
                 router.push("/login");
@@ -67,7 +90,7 @@ export default function Menu({ ual }) {
               <ListItemIcon>
                 <LogoutIcon />
               </ListItemIcon>
-              <ListItemText primary={"logout"} />
+              <ListItemText primary={"Logout"} />
             </ListItem>
           </List>
         ) : (

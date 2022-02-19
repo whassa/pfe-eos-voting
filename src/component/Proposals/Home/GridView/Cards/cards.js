@@ -1,4 +1,4 @@
-import { Card, CardContent, CardActionArea, CardMedia, Divider } from "@mui/material";
+import { Card, CardContent, CardActionArea, CardMedia, Divider, Box } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -9,7 +9,7 @@ import { styled } from '@mui/material/styles';
 
 const VotingCard = styled(Card)(({ theme }) => ({
   '& .MuiCardMedia-root': {
-    height: 200,
+    height: 300,
     flexBasis: 200,
     flexGrow: 0,
     flexShrink: 0,
@@ -25,7 +25,7 @@ const VotingCard = styled(Card)(({ theme }) => ({
   }
 }));
 
-const Cards = (props) => {
+const Cards = ({resolution, elevation, isLast, cardOnClick}) => {
   //const classes = useStyles;
 
   const theme = useTheme();
@@ -37,11 +37,11 @@ const Cards = (props) => {
       color="textSecondary"
       component="p"
     >
-      {props.resolution.summary}
+      {resolution.summary}
     </Typography>
   );
 
-  const numberOfComment = props.resolution.comments.totalCount;
+  const numberOfComment = resolution.comments.totalCount;
 
   const handleVoteButtonClick = (e) => {
     //TODO changer pour push vers le show.js en passant la resolution qui contient tout
@@ -55,35 +55,40 @@ const Cards = (props) => {
       sx={{ width: '100%'}}
     >
       <VotingCard
-        elevation={props.elevation}
+        elevation={elevation}
       >
-        <CardActionArea onClick={handleVoteButtonClick}>
-          {props.resolution.pictureThumbUrl && (
+        <CardActionArea onClick={() => { cardOnClick(resolution.id)}}>
+          {resolution.pictureThumbUrl && (
             <CardMedia
-              image={props.resolution.pictureThumbUrl}
+              image={resolution.pictureThumbUrl}
             />
           )}
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              {props.resolution.name}
-              {props.resolution.published === false ? (
-                <em> (Draft)</em>
-              ) : null}
-            </Typography>
-            <Typography variant="subtitle2" component="p">
-                swag life 
-            </Typography>
+          <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+             <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                {resolution.name}
+                {resolution.published === false ? (
+                  <em> (Draft)</em>
+                ) : null}
+              </Typography>
+              <Typography variant="subtitle2" component="p">
+                  swag life 
+              </Typography>
+            </CardContent>
             <Typography sx={{
-                display: "flex",
-                justifyContent: "flex-end"
-            }} component="span">
-              <span>{props.resolution.votes.totalCount}</span>
+                  display: "flex",
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  marginRight: '15px',
+              }} component="span">
+              <span>{resolution.votes.totalCount}</span>
             </Typography>
-          </CardContent>
+          </Box>
+         
           
         </CardActionArea>
       </VotingCard>
-      {props.isLast && props.elevation === 0 && (
+      {isLast && elevation === 0 && (
         <Divider orientation="horizontal" />
       )}
     </Grid>
