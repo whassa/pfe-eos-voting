@@ -1,47 +1,61 @@
-import { username, user } from "./../../userDB";
+
 import { useEffect, useState } from "react";
 import GUN from "gun/gun";
+import SEA from "gun/sea";
 import LiveChatMessage from "./LiveChatMessage";
 
 import { Grid, Paper, Container } from "@mui/material";
 
-const db = GUN();
 let messages = [];
+const gun =  GUN();
+
+const match = {
+  // lexical queries are kind of like a limited RegEx or Glob.
+  '.': {
+    // property selector
+    '>': new Date(+new Date() - 1 * 1000 * 60 * 60 * 3).toISOString(), // find any indexed property larger ~3 hours ago
+  },
+  '-': 1, // filter in reverse
+};
+
 
 export default function LiveChat({ ual, resolution, encryptionKey }) {
 
   let [newMessage, setNewMessage] = useState('');
+  let [messages, setMessages] = useState([]);
 
   async function sendMessage() {
-    const secret = await SEA.encrypt(newMessage, encryptionKey);
-    const message = user.get("all").set({ what: secret });
     const index = new Date().toISOString();
-    db.get("liveChat:" + resolution.id)
-      .get(index)
-      .put(message);
+    const secret = await SEA.encrypt(newMessage, encryptionKey);
+    // const message = user.get('all').set({ what: secret });
+    gun.get("liveChat:" + resolution.id)
+      .put({ [index]: secret});
     console.log('message sent');
     setNewMessage("");
   }
   
 
 
-  useEffect(() => {
-    var match = {
-      // lexical queries are kind of like a limited RegEx or Glob.
-      ".": {
-        // property selector
-        ">": new Date(+new Date() - 1 * 1000 * 60 * 60 * 3).toISOString(), // find any indexed property larger ~3 hours ago
-      },
-      "-": 1, // filter in reverse
-    };
-    // Get Messages
-    console.log(db);
-    db.get("liveChat:" + resolution.id)
-      .map().on((item, id) => {
-        console.log(item);
+  useEffect( async () => {
+    console.log(gun);
+    gun.get("liveChat:" + resolution.id)
+      .map()
+      .once(async (data, id) => {
+        console.log(data);
+        if (data) {
+          // Key for end-to-end encryption
+          var message = {
+            // transform the data
+            what: (await SEA.decrypt(data, encryptionKey)) + '', // force decrypt as text.
+            when: data.id, // get the internal timestamp for the what property.
+          };          
+          if (message.what) {
+            setMessages(oldMessages => [...oldMessages, message] );
+          }
+        }
       })
-     
-  }, [db]);
+  }, []);
+
 
   return (
     <Grid
@@ -60,6 +74,7 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
                 {messages.map((message) => {
                   return (
                     <LiveChatMessage
+                      key={message.when}
                       message={message}
                       sender={ual.activeUser.accountName}
                     />
@@ -96,7 +111,7 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
                 })}
               </main>
               <Grid>
-                You are not connected. Please connect to your EOS/EDAN account
+                You are not connected. Please connect to your EOS/EDEN account
                 in order to use the live chat.
               </Grid>
             </Grid>
