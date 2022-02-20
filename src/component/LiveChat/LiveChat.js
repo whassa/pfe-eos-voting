@@ -8,6 +8,7 @@ import { Grid, Paper, Container } from "@mui/material";
 
 let messages = [];
 const gun =  GUN();
+const user = gun.user().recall({sessionStorage: true});
 
 const match = {
   // lexical queries are kind of like a limited RegEx or Glob.
@@ -23,39 +24,47 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
 
   let [newMessage, setNewMessage] = useState('');
   let [messages, setMessages] = useState([]);
+  
 
   async function sendMessage() {
     const index = new Date().toISOString();
-    const secret = await SEA.encrypt(newMessage, encryptionKey);
+    // new TextDecoder().decode(uin8arry)
+    const publicKey = ual.activeUser.session.publicKey.data.array;
+    const messageToEncrypt = {
+      message:newMessage,
+      userName:ual.activeUser.accountName,
+      userPublicKey:publicKey
+    };
+    const secret = await SEA.encrypt(messageToEncrypt, encryptionKey);
     // const message = user.get('all').set({ what: secret });
     gun.get("liveChat:" + resolution.id)
       .put({ [index]: secret});
     console.log('message sent');
     setNewMessage("");
   }
-  
-
 
   useEffect( async () => {
-    console.log(gun);
+  
     gun.get("liveChat:" + resolution.id)
       .map()
       .once(async (data, id) => {
         console.log(data);
         if (data) {
           // Key for end-to-end encryption
+          const messageDecrypted = (await SEA.decrypt(data, encryptionKey))
           var message = {
             // transform the data
-            what: (await SEA.decrypt(data, encryptionKey)) + '', // force decrypt as text.
-            when: data.id, // get the internal timestamp for the what property.
-          };          
+            publicKey: messageDecrypted.userPublicKey,
+            who: messageDecrypted.userName,
+            what: messageDecrypted.message + '', // force decrypt as text.
+            when: id, // get the internal timestamp for the what property.
+          };
           if (message.what) {
             setMessages(oldMessages => [...oldMessages, message] );
           }
         }
       })
   }, []);
-
 
   return (
     <Grid
@@ -72,6 +81,7 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
             <Grid>
               <main>
                 {messages.map((message) => {
+                  console.log(message.when);
                   return (
                     <LiveChatMessage
                       key={message.when}
@@ -102,8 +112,10 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
             <Grid>
               <main>
                 {messages.map((message) => {
+                  console.log(message.when);
                   return (
                     <LiveChatMessage
+                      key={message.when}
                       message={message}
                       sender={ual.activeUser.accountName}
                     />
