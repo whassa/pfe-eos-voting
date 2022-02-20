@@ -1,4 +1,4 @@
-import GUN from 'gun'
+import GUN from 'gun/gun'
 import 'gun/sea';
 import 'gun/axe';
 import { writable } from 'svelte/store';

@@ -1,17 +1,33 @@
 import { createTheme } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
 
-// Create a theme instance.
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#556cd6',
+      main: "#324856",
+      light: "#5d7383",
+      dark: "#08212d",
     },
     secondary: {
-      main: '#19857b',
+      main: "#d66c44",
+      light: "#ff9c70",
+      dark: "#9f3e1a",
     },
-    error: {
-      main: red.A400,
+    grey: {
+      400: "#BDBDBD",
+    },
+    background: {
+      default: "#F7F9FC",
+    },
+    colors: {
+      nightfall: "#324856",
+      rawSienna: "#d18237",
+      coolSage: "#4a746a",
+      sunset: "#d66c44",
+      white: "#FFFFFF",
+      black: "#000000",
+      lightContrastText: "#fff",
+      darkContrastText: "#000",
+      grey: "#BDBDBD"
     },
   },
 });

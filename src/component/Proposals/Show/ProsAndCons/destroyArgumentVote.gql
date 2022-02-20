@@ -1,0 +1,12 @@
+mutation destroyArgumentVote($argumentId: ID!) {
+ 	destroyArgumentVote(argumentId: $argumentId) {
+    argumentVote {
+      id
+    }
+
+    errors {
+      name
+      message
+    }
+  }
+}

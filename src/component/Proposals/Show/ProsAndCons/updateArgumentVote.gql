@@ -1,0 +1,13 @@
+
+mutation UpdatetArgumentVote($argumentVote: ArgumentVoteInput!) {
+ 	updateArgumentVote(argumentVote: $argumentVote) {
+    argumentVote {
+      id
+    }
+
+    errors {
+      name
+      message
+    }
+  }
+}

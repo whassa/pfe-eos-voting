@@ -1,0 +1,12 @@
+mutation DestroyComment($id: ID!) {
+  destroyComment(id: $id) {
+    comment {
+      id
+    }
+
+    errors {
+      name
+      message
+    }
+  }
+}
