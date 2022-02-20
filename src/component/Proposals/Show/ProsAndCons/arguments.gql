@@ -1,0 +1,90 @@
+query Arguments($organizationId: ID!, $id: ID!) {
+  organization(id: $organizationId) {
+    resolution(id: $id) {
+      id
+      author {
+        id
+        user {
+          displayName
+          pictureThumbUrl
+        }
+      }
+      argumentsPro: arguments(official: false, type: "pros", all:true) {
+        items {
+          id
+          pro
+          title
+          content
+          memberCurrentVote
+          score
+          updatedAt
+          createdAt
+          member {
+            id
+            user {
+              displayName
+              pictureThumbUrl
+            }
+          }
+        }
+      }
+      argumentsCon: arguments(official: false, type: "cons", all:true) {
+        items {
+          id
+          pro
+          title
+          content
+          memberCurrentVote
+          score
+          updatedAt
+          createdAt
+          member {
+            id
+            user {
+              displayName
+              pictureThumbUrl
+            }
+          }
+        }
+      }
+      officialsPro: arguments(official: true, type: "pros", ipp:5) {
+        items {
+          id
+          pro
+          title
+          content
+          memberCurrentVote
+          score
+          updatedAt
+          createdAt
+          member {
+            id
+            user {
+              displayName
+              pictureThumbUrl
+            }
+          }
+        }
+      }
+      officialsCon: arguments(official: true, type: "cons", ipp:5) {
+        items {
+          id
+          pro
+          title
+          content
+          memberCurrentVote
+          score
+          updatedAt
+          createdAt
+          member {
+            id
+            user {
+              displayName
+              pictureThumbUrl
+            }
+          }
+        }
+      }
+    }
+  }
+}

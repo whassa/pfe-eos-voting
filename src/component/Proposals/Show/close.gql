@@ -1,0 +1,12 @@
+mutation close($id: ID!){
+  closeResolution(id: $id){
+    resolution {
+      id
+    }
+
+    errors {
+      name
+      message
+    }
+  }
+}

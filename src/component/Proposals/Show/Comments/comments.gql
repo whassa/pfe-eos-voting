@@ -1,0 +1,51 @@
+query Comments($organizationId: ID!, $id: ID!) {
+  organization(id: $organizationId) {
+    resolution(id: $id) {
+      id
+      author {
+        id
+        user {
+          displayName
+          pictureThumbUrl
+        }
+      }
+      comments(includeDeleted: true) {
+        totalCount
+        hasPreviousPage
+        hasNextPage
+        page
+        items {
+          id
+          content
+          member {
+            id
+            user {
+              displayName
+              pictureThumbUrl
+            }
+          }
+          createdAt
+          updatedAt
+          deletedAt
+          replies{
+            items {
+              id
+              content
+              parent{
+                id
+              }
+              member {
+                id
+                user {
+                  displayName
+                }
+              }
+              createdAt
+              updatedAt
+            }
+          }
+        }
+      }
+    }
+  }
+}
