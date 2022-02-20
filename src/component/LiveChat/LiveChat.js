@@ -46,7 +46,7 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
   useEffect( async () => {
   
     gun.get("liveChat:" + resolution.id)
-      .map()
+      .map(match)
       .once(async (data, id) => {
         console.log(data);
         if (data) {
