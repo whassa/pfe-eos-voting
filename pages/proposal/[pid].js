@@ -59,6 +59,13 @@ export default function pid({ ual }) {
           </Box>
         )}
 
+        { view === views[1] && (
+          <Box>
+            <NewProsCons ual={ual}></NewProsCons>
+          </Box>
+        )}
+
+
       </Container>
     </>
   );
