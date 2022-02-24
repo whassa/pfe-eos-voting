@@ -21,7 +21,7 @@ const reducer = (state, action) => {
     case types.SUMMARY_CHANGED:
       return { ...state, summary: action.value };
     case types.POSITION_CHANGED:
-      return { ...state, position: action.value };
+      return { ...state, position: action.value === "Pro" ? true : false };
   }
 };
 
@@ -35,6 +35,13 @@ export default function formProsCons({ ual }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   function createProsCons() {}
+  function cancelProsCons() {
+      state = {
+        title: "",
+        content: "",
+        position: "",
+      };
+  }
 
   return (
     <Grid
@@ -72,10 +79,23 @@ export default function formProsCons({ ual }) {
               required
             />
 
+            <RadioGroup
+              row
+              defaultValue="first"
+              onChange={(e) => {
+                dispatch({
+                  type: types.POSITION_CHANGED,
+                  value: e.target.value,
+                });
+              }}
+            >
+              <FormControlLabel value="Pro" control={<Radio />} label="Pro" />
+              <FormControlLabel value="Con" control={<Radio />} label="Con" />
+            </RadioGroup>
+
             <Button
               onClick={(e) => {
-                e.preventDefault();
-                sendForm();
+                cancelProsCons();
               }}
               type="cancel"
               variant="contained"
@@ -92,7 +112,7 @@ export default function formProsCons({ ual }) {
               }
               onClick={(e) => {
                 e.preventDefault();
-                sendForm();
+                createProsCons();
               }}
               type="submit"
               variant="contained"
