@@ -4,7 +4,6 @@ export default function LiveChatMessage({ ual, message }) {
   const date = new Date(message.when);
 
   const ownMessage = ( ual.activeUser && JSON.stringify(message.publicKey) === JSON.stringify(ual.activeUser.session.publicKey.data.array) );
-  console.log(ownMessage);
 
   return (
     <Box sx={{ 
