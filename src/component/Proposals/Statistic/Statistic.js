@@ -1,15 +1,6 @@
 import {
     Grid,
-    Paper,
-    Container,
-    FormControl,
-    TextField,
-    Button,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-    Stack,
-    Box,
+    Paper
 } from "@mui/material";
 
 export default function Statistics({ resolution }) {
@@ -30,16 +21,7 @@ export default function Statistics({ resolution }) {
     return (
         <Grid>
             <Grid>
-                <Box
-                    id="totalVote"
-                    sx={{
-                        border: 1,
-                        borderColor: 'grey.500',
-                        bgcolor: 'common.white',
-                        width: 300,
-                        height: 200
-                    }}
-                >
+                <Paper elevation={3} padding="dense">
                     <Grid>Total votes</Grid>
                     <Grid>{prosVotes - consVotes}</Grid>
                     <Grid>
@@ -50,39 +32,19 @@ export default function Statistics({ resolution }) {
                         No
                         {consVotes}
                     </Grid>
-                </Box>
+                </Paper>
             </Grid>
 
             <Grid>
-                <Box
-                    id="voteMargin"
-                    sx={{
-                        border: 1,
-                        borderColor: 'grey.500',
-                        bgcolor: 'common.white',
-                        width: 300,
-                        height: 200
-                    }}
-                >
+                <Paper elevation={3} padding="dense">
                     <Grid>Vote margin</Grid>
                     <Grid>???</Grid>
-                    <Grid>
-                        ???
-                    </Grid>
-                </Box>
+                    <Grid>???</Grid>
+                </Paper>
             </Grid>
 
             <Grid>
-                <Box
-                    id="remainingDays"
-                    sx={{
-                        border: 1,
-                        borderColor: 'grey.500',
-                        bgcolor: 'common.white',
-                        width: 300,
-                        height: 200,
-                    }}
-                >
+                <Paper elevation={3} padding="dense">
                     <Grid>Remaining days</Grid>
                     <Grid>
                         {Math.ceil(
@@ -97,23 +59,14 @@ export default function Statistics({ resolution }) {
                         {resolution.expireAt._d.getDay()}{" "}
                         {resolution.expireAt._d.getFullYear()}
                     </Grid>
-                </Box>
+                </Paper>
             </Grid>
 
             <Grid>
-                <Box
-                    id="chart"
-                    sx={{
-                        border:1,
-                        borderColor: 'grey.500',
-                        bgcolor: 'common.white',
-                        width: 1080,
-                        height: 500
-                    }}
-                >
+                <Paper elevation={3} padding="dense">
                     <Grid>This is a chart</Grid>
                     <Grid>STONK</Grid>
-                </Box>
+                </Paper>
             </Grid>
         </Grid>
     );

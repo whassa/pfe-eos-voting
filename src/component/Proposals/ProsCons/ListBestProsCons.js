@@ -1,7 +1,4 @@
-import {
-    Grid,
-    Box
-} from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 
@@ -9,16 +6,7 @@ export default function ListBestProsCons({ prosList, consList }) {
     console.log(prosList);
     return (
         <Grid>
-            <Box
-                id="remainingDays"
-                sx={{
-                    border: 1,
-                    borderColor: "grey.500",
-                    bgcolor: 'common.white',
-                    width: 1080,
-                    height: 240,
-                }}
-            >
+            <Paper elevation={3} padding="dense">
                 <Grid>
                     Pros
                     {prosList &&
@@ -47,7 +35,7 @@ export default function ListBestProsCons({ prosList, consList }) {
                             );
                         })}
                 </Grid>
-            </Box>
+            </Paper>
         </Grid>
     );
 }

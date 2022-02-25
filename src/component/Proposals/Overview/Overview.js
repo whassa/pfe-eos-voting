@@ -1,7 +1,4 @@
-import {
-    Grid,
-    Box,
-} from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -12,16 +9,7 @@ export default function Overview({ resolution }) {
         <Grid>
             <Grid>{resolution.content}</Grid>
             <Grid>
-                <Box
-                    id="author"
-                    sx={{
-                        border: 1,
-                        borderColor: 'grey.500',
-                        bgcolor: 'common.white',
-                        width: 300,
-                        height: 200
-                    }}
-                >
+                <Paper elevation={3} padding="dense">
                     <Grid>Author</Grid>
                     <Grid>
                         {resolution.author.userPicture === "" ? (
@@ -45,38 +33,20 @@ export default function Overview({ resolution }) {
                         {/*TODO change it for .author.userName*/}
                         {resolution.author.user.displayName}
                     </Grid>
-                </Box>
+                </Paper>
             </Grid>
             <Grid>
-                <Box
-                    id="details"
-                    sx={{
-                        border: 1,
-                        borderColor: 'grey.500',
-                        bgcolor: 'common.white',
-                        width: 300,
-                        height: 100
-                    }}
-                >
+                <Paper elevation={3} padding="dense">
                     <Grid>Details</Grid>
                     {/*TODO change it to .category*/}
                     <Grid>Category {resolution.category.name}</Grid>
                     {/*TODO change it to .createdAt*/}
                     <Grid>Created on {resolution.createdAt._i}</Grid>
-                </Box>
+                </Paper>
             </Grid>
 
             <Grid>
-                <Box
-                    id="integrity"
-                    sx={{
-                        border: 1,
-                        borderColor: 'grey.500',
-                        bgcolor: 'common.white',
-                        width: 300,
-                        height: 100
-                    }}
-                >
+                <Paper elevation={3} padding="dense">
                     <Grid>Resolution integrity check</Grid>
                     {resolution.integrity ? (
                         <CheckCircleIcon
@@ -93,7 +63,7 @@ export default function Overview({ resolution }) {
                             }}
                         />
                     )}
-                </Box>
+                </Paper>
             </Grid>
         </Grid>
     );
