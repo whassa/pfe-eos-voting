@@ -15,13 +15,11 @@ export default function Overview({ resolution }) {
                 <Box
                     id="author"
                     sx={{
+                        border: 1,
+                        borderColor: 'grey.500',
+                        bgcolor: 'common.white',
                         width: 300,
-                        height: 200,
-                        backgroundColor: "grey.200",
-                        "&:hover": {
-                            backgroundColor: "primary.main",
-                            opacity: [0.9, 0.8, 0.7],
-                        },
+                        height: 200
                     }}
                 >
                     <Grid>Author</Grid>
@@ -53,13 +51,11 @@ export default function Overview({ resolution }) {
                 <Box
                     id="details"
                     sx={{
+                        border: 1,
+                        borderColor: 'grey.500',
+                        bgcolor: 'common.white',
                         width: 300,
-                        height: 100,
-                        backgroundColor: "grey.200",
-                        "&:hover": {
-                            backgroundColor: "primary.main",
-                            opacity: [0.9, 0.8, 0.7],
-                        },
+                        height: 100
                     }}
                 >
                     <Grid>Details</Grid>
@@ -74,13 +70,11 @@ export default function Overview({ resolution }) {
                 <Box
                     id="integrity"
                     sx={{
+                        border: 1,
+                        borderColor: 'grey.500',
+                        bgcolor: 'common.white',
                         width: 300,
-                        height: 100,
-                        backgroundColor: "grey.200",
-                        "&:hover": {
-                            backgroundColor: "primary.main",
-                            opacity: [0.9, 0.8, 0.7],
-                        },
+                        height: 100
                     }}
                 >
                     <Grid>Resolution integrity check</Grid>

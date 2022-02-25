@@ -33,13 +33,11 @@ export default function Statistics({ resolution }) {
                 <Box
                     id="totalVote"
                     sx={{
+                        border: 1,
+                        borderColor: 'grey.500',
+                        bgcolor: 'common.white',
                         width: 300,
-                        height: 200,
-                        backgroundColor: "grey.200",
-                        "&:hover": {
-                            backgroundColor: "primary.main",
-                            opacity: [0.9, 0.8, 0.7],
-                        },
+                        height: 200
                     }}
                 >
                     <Grid>Total votes</Grid>
@@ -59,13 +57,11 @@ export default function Statistics({ resolution }) {
                 <Box
                     id="voteMargin"
                     sx={{
+                        border: 1,
+                        borderColor: 'grey.500',
+                        bgcolor: 'common.white',
                         width: 300,
-                        height: 200,
-                        backgroundColor: "grey.200",
-                        "&:hover": {
-                            backgroundColor: "primary.main",
-                            opacity: [0.9, 0.8, 0.7],
-                        },
+                        height: 200
                     }}
                 >
                     <Grid>Vote margin</Grid>
@@ -80,13 +76,11 @@ export default function Statistics({ resolution }) {
                 <Box
                     id="remainingDays"
                     sx={{
+                        border: 1,
+                        borderColor: 'grey.500',
+                        bgcolor: 'common.white',
                         width: 300,
                         height: 200,
-                        backgroundColor: "grey.200",
-                        "&:hover": {
-                            backgroundColor: "primary.main",
-                            opacity: [0.9, 0.8, 0.7],
-                        },
                     }}
                 >
                     <Grid>Remaining days</Grid>
@@ -108,15 +102,13 @@ export default function Statistics({ resolution }) {
 
             <Grid>
                 <Box
-                    id="voteMargin"
+                    id="chart"
                     sx={{
+                        border:1,
+                        borderColor: 'grey.500',
+                        bgcolor: 'common.white',
                         width: 1080,
-                        height: 500,
-                        backgroundColor: "grey.200",
-                        "&:hover": {
-                            backgroundColor: "primary.main",
-                            opacity: [0.9, 0.8, 0.7],
-                        },
+                        height: 500
                     }}
                 >
                     <Grid>This is a chart</Grid>
