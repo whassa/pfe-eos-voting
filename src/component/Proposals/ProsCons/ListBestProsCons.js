@@ -1,4 +1,4 @@
-import { Grid, Paper } from "@mui/material";
+import { Grid, Paper, Stack, Box, Divider, Typography } from "@mui/material";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { useTheme } from "@mui/styles";
@@ -7,35 +7,45 @@ export default function ListBestProsCons({ prosList, consList }) {
     const theme = useTheme();
 
     return (
-        <Paper elevation={3} padding="dense" sx={{ marginTop: theme.homeMarginTop}}>
-            <Grid>
-                Pros
-                {prosList &&
-                    prosList.map((argument) => {
-                        return (
-                            <Grid id={argument.id}>
-                                {/*TODO changer .content par .title et items.length par .vote*/}
-                                {argument.content}{" "}
-                                {argument.votes.items.length}{" "}
-                                <ArrowCircleUpIcon />
-                            </Grid>
-                        );
-                    })}
-            </Grid>
-            <Grid>
-                Cons
-                {consList &&
-                    consList.map((argument) => {
-                        return (
-                            <Grid id={argument.id}>
-                                {/*TODO changer .content par .title et items.length par .vote*/}
-                                {argument.content}{" "}
-                                {argument.votes.items.length}{" "}
-                                <ArrowCircleDownIcon />
-                            </Grid>
-                        );
-                    })}
-            </Grid>
+        <Paper elevation={3} padding="dense" sx={{ marginTop: theme.homeMarginTop, padding: '10px'}}>
+            <Stack 
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem />}
+                spacing={2}
+            >
+                <Box  sx={{ flex: 1 }}>
+                    <Typography variant="h5"> Pros </Typography>
+                    {prosList &&
+                        prosList.map((argument) => {
+                            return (
+                                <Box key={argument.id} sx={{paddingLeft: '20px'}}>
+                                    {/*TODO changer .content par .title et items.length par .vote*/}
+                                    <Typography>
+                                        {argument.title}{" "}
+                                        {argument.votes.items.length}{" "}
+                                        <ArrowCircleUpIcon />
+                                    </Typography>
+                                </Box>
+                            );
+                        })}
+                </Box>
+                <Box  sx={{ flex: 1 }}>
+                    <Typography variant="h5"> Cons </Typography>
+                    {consList &&
+                        consList.map((argument) => {
+                            return (
+                                <Box key={argument.id} sx={{paddingLeft: '20px'}}>
+                                    {/*TODO changer .content par .title et items.length par .vote*/}
+                                    <Typography>
+                                        {argument.title}{" "}
+                                        {argument.votes.items.length}{" "}
+                                        <ArrowCircleUpIcon />
+                                    </Typography>
+                                </Box>
+                            );
+                        })}
+                </Box>
+            </Stack>
         </Paper>
     );
 }

@@ -4,7 +4,6 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 export default function Overview({ resolution }) {
-    console.log(resolution);
     return (
         <Grid>
             <Grid>{resolution.content}</Grid>

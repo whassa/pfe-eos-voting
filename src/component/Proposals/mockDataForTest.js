@@ -37,7 +37,8 @@ const resolutions = [
         {
           id: "00000000-0000-0000-0000-000000000006",
           pro: true,
-          content: "This is content",
+          title: 'Argument title',
+          content: "This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. ",
           member: {
             id: "00000000-0000-0000-0000-000000000007",
             user: {

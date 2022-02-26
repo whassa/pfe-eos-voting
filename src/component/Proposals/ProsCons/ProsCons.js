@@ -22,8 +22,6 @@ export default function Menu({ ual, resolution }) {
     prosList.sort((a, b) => b.vote - a.vote);
     consList.sort((a, b) => b.vote - a.vote);
 
-    console.log(resolution);
-    console.log(prosList);
     // pros and cons
     return (
         <Box>

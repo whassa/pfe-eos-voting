@@ -78,8 +78,6 @@ export default function proposalForm({ ual }) {
         items: [], //all the votes. Each vote contains createdAt, updatedAt, userPublicKey, value (true for pro or false for con)
       },
     };
-
-    console.log(formInformations);
   }
 
   return (

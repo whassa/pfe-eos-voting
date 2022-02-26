@@ -15,7 +15,7 @@ export default function ListProsCons({ ual, prosAndCons }) {
             {prosAndCons &&
                 prosAndCons.map((argument) => {
                     return (
-                      <ProsConsItem argument={argument} />
+                      <ProsConsItem key={argument.id} argument={argument} />
                     );
                 })}
         </Grid>

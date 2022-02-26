@@ -6,7 +6,7 @@ import { useReducer } from "react";
 import Menu, { drawerWidth } from "component/Menu/Menu";
 import Header from "component/Head/Header";
 import { Box, Container, FormControl, InputLabel, Input } from "@mui/material";
-import ProposalForm from "../src/component/Proposals/Form/proposalForm"
+import ProposalForm from "../src/component/Proposals/Form/ProposalForm"
 
 const actionType = {
   CHANGE_NAME: "CHANGE_NAME",
