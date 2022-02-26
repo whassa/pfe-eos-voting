@@ -1,7 +1,9 @@
 import { Box, Typography } from "@mui/material";
+import { useTheme } from "@mui/styles";
 
 export default function LiveChatMessage({ ual, message }) {
   const date = new Date(message.when);
+  const theme = useTheme();
 
   const ownMessage = ( ual.activeUser && JSON.stringify(message.publicKey) === JSON.stringify(ual.activeUser.session.publicKey.data.array) );
 
@@ -14,7 +16,7 @@ export default function LiveChatMessage({ ual, message }) {
       <Typography component="span" variant="caption" sx={{ 
           display: 'inline-block',
           marginBottom: "5px",
-          color: '#BDBDBD',
+          color: theme.palette.primary.main,
           ...(ownMessage) && {
             float: "right",
             direction: 'rtl',
@@ -35,7 +37,7 @@ export default function LiveChatMessage({ ual, message }) {
             display: 'inline-block',
             ...(ownMessage) && {
                 color: 'white',
-                backgroundColor: '#324856',
+                backgroundColor: theme.palette.primary.main,
                 float: "right"
             }
           }}

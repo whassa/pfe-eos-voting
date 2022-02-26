@@ -67,7 +67,7 @@ export default function proposalForm({ ual }) {
       },
       status: "Open",
       arguments: {
-        items: [], //content, author (userName, publicKey), createdAt, updatedAt, vote, value (true for pro or false for con)
+        items: [], //title, content, author (userName, publicKey), createdAt, updatedAt, vote, value (true for pro or false for con)
       },
       news: {
         items: [], //title, content, createdAt, updatedAt

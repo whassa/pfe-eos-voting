@@ -9,14 +9,23 @@ import {
     FormControlLabel,
     Radio,
     Stack,
+    Input
 } from "@mui/material";
 import { useState, useReducer } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useTheme } from "@mui/styles";
+
+const initialState = {
+    title: "",
+    content: "",
+    position: "",
+};
 
 const types = {
     TITLE_CHANGED: "TITLE_CHANGED",
     CONTENT_CHANGED: "CONTENT_CHANGED",
     POSITION_CHANGED: "POSITION_CHANGED",
+    CANCEL_CLICKED: "CANCEL_CLICKED"
 };
 
 const reducer = (state, action) => {
@@ -27,19 +36,16 @@ const reducer = (state, action) => {
             return { ...state, content: action.value };
         case types.POSITION_CHANGED:
             return { ...state, position: action.value };
+        case types.CANCEL_CLICKED:
+            return { ...state, title: initialState.title, content: initialState.content, position: initialState.position}
         default:
             return { ...state };
     }
 };
 
-const initialState = {
-    title: "",
-    content: "",
-    position: "",
-};
-
 export default function FormProsCons({ ual, resolution }) {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const theme = useTheme();
 
     function createProsCons() {
         //TODO send it to GunJS and contract
@@ -56,58 +62,54 @@ export default function FormProsCons({ ual, resolution }) {
             vote: {
                 vote: 0, //votes by the users. I.E, -1 because positif vote - negatif vote = -1
                 totalVote: 0, //how many people voted
-                items: [], //all the votes. Each vote contains createdAt, userPublicKey, value (+1 or -1)
+                items: [], //all the votes. Each vote contains createdAt, userPublicKey, value (true or false)
             },
         };
 
         resolution.arguments.push(argument);
     }
 
-    function cancelProsCons() {
-        state.title = "";
-        state.content = "";
-        state.position = "";
-    }
-
     return (
-        <Grid
-            container
-            spacing={0}
-            direction="column"
-            alignItems="center"
-            justify="center"
-            style={{ minHeight: "100vh", padding: "16px", marginTop: "70px" }}
-        >
-            <Container maxWidth="sm">
-                <Paper elevation={3} padding="dense">
-                    <FormControl>
-                        <TextField
-                            id="Title"
-                            label="Title"
-                            onChange={(e) => {
-                                dispatch({
-                                    type: types.TITLE_CHANGED,
-                                    value: e.target.value,
-                                });
-                            }}
-                            value={state.title}
-                            required
-                        />
 
-                        <TextField
-                            label="Content"
-                            variant="outlined"
-                            multiline
-                            onChange={(e) => {
-                                dispatch({
-                                    type: types.CONTENT_CHANGED,
-                                    value: e.target.value,
-                                });
-                            }}
-                            value={state.content}
-                            required
-                        />
+        <Paper elevation={3} padding="dense" sx={{ marginTop: '20px', padding: '10px'}}>
+            <FormControl sx={{ width: '100%'}}>
+                <Input
+                    id="Title"
+                    label="Title"
+                    placeholder="Title"
+                    onChange={(e) => {
+                        dispatch({
+                            type: types.TITLE_CHANGED,
+                            value: e.target.value,
+                        });
+                    }}
+                    value={state.title}
+                    sx={{marginBottom: '10px', maxWidth: '200px' }}
+                    fullWidth={false}
+                    required
+                />
 
+                <TextField
+                    label="Content"
+                    onChange={(e) => {
+                        dispatch({
+                            type: types.CONTENT_CHANGED,
+                            value: e.target.value,
+                        });
+                    }}
+                    value={state.content}
+                    multiline
+                    fullWidth
+                    required
+                />
+                <Grid 
+                    container
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{marginTop: '10px'}}
+                >
+                    <Grid item> 
                         <RadioGroup
                             row
                             defaultValue="Pro"
@@ -129,18 +131,10 @@ export default function FormProsCons({ ual, resolution }) {
                                 label="Con"
                             />
                         </RadioGroup>
+                    </Grid>
+                    <Grid item>
 
                         <Stack spacing={2} direction="row">
-                            <Button
-                                onClick={(e) => {
-                                    cancelProsCons();
-                                }}
-                                type="cancel"
-                                variant="contained"
-                            >
-                                Cancel
-                            </Button>
-
                             <Button
                                 disabled={
                                     state.title === "" ||
@@ -157,10 +151,19 @@ export default function FormProsCons({ ual, resolution }) {
                             >
                                 Propose
                             </Button>
+                            <Button
+                                onClick={(e) => {
+                                    dispatch({type: types.CANCEL_CLICKED});
+                                }}
+                                type="cancel"
+                                variant="contained"
+                            >
+                                Cancel
+                            </Button>
                         </Stack>
-                    </FormControl>
-                </Paper>
-            </Container>
-        </Grid>
+                    </Grid>
+                </Grid>
+            </FormControl>
+        </Paper>
     );
 }

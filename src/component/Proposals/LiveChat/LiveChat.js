@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import GUN from "gun/gun";
 import SEA from "gun/sea";
 import LiveChatMessage from "./LiveChatMessage";
+import { useTheme } from "@mui/styles";
 
 import { Grid, Paper, FormControl, Box, Input, Button } from "@mui/material";
 
@@ -19,6 +20,7 @@ const match = {
 export default function LiveChat({ ual, resolution, encryptionKey }) {
   let [newMessage, setNewMessage] = useState("");
   let [messages, setMessages] = useState([]);
+  const theme = useTheme();
 
   async function sendMessage() {
     const index = new Date().toISOString();
@@ -64,7 +66,7 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
       direction="column"
       alignItems="center"
       justify="center"
-      style={{ marginTop: "20px" }}
+      style={{ marginTop: theme.homeMarginTop }}
     >
       <Paper
         elevation={3}

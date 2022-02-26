@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
+  homeMarginTop: '20px',
   palette: {
     primary: {
       main: "#324856",
