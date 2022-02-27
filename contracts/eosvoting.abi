@@ -18,6 +18,11 @@
             ]
         },
         {
+            "name": "clear",
+            "base": "",
+            "fields": []
+        },
+        {
             "name": "crtproposal",
             "base": "",
             "fields": [
@@ -48,6 +53,32 @@
                 {
                     "name": "status",
                     "type": "string"
+                },
+                {
+                    "name": "author",
+                    "type": "author"
+                }
+            ]
+        },
+        {
+            "name": "makevote",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "publicKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "value",
+                    "type": "int8"
                 }
             ]
         },
@@ -155,11 +186,11 @@
                 },
                 {
                     "name": "publicKey",
-                    "type": "string"
+                    "type": "uint64"
                 },
                 {
                     "name": "value",
-                    "type": "bool"
+                    "type": "int8"
                 }
             ]
         },
@@ -184,8 +215,18 @@
     ],
     "actions": [
         {
+            "name": "clear",
+            "type": "clear",
+            "ricardian_contract": ""
+        },
+        {
             "name": "crtproposal",
             "type": "crtproposal",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "makevote",
+            "type": "makevote",
             "ricardian_contract": ""
         }
     ],

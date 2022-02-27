@@ -7,9 +7,7 @@ CONTRACT eosvoting : public contract {
   public:
     using contract::contract;
 
-    ACTION crtproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status);
-
-    struct author {
+     struct author {
         string userName;
         uint64_t publicKey;
     };
@@ -30,11 +28,13 @@ CONTRACT eosvoting : public contract {
       uint64_t updatedAt;
     };
 
+
+    // vote value if 1 = yes, -1 = no, 0 =  abstain
     struct vote {
       uint64_t createdAt;
       uint64_t updatedAt;
-      string publicKey;
-      bool value;
+      uint64_t publicKey;
+      char value;
     };
 
 
@@ -52,7 +52,12 @@ CONTRACT eosvoting : public contract {
       std::vector<vote> vote;
     };
 
+    ACTION crtproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status, author author );
+    ACTION makevote(name from, uint64_t primaryKey, uint64_t publicKey, char value);
+    ACTION clear();
+
     public:
+    
     
     TABLE proposals {
       uint64_t primaryKey;
