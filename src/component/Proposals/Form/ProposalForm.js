@@ -72,12 +72,12 @@ export default function proposalForm({ ual }) {
       news: {
         items: [], //title, content, createdAt, updatedAt
       },
-      vote: {
+      votes: {
         vote: 0, //votes by the users. I.E, -1 because positif vote - negatif vote = -1
-        totalVote: 0, //how many people voted
-        items: [], //all the votes. Each vote contains createdAt, updatedAt, userPublicKey, value (true for pro or false for con)
+        totalVotes: 0, //how many people voted
+        items: [], //all the votes. Each vote contains createdAt, updatedAt, userPublicKey, value (true for pro or false for con or null for refrain)
       },
-    };
+    }; 
   }
 
   return (

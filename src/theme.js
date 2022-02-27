@@ -20,15 +20,17 @@ const theme = createTheme({
       default: "#F7F9FC",
     },
     colors: {
-      nightfall: "#324856",
-      rawSienna: "#d18237",
-      coolSage: "#4a746a",
+      nightfall: "#324856", // dark blue
+      rawSienna: "#d18237", // orange
+      coolSage: "#4a746a", // darkgreen
       sunset: "#d66c44",
       white: "#FFFFFF",
       black: "#000000",
       lightContrastText: "#fff",
       darkContrastText: "#000",
-      grey: "#BDBDBD"
+      grey: "#BDBDBD",
+      success: "#4BB543",
+      error: "#E8000B"
     },
   },
 });
