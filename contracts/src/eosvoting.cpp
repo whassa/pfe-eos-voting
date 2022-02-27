@@ -1,37 +1,32 @@
 #include <eosvoting.hpp>
 
-ACTION eosvoting::vote(name from) {
+ACTION eosvoting::crtproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status) {
+
   require_auth(from);
 
   // Init the _votes table
-  votes_table _votes(get_self(), get_self().value);
+  proposals_table _proposals(get_self(), get_self().value);
+  
+  auto primary_key_itr = _proposals.find(from.value);
 
-  // Find the last vote count of user
-  auto votes_itr = _votes.find(from.value);
-  if (votes_itr == _votes.end()) {
+  if (primary_key_itr == _proposals.end()) {
     // Create a vote if it doesnt exist
-    _votes.emplace(from, [&](auto& vote_info) {
-      vote_info.user = from;
-      vote_info.votes = 1;
+    _proposals.emplace(get_self(), [&](auto& proposal_info) {
+      proposal_info.primaryKey = primaryKey;
+      proposal_info.title = title;
+      proposal_info.summary = summary;
+      proposal_info.content = content;
+      proposal_info.category =  category;
+      proposal_info.status = status;
+      proposal_info.createdAt = 1;
+      proposal_info.updatedAt = 1;
+      proposal_info.integrity = true;
     });
   } else {
-    // add a vote if it exists 
-    _votes.modify(votes_itr, from, [&](auto& vote_info) {
-      vote_info.votes += 1;
-    });
+    
   }
-}
 
-ACTION eosvoting::clear() {
-  require_auth(get_self());
+};
 
-  votes_table _votes(get_self(), get_self().value);
 
-  // Delete all records in _messages table
-  auto votes_itr = _votes.begin();
-  while (votes_itr != _votes.end()) {
-    votes_itr = _votes.erase(votes_itr);
-  }
-}
-
-EOSIO_DISPATCH(eosvoting, (vote)(clear))
+EOSIO_DISPATCH(eosvoting, (crtproposal));
