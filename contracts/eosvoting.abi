@@ -4,17 +4,193 @@
     "types": [],
     "structs": [
         {
+            "name": "author",
+            "base": "",
+            "fields": [
+                {
+                    "name": "userName",
+                    "type": "string"
+                },
+                {
+                    "name": "publicKey",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
             "name": "clear",
             "base": "",
             "fields": []
+        },
+        {
+            "name": "crtproposal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "summary",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                },
+                {
+                    "name": "category",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "type": "string"
+                },
+                {
+                    "name": "author",
+                    "type": "author"
+                }
+            ]
+        },
+        {
+            "name": "makevote",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "publicKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "value",
+                    "type": "int8"
+                }
+            ]
+        },
+        {
+            "name": "news",
+            "base": "",
+            "fields": [
+                {
+                    "name": "singleNews",
+                    "type": "singleNews[]"
+                }
+            ]
+        },
+        {
+            "name": "proposals",
+            "base": "",
+            "fields": [
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "summary",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                },
+                {
+                    "name": "category",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "type": "string"
+                },
+                {
+                    "name": "createdAt",
+                    "type": "uint64"
+                },
+                {
+                    "name": "updatedAt",
+                    "type": "uint64"
+                },
+                {
+                    "name": "deletedAt",
+                    "type": "uint64"
+                },
+                {
+                    "name": "integrity",
+                    "type": "bool"
+                },
+                {
+                    "name": "author",
+                    "type": "author"
+                },
+                {
+                    "name": "news",
+                    "type": "news"
+                },
+                {
+                    "name": "votes",
+                    "type": "votes"
+                }
+            ]
+        },
+        {
+            "name": "singleNews",
+            "base": "",
+            "fields": [
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                },
+                {
+                    "name": "createdAt",
+                    "type": "uint64"
+                },
+                {
+                    "name": "updatedAt",
+                    "type": "uint64"
+                }
+            ]
         },
         {
             "name": "vote",
             "base": "",
             "fields": [
                 {
-                    "name": "from",
-                    "type": "name"
+                    "name": "createdAt",
+                    "type": "uint64"
+                },
+                {
+                    "name": "updatedAt",
+                    "type": "uint64"
+                },
+                {
+                    "name": "publicKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "value",
+                    "type": "int8"
                 }
             ]
         },
@@ -23,12 +199,16 @@
             "base": "",
             "fields": [
                 {
-                    "name": "user",
-                    "type": "name"
+                    "name": "actualVote",
+                    "type": "int32"
                 },
                 {
-                    "name": "votes",
+                    "name": "totalVotes",
                     "type": "int32"
+                },
+                {
+                    "name": "vote",
+                    "type": "vote[]"
                 }
             ]
         }
@@ -40,15 +220,20 @@
             "ricardian_contract": ""
         },
         {
-            "name": "vote",
-            "type": "vote",
+            "name": "crtproposal",
+            "type": "crtproposal",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "makevote",
+            "type": "makevote",
             "ricardian_contract": ""
         }
     ],
     "tables": [
         {
-            "name": "votes",
-            "type": "votes",
+            "name": "proposals",
+            "type": "proposals",
             "index_type": "i64",
             "key_names": [],
             "key_types": []

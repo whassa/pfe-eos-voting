@@ -1,37 +1,95 @@
 #include <eosvoting.hpp>
 
-ACTION eosvoting::vote(name from) {
+ACTION eosvoting::crtproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status, author author) {
+
   require_auth(from);
 
   // Init the _votes table
-  votes_table _votes(get_self(), get_self().value);
+  proposals_table _proposals(get_self(), get_self().value);
+  
+  auto primary_key_itr = _proposals.find(primaryKey);
 
-  // Find the last vote count of user
-  auto votes_itr = _votes.find(from.value);
-  if (votes_itr == _votes.end()) {
+  if (primary_key_itr == _proposals.end()) {
     // Create a vote if it doesnt exist
-    _votes.emplace(from, [&](auto& vote_info) {
-      vote_info.user = from;
-      vote_info.votes = 1;
+    _proposals.emplace(get_self(), [&](auto& proposal_info) {
+      proposal_info.primaryKey = primaryKey;
+      proposal_info.title = title;
+      proposal_info.summary = summary;
+      proposal_info.content = content;
+      proposal_info.category =  category;
+      proposal_info.status = status;
+      proposal_info.createdAt = 1;
+      proposal_info.updatedAt = 1;
+      proposal_info.integrity = true;
+      proposal_info.author = author;
     });
   } else {
-    // add a vote if it exists 
-    _votes.modify(votes_itr, from, [&](auto& vote_info) {
-      vote_info.votes += 1;
+    _proposals.modify(primary_key_itr, get_self(), [&](auto& proposal_info) {
+      proposal_info.primaryKey = primaryKey;
+      proposal_info.title = title;
+      proposal_info.summary = summary;
+      proposal_info.content = content;
+      proposal_info.category =  category;
+      proposal_info.status = status;
+      proposal_info.createdAt = 1;
+      proposal_info.updatedAt = 1;
+      proposal_info.integrity = true;
     });
   }
 }
+
+ACTION eosvoting::makevote(name from, uint64_t primaryKey, uint64_t publicKey, char value) {
+  require_auth(from);
+  // Init the _votes table
+  proposals_table _proposals(get_self(), get_self().value);
+
+  auto primary_key_itr = _proposals.find(primaryKey);
+  if (primary_key_itr != _proposals.end()) {
+    auto proposals = _proposals.get(primaryKey);
+    bool found = 0;
+    for (size_t i = 0; i < proposals.votes.vote.size(); i++) {
+      if (proposals.votes.vote[i].publicKey == publicKey) {
+        found = 1;
+        if ( proposals.votes.vote[i].value != value ) {
+          int tmpValue = 0;
+          if ( proposals.votes.vote[i].value == 1 ) {
+              tmpValue = -1;
+          } else if ( proposals.votes.vote[i].value == -1 ) {
+              tmpValue = 1;
+          }
+          _proposals.modify(primary_key_itr, get_self(), [&](auto& proposal_info) {
+            proposal_info.votes.actualVote = proposal_info.votes.actualVote + value + tmpValue;
+            proposal_info.votes.vote[i].value = value;
+            proposal_info.votes.vote[i].updatedAt = 1;
+          });
+        }
+        break;
+      }
+    }
+
+    if (!found) {
+      struct vote vote = { 1, 1, publicKey, value};
+      _proposals.modify(primary_key_itr, get_self(), [&](auto& proposal_info) {
+        proposal_info.votes.totalVotes = proposal_info.votes.totalVotes + 1;
+        proposal_info.votes.actualVote = proposal_info.votes.actualVote + value;
+        proposal_info.votes.vote.insert(proposal_info.votes.vote.end(), vote);
+      });
+    }
+  }
+}
+
 
 ACTION eosvoting::clear() {
   require_auth(get_self());
 
-  votes_table _votes(get_self(), get_self().value);
+  proposals_table _proposals(get_self(), get_self().value);
 
   // Delete all records in _messages table
-  auto votes_itr = _votes.begin();
-  while (votes_itr != _votes.end()) {
-    votes_itr = _votes.erase(votes_itr);
+  auto msg_itr = _proposals.begin();
+  while (msg_itr != _proposals.end()) {
+    msg_itr = _proposals.erase(msg_itr);
   }
 }
 
-EOSIO_DISPATCH(eosvoting, (vote)(clear))
+
+EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote));

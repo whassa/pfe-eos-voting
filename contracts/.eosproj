@@ -1,6 +1,6 @@
 {
-  "main": "eosvotin",
-  "contract": "",
+  "main": "src/eosvoting.cpp",
+  "contract": "eosvoting",
   "include": "",
   "resource": "",
   "cdt": "v1.8.1",
@@ -16,6 +16,6 @@
     "local": ""
   },
   "test": {
-    "npmClient": ""
+    "npmClient": "npm"
   }
 }
