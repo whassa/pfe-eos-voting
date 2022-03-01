@@ -38,7 +38,7 @@ ACTION eosvoting::crtproposal(name from, uint64_t primaryKey, string title, stri
   }
 }
 
-ACTION eosvoting::makevote(name from, uint64_t primaryKey, uint64_t publicKey, char value) {
+ACTION eosvoting::makevote(name from, uint64_t primaryKey, string publicKey, char value) {
   require_auth(from);
   // Init the _votes table
   proposals_table _proposals(get_self(), get_self().value);

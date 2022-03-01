@@ -9,7 +9,7 @@ CONTRACT eosvoting : public contract {
 
      struct author {
         string userName;
-        uint64_t publicKey;
+        string publicKey;
     };
 
     struct argument {
@@ -33,7 +33,7 @@ CONTRACT eosvoting : public contract {
     struct vote {
       uint64_t createdAt;
       uint64_t updatedAt;
-      uint64_t publicKey;
+      string publicKey;
       char value;
     };
 
@@ -53,7 +53,7 @@ CONTRACT eosvoting : public contract {
     };
 
     ACTION crtproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status, author author );
-    ACTION makevote(name from, uint64_t primaryKey, uint64_t publicKey, char value);
+    ACTION makevote(name from, uint64_t primaryKey, string publicKey, char value);
     ACTION clear();
 
     public:

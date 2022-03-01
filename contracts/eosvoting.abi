@@ -13,7 +13,7 @@
                 },
                 {
                     "name": "publicKey",
-                    "type": "uint64"
+                    "type": "string"
                 }
             ]
         },
@@ -74,7 +74,7 @@
                 },
                 {
                     "name": "publicKey",
-                    "type": "uint64"
+                    "type": "string"
                 },
                 {
                     "name": "value",
@@ -186,7 +186,7 @@
                 },
                 {
                     "name": "publicKey",
-                    "type": "uint64"
+                    "type": "string"
                 },
                 {
                     "name": "value",
