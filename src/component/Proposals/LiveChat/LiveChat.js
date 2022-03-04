@@ -3,6 +3,7 @@ import GUN from "gun/gun";
 import SEA from "gun/sea";
 import LiveChatMessage from "./LiveChatMessage";
 import { useTheme } from "@mui/styles";
+import dayjs from 'dayjs';
 
 import { Grid, Paper, FormControl, Box, Input, Button } from "@mui/material";
 
@@ -12,18 +13,19 @@ const match = {
   // lexical queries are kind of like a limited RegEx or Glob.
   ".": {
     // property selector
-    ">": new Date(+new Date() - 1 * 1000 * 60 * 60 * 3).toISOString(), // find any indexed property larger ~3 hours ago
+    ">": dayjs().subtract(3, 'hours').toISOString(), // find any indexed property larger ~3 hours ago
   },
   "-": 1, // filter in reverse
 };
+
 
 export default function LiveChat({ ual, resolution, encryptionKey }) {
   let [newMessage, setNewMessage] = useState("");
   let [messages, setMessages] = useState([]);
   const theme = useTheme();
 
-  async function sendMessage() {
-    const index = new Date().toISOString();
+  const sendMessage = async() => {
+    const index = dayjs().toISOString();
     // new TextDecoder().decode(uin8arry)
     const publicKey = ual.activeUser.session.publicKey.data.array;
     const messageToEncrypt = {
@@ -36,6 +38,7 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
     gun.get("liveChat:" + resolution.id).put({ [index]: secret });
     setNewMessage("");
   }
+  
 
   useEffect(async () => {
     gun
@@ -80,10 +83,6 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
         }}
       >
         <Box sx={{overflowY: 'scroll', margin: '10px', height: '100%' }}>
-
-
-
-
           {messages.map((message) => {
             return (
               <LiveChatMessage

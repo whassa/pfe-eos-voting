@@ -1,8 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
+import dayjs from 'dayjs';
 
 export default function LiveChatMessage({ ual, message }) {
-  const date = new Date(message.when);
+  const date = dayjs(message.when);
   const theme = useTheme();
 
   const ownMessage = ( ual.activeUser && JSON.stringify(message.publicKey) === JSON.stringify(ual.activeUser.session.publicKey.data.array) );
@@ -22,8 +23,7 @@ export default function LiveChatMessage({ ual, message }) {
             direction: 'rtl',
           }
         }}>
-        {message.who} on {date &&
-          `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`}
+        {message.who} on {date.toString() && date.format('YYYY-MM-DD HH:mm:ss')}
       </Typography>
       <Box>
         <Typography

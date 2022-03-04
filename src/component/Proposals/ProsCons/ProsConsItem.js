@@ -17,6 +17,8 @@ export default function ListProsCons({ argument }) {
     )
     const [votes, setVotes] = useState(tmpVote);
 
+    console.log(argument);
+
     return (
         <Paper elevation={3} padding="dense" sx={{padding: '10px'}}>
             <Stack
@@ -37,7 +39,7 @@ export default function ListProsCons({ argument }) {
                     {/*TODO change for argument.author.userName*/}
                     <Typography display="block" variant="caption" sx={{ color: theme.palette.grey[400], marginTop: '-2px'}}>
                         {argument.member.user.displayName} -{" "}
-                        {argument.createdAt._d.toLocaleString()}
+                        {argument.createdAt.format('YYYY-MM-DD').toString()}
                     </Typography>
                     <Typography display="block" sx={{ marginTop: '5px'}}>{argument.content}
                     </Typography>

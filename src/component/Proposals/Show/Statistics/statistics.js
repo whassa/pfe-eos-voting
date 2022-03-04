@@ -4,7 +4,7 @@ import CardHeader from "@mui/material/CardHeader";
 import Grid from "@mui/material/Grid";
 //import { useQuery } from "@services/graphql/resolutions";
 //import { loader } from "graphql.macro";
-import moment from "moment";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import Chart from "react-apexcharts";
 import { useTranslation } from "react-i18next";
@@ -25,7 +25,7 @@ function valueOverTime(votesList, voteType) {
     if (vote.value === voteType) {
       nbrOfVotes++;
       const newVote = {
-        x: moment(vote.updatedAt).valueOf(),
+        x: dayjs(vote.updatedAt).unix(),
         y: nbrOfVotes,
       };
       voteData.x.push(newVote.x);
@@ -34,7 +34,7 @@ function valueOverTime(votesList, voteType) {
   });
   const lastVote = votesList.items[votesList.items.length - 1];
   if (lastVote && lastVote?.value !== voteType) {
-    voteData.x.push(moment(lastVote.updatedAt).valueOf());
+    voteData.x.push(dayjs(lastVote.updatedAt).unix());
     voteData.y.push(nbrOfVotes);
   }
   return voteData;
@@ -100,6 +100,7 @@ const Statistics = () => {
     });
     return nbrOfYes;
   };
+  
 
   return loading || !data || !options || !series ? (
     <Loading />
@@ -163,11 +164,11 @@ const Statistics = () => {
             <CardContent>
               <div>
                 <span className={classes.bigNumber}>
-                  {moment(resolution.expireAt).diff(moment(), "days")}
+                  {dayjs(resolution.expireAt).diff(dayjs(), "days")}
                 </span>
                 <div className={classes.subNumber}>
                   <span className={classes.numberSentence}>
-                    {moment(resolution.expireAt).format("LLL")}
+                    {dayjs(resolution.expireAt, "LLL")}
                   </span>
                 </div>
               </div>

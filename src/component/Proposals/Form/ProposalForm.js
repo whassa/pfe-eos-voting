@@ -11,6 +11,10 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { v4 as uuidv4 } from "uuid";
 import { useState, useReducer } from "react";
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import dayjs from "dayjs"
+dayjs.extend(customParseFormat)
+
 
 const types = {
   TITLE_CHANGED: "TITLE_CHANGED",
@@ -46,7 +50,7 @@ const initialState = {
 export default function proposalForm({ ual }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  function sendForm() {
+  const sendForm = () => {
     //TODO send it to the contract
     let formInformations = {
       id: uuidv4(),
@@ -54,9 +58,9 @@ export default function proposalForm({ ual }) {
       summary: state.summary,
       content: state.content,
       category: state.category,
-      expireAt: new Date(state.expirationDate).toISOString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      expireAt: dayjs(state.expirationDate).toISOString(),
+      createdAt: dayjs().toISOString(),
+      updatedAt: dayjs().toISOString(),
       deletedAt: null,
       integrity: true,
       pictureThumbUrl: null,

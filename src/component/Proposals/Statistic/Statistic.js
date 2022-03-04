@@ -20,6 +20,8 @@ export default function Statistics({ resolution }) {
                 consVotes++;
             }
         });
+    
+        console.log(resolution)
 
     return (
         <Box sx={{ marginTop: theme.homeMarginTop }}>
@@ -97,16 +99,16 @@ export default function Statistics({ resolution }) {
                         }}
                     >
                         {Math.ceil(
-                            Math.abs(resolution.expireAt._d - Date.now()) /
+                            Math.abs(resolution.expireAt.$d - Date.now()) /
                                 (1000 * 60 * 60 * 24)
                         )}
                     </Typography>
                     <Typography sx={{ textAlign: "center" }}>
-                        {resolution.expireAt._d.toLocaleString("default", {
+                        {resolution.expireAt.$d.toLocaleString("default", {
                             month: "long",
                         })}{" "}
-                        {resolution.expireAt._d.getDay()}{" "}
-                        {resolution.expireAt._d.getFullYear()}
+                        {resolution.expireAt.$d.getDay()}{" "}
+                        {resolution.expireAt.$d.getFullYear()}
                     </Typography>
                 </Paper>
             </Stack>

@@ -1,4 +1,6 @@
-import moment from "moment";
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import dayjs from "dayjs"
+dayjs.extend(customParseFormat)
 
 const resolutions = [
   {
@@ -7,9 +9,9 @@ const resolutions = [
     summary: "This is a summary",
     content: "this is a content",
     transactionId: "4jk55r53f8576asdfasdfasdffg85as77sdfghsdfsad",
-    expireAt: moment("01-01-2050", "DD-MM-YYYY"),
-    createdAt: moment("01-10-2049", "DD-MM-YYYY"),
-    updatedAt: moment("01-10-2049", "DD-MM-YYYY"),
+    expireAt: dayjs("01-01-2025", "DD-MM-YYYY"),
+    createdAt: dayjs("01-10-2025", "DD-MM-YYYY"),
+    updatedAt: dayjs("01-10-2025", "DD-MM-YYYY"),
     deletedAt: null,
     organizationId: "00000000-0000-0000-0000-000000000001",
     integrity: true,
@@ -45,8 +47,8 @@ const resolutions = [
               displayName: "John Deer",
             },
           },
-          createdAt: moment("02-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("02-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("02-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("02-10-2049", "DD-MM-YYYY"),
           votes: {
             items: [
               {
@@ -76,8 +78,8 @@ const resolutions = [
               displayName: "John Doe",
             },
           },
-          createdAt: moment("03-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("03-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("03-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("03-10-2049", "DD-MM-YYYY"),
         },
       ],
     },
@@ -87,8 +89,8 @@ const resolutions = [
           id: "00000000-0000-0000-0000-000000000011",
           title: "Title news",
           content: "This is a news",
-          createdAt: moment("04-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("04-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("04-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("04-10-2049", "DD-MM-YYYY"),
         },
       ],
     },
@@ -98,20 +100,20 @@ const resolutions = [
         {
           id: "00000000-0000-0000-0000-000000000012",
           value: true,
-          createdAt: moment("01-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("01-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("01-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("01-10-2049", "DD-MM-YYYY"),
         },
         {
           id: "00000000-0000-0000-0000-000000000013",
           value: false,
-          createdAt: moment("01-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("01-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("01-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("01-10-2049", "DD-MM-YYYY"),
         },
         {
           id: "00000000-0000-0000-0000-000000000014",
           value: null,
-          createdAt: moment("01-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("01-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("01-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("01-10-2049", "DD-MM-YYYY"),
         },
       ],
     },
@@ -122,9 +124,9 @@ const resolutions = [
     summary: "This is a summary",
     content: "this is a content",
     transactionId: "4jk55r53f8576asdfasdfasdffg85as77sdfghsdfsad",
-    expireAt: moment("01-01-2050", "DD-MM-YYYY"),
-    createdAt: moment("01-10-2049", "DD-MM-YYYY"),
-    updatedAt: moment("01-10-2049", "DD-MM-YYYY"),
+    expireAt: dayjs("01-01-2050", "DD-MM-YYYY"),
+    createdAt: dayjs("01-10-2049", "DD-MM-YYYY"),
+    updatedAt: dayjs("01-10-2049", "DD-MM-YYYY"),
     deletedAt: null,
     organizationId: "00000000-0000-0000-0000-000000000001",
     integrity: true,
@@ -159,8 +161,8 @@ const resolutions = [
               displayName: "John Deer",
             },
           },
-          createdAt: moment("02-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("02-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("02-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("02-10-2049", "DD-MM-YYYY"),
           votes: {
             items: [
               {
@@ -190,8 +192,8 @@ const resolutions = [
               displayName: "John Doe",
             },
           },
-          createdAt: moment("03-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("03-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("03-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("03-10-2049", "DD-MM-YYYY"),
         },
       ],
     },
@@ -201,8 +203,8 @@ const resolutions = [
           id: "00000000-0000-0000-0000-000000000011",
           title: "Title news",
           content: "This is a news",
-          createdAt: moment("04-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("04-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("04-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("04-10-2049", "DD-MM-YYYY"),
         },
       ],
     },
@@ -212,20 +214,20 @@ const resolutions = [
         {
           id: "00000000-0000-0000-0000-000000000012",
           value: true,
-          createdAt: moment("01-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("01-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("01-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("01-10-2049", "DD-MM-YYYY"),
         },
         {
           id: "00000000-0000-0000-0000-000000000013",
           value: false,
-          createdAt: moment("01-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("01-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("01-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("01-10-2049", "DD-MM-YYYY"),
         },
         {
           id: "00000000-0000-0000-0000-000000000014",
           value: null,
-          createdAt: moment("01-10-2049", "DD-MM-YYYY"),
-          updatedAt: moment("01-10-2049", "DD-MM-YYYY"),
+          createdAt: dayjs("01-10-2049", "DD-MM-YYYY"),
+          updatedAt: dayjs("01-10-2049", "DD-MM-YYYY"),
         },
       ],
     },

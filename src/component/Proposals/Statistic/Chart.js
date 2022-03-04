@@ -9,7 +9,7 @@ import {
     Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import moment from "moment";
+import dayjs from "dayjs";
 
 ChartJS.register(
     CategoryScale,
@@ -31,7 +31,7 @@ function valueOverTime(votesList, voteType) {
       if (vote.value === voteType) {
         nbrOfVotes++;
         const newVote = {
-          x: moment(vote.updatedAt).valueOf(),
+          x: dayjs(vote.updatedAt).valueOf(),
           y: nbrOfVotes,
         };
         voteData.x.push(newVote.x);
@@ -40,7 +40,7 @@ function valueOverTime(votesList, voteType) {
     });
     const lastVote = votesList[votesList.length - 1];
     if (lastVote && lastVote?.value !== voteType) {
-      voteData.x.push(moment(lastVote.updatedAt).valueOf());
+      voteData.x.push(dayjs(lastVote.updatedAt).valueOf());
       voteData.y.push(nbrOfVotes);
     }
     return voteData;
