@@ -6,6 +6,7 @@ import { useReducer } from "react";
 import Menu, { drawerWidth } from "component/Menu/Menu";
 import Header from "component/Head/Header";
 import { Box, Container, FormControl, InputLabel, Input } from "@mui/material";
+import ProposalForm from "../src/component/Proposals/Form/ProposalForm"
 
 const actionType = {
   CHANGE_NAME: "CHANGE_NAME",
@@ -47,20 +48,8 @@ export default function Vote({ ual }) {
               noValidate
               autoComplete="off"
             >
-            <FormControl>
-                <InputLabel htmlFor="Name">Name of the vote</InputLabel>
-                <Input
-                id="Name"
-                value={state.name}
-                onChange={(e) => {
-                    dispatch({
-                    type: actionType.CHANGE_NAME,
-                    name: e.target.value,
-                    });
-                }}
-                />
-            </FormControl>
-        </Box>
+              <ProposalForm ual={ual}></ProposalForm>
+            </Box>
         )}
       </Container>
     </>

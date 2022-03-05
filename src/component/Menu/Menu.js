@@ -20,7 +20,6 @@ import { useTheme } from "@mui/styles";
 export const drawerWidth = 240;
 
 export default function Menu({ ual }) {
-  console.log(ual)
   const router = useRouter();
   const theme = useTheme();
   return (
