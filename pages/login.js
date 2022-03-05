@@ -24,7 +24,7 @@ import Header from "component/Head/Header";
 // http://localhost:8888/v1/chain/get_info
 
 const network = {
-  chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f",
+  chainId: "2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840",
   rpcEndpoints: [{ protocol: "http", host: "localhost", port: 8888 }],
 };
 
