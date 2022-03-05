@@ -28,12 +28,16 @@ export default function Menu({ ual }) {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box", backgroundColor: theme.palette.primary.main },
-        [`& .MuiListItemIcon-root`]: { color: theme.palette.colors.white, },
-        [`& .MuiTypography-root`]: { color: theme.palette.colors.white, }
+        [`& .MuiDrawer-paper`]: {
+          width: drawerWidth,
+          boxSizing: "border-box",
+          backgroundColor: theme.palette.primary.main,
+        },
+        [`& .MuiListItemIcon-root`]: { color: theme.palette.colors.white },
+        [`& .MuiTypography-root`]: { color: theme.palette.colors.white },
       }}
     >
-      <Box >
+      <Box>
         <List>
           <ListItem button key={"Avatar"}>
             <ListItemAvatar>
@@ -47,31 +51,49 @@ export default function Menu({ ual }) {
               <ListItemText primary="Anonymous" />
             )}
           </ListItem>
-
-          
         </List>
       </Box>
 
       <Box sx={{ overflow: "auto" }}>
         <List>
-          <ListItem button key={"Home"}
+          <ListItem
+            button
+            key={"Home"}
             onClick={() => {
               router.push("/");
-            }}>
+            }}
+          >
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
             <ListItemText primary={"Home"} />
           </ListItem>
           {ual.activeUser && (
-            
-            <ListItem button key={"Create proposal"}  onClick={() => {
+            <ListItem
+              button
+              key={"Create proposal"}
+              onClick={() => {
                 router.push("/proposal");
-              }}>
+              }}
+            >
               <ListItemIcon>
                 <HowToVoteIcon />
               </ListItemIcon>
               <ListItemText primary={"Create proposal"} />
+            </ListItem>
+          )}
+          {ual.activeUser && (
+            <ListItem
+              button
+              key={"Invitation Link"}
+              onClick={() => {
+                router.push("/proposal");
+              }}
+            >
+              <ListItemIcon>
+                <HowToVoteIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Invitation Link"} />
             </ListItem>
           )}
         </List>
