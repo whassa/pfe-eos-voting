@@ -8,6 +8,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
+import InvitationIcon from "@mui/icons-material/Link";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import { useRouter } from "next/router";
@@ -87,11 +88,11 @@ export default function Menu({ ual }) {
               button
               key={"Invitation Link"}
               onClick={() => {
-                router.push("/proposal");
+                router.push("/link");
               }}
             >
               <ListItemIcon>
-                <HowToVoteIcon />
+                <InvitationIcon />
               </ListItemIcon>
               <ListItemText primary={"Invitation Link"} />
             </ListItem>
