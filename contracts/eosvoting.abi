@@ -13,7 +13,7 @@
                 },
                 {
                     "name": "publicKey",
-                    "type": "uint64"
+                    "type": "string"
                 }
             ]
         },
@@ -29,10 +29,6 @@
                 {
                     "name": "from",
                     "type": "name"
-                },
-                {
-                    "name": "primaryKey",
-                    "type": "uint64"
                 },
                 {
                     "name": "title",
@@ -57,6 +53,10 @@
                 {
                     "name": "author",
                     "type": "author"
+                },
+                {
+                    "name": "expiredAt",
+                    "type": "time_point_sec"
                 }
             ]
         },
@@ -74,7 +74,7 @@
                 },
                 {
                     "name": "publicKey",
-                    "type": "uint64"
+                    "type": "string"
                 },
                 {
                     "name": "value",
@@ -121,16 +121,20 @@
                     "type": "string"
                 },
                 {
+                    "name": "expiredAt",
+                    "type": "time_point_sec"
+                },
+                {
                     "name": "createdAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "updatedAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "deletedAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "integrity",
@@ -164,11 +168,53 @@
                 },
                 {
                     "name": "createdAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "updatedAt",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "upproposal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
                     "type": "uint64"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "summary",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                },
+                {
+                    "name": "category",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "type": "string"
+                },
+                {
+                    "name": "author",
+                    "type": "author"
+                },
+                {
+                    "name": "expiredAt",
+                    "type": "time_point_sec"
                 }
             ]
         },
@@ -178,15 +224,15 @@
             "fields": [
                 {
                     "name": "createdAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "updatedAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "publicKey",
-                    "type": "uint64"
+                    "type": "string"
                 },
                 {
                     "name": "value",
@@ -227,6 +273,11 @@
         {
             "name": "makevote",
             "type": "makevote",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "upproposal",
+            "type": "upproposal",
             "ricardian_contract": ""
         }
     ],

@@ -8,19 +8,30 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import ListView from "../src/component/Proposals/Home/ListView/listView";
 import GridView from "../src/component/Proposals/Home/GridView/gridView";
 import resolutions from "../src/component/Proposals/mockDataForTest";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "component/Head/Header";
 import { useRouter } from "next/router";
+import { getProposals } from "../src/utils/ContractActions/Contract";
 
-export default function Home({ ual }) {
+
+
+export default function Home({ ual, privateKey, eosAccountName }) {
   const [view, setView] = useState("listView");
   const [sort, setSort] = useState("Date");
+  const [resolutions, setResolutions] = useState([]);
   const router = useRouter();
 
   const cardOnClick = (id) => {
     router.push("/proposal/"+id);
-    
   }
+
+  useEffect( () => {
+    getProposals(privateKey, eosAccountName).then( (value) => {
+      console.log(value.rows);
+      setResolutions(value.rows);
+    });
+  }, []);
+  
 
   return (
     <>
@@ -78,4 +89,13 @@ export default function Home({ ual }) {
       </Container>
     </>
   );
+}
+
+export async function getStaticProps(context) {
+  return {
+      props: {
+          privateKey: process.env.PRIVATE_KEY,
+          eosAccountName: process.env.EOS_ACCOUNT_NAME,
+      }, // will be passed to the page component as props
+  };
 }

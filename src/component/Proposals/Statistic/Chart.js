@@ -27,7 +27,7 @@ function valueOverTime(votesList, voteType) {
       y: [],
     };
     let nbrOfVotes = 0;
-    votesList.forEach((vote) => {
+    votesList.map((vote) => {
       if (vote.value === voteType) {
         nbrOfVotes++;
         const newVote = {

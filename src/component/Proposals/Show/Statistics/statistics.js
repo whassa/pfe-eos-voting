@@ -21,7 +21,7 @@ function valueOverTime(votesList, voteType) {
     y: [],
   };
   let nbrOfVotes = 0;
-  votesList.items.forEach((vote) => {
+  votesList.map((vote) => {
     if (vote.value === voteType) {
       nbrOfVotes++;
       const newVote = {
@@ -81,7 +81,7 @@ const Statistics = () => {
           },
         ]);
 
-        setNbOfMembers(resolution.members?.totalCount || 0);
+        setNbOfMembers(resolution.members?.totalVotes || 0);
       },
     }
   );
@@ -115,7 +115,7 @@ const Statistics = () => {
             <CardContent>
               <div>
                 <span className={classes.bigNumber}>
-                  {resolution.votes.totalCount}
+                  {resolution.votes.totalVotes}
                 </span>
                 <div className={classes.subNumber}>
                   <div className={classes.voteElement}>
@@ -125,7 +125,7 @@ const Statistics = () => {
                   <div className={classes.voteElement}>
                     <span>{t("utils.no")}</span>
                     <span className={classes.number}>
-                      {resolution.votes.totalCount - votesInFavor()}
+                      {resolution.votes.totalVotes - votesInFavor()}
                     </span>
                   </div>
                   <div className={classes.voteElement}>
@@ -164,11 +164,11 @@ const Statistics = () => {
             <CardContent>
               <div>
                 <span className={classes.bigNumber}>
-                  {dayjs(resolution.expireAt).diff(dayjs(), "days")}
+                  {dayjs(resolution.expiredAt).diff(dayjs(), "days")}
                 </span>
                 <div className={classes.subNumber}>
                   <span className={classes.numberSentence}>
-                    {dayjs(resolution.expireAt, "LLL")}
+                    {dayjs(resolution.expiredAt, "LLL")}
                   </span>
                 </div>
               </div>

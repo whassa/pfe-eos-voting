@@ -9,11 +9,16 @@ import {
     FormControlLabel,
     Radio,
     Stack,
-    Input
+    Input,
 } from "@mui/material";
 import { useState, useReducer } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useTheme } from "@mui/styles";
+import {
+    argumentTemplate,
+    createArgument,
+} from "../../../utils/ContractActions/Contract";
+import dayjs from "dayjs";
 
 const initialState = {
     title: "",
@@ -25,7 +30,7 @@ const types = {
     TITLE_CHANGED: "TITLE_CHANGED",
     CONTENT_CHANGED: "CONTENT_CHANGED",
     POSITION_CHANGED: "POSITION_CHANGED",
-    CANCEL_CLICKED: "CANCEL_CLICKED"
+    CANCEL_CLICKED: "CANCEL_CLICKED",
 };
 
 const reducer = (state, action) => {
@@ -37,42 +42,47 @@ const reducer = (state, action) => {
         case types.POSITION_CHANGED:
             return { ...state, position: action.value };
         case types.CANCEL_CLICKED:
-            return { ...state, title: initialState.title, content: initialState.content, position: initialState.position}
+            return {
+                ...state,
+                title: initialState.title,
+                content: initialState.content,
+                position: initialState.position,
+            };
         default:
             return { ...state };
     }
 };
 
-export default function FormProsCons({ ual, resolution }) {
+export default function FormProsCons({ ual, resolution, privateKey, eosAccountName }) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const theme = useTheme();
 
     function createProsCons() {
         //TODO send it to GunJS and contract
-        let argument = {
-            id: uuidv4(),
+        const argument = {
+            ...argumentTemplate,
+            id: BigInt("0x" + uuidv4().replace(/-/g, "")),
+            //changer pour .primaryKey
+            proposalID: resolution.id,
             title: state.title,
             content: state.content,
-            position: state.position,
-            createdAt: new Date().toISOString(),
+            value: state.position,
             author: {
                 userName: ual.activeUser.accountName,
                 userPublicKey: ual.activeUser.session.publicKey.data.array,
             },
-            vote: {
-                vote: 0, //votes by the users. I.E, -1 because positif vote - negatif vote = -1
-                totalVote: 0, //how many people voted
-                items: [], //all the votes. Each vote contains createdAt, userPublicKey, value (true or false)
-            },
         };
 
-        resolution.arguments.push(argument);
+        createArgument(ual, argument, privateKey, eosAccountName);
     }
 
     return (
-
-        <Paper elevation={3} padding="dense" sx={{ marginTop: '20px', padding: '10px'}}>
-            <FormControl sx={{ width: '100%'}}>
+        <Paper
+            elevation={3}
+            padding="dense"
+            sx={{ marginTop: "20px", padding: "10px" }}
+        >
+            <FormControl sx={{ width: "100%" }}>
                 <Input
                     id="Title"
                     label="Title"
@@ -84,7 +94,7 @@ export default function FormProsCons({ ual, resolution }) {
                         });
                     }}
                     value={state.title}
-                    sx={{marginBottom: '10px', maxWidth: '200px' }}
+                    sx={{ marginBottom: "10px", maxWidth: "200px" }}
                     fullWidth={false}
                     required
                 />
@@ -102,14 +112,14 @@ export default function FormProsCons({ ual, resolution }) {
                     fullWidth
                     required
                 />
-                <Grid 
+                <Grid
                     container
                     direction="row"
                     justifyContent="space-between"
                     alignItems="center"
-                    sx={{marginTop: '10px'}}
+                    sx={{ marginTop: "10px" }}
                 >
-                    <Grid item> 
+                    <Grid item>
                         <RadioGroup
                             row
                             defaultValue="Pro"
@@ -121,19 +131,18 @@ export default function FormProsCons({ ual, resolution }) {
                             }}
                         >
                             <FormControlLabel
-                                value="Pro"
+                                value={true}
                                 control={<Radio />}
                                 label="Pro"
                             />
                             <FormControlLabel
-                                value="Con"
+                                value={false}
                                 control={<Radio />}
                                 label="Con"
                             />
                         </RadioGroup>
                     </Grid>
                     <Grid item>
-
                         <Stack spacing={2} direction="row">
                             <Button
                                 disabled={
@@ -153,7 +162,7 @@ export default function FormProsCons({ ual, resolution }) {
                             </Button>
                             <Button
                                 onClick={(e) => {
-                                    dispatch({type: types.CANCEL_CLICKED});
+                                    dispatch({ type: types.CANCEL_CLICKED });
                                 }}
                                 type="cancel"
                                 variant="contained"

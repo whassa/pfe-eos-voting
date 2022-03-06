@@ -10,8 +10,8 @@ export default function Statistics({ resolution }) {
 
     resolution &&
         resolution.votes &&
-        resolution.votes.items &&
-        resolution.votes.items.forEach((vote) => {
+        resolution.votes.vote &&
+        resolution.votes.vote.map((vote) => {
             if (vote.value == null) {
                 refrainVotes++;
             } else if (vote.value) {
@@ -20,8 +20,7 @@ export default function Statistics({ resolution }) {
                 consVotes++;
             }
         });
-    
-        console.log(resolution)
+
 
     return (
         <Box sx={{ marginTop: theme.homeMarginTop }}>
@@ -99,22 +98,18 @@ export default function Statistics({ resolution }) {
                         }}
                     >
                         {Math.ceil(
-                            Math.abs(resolution.expireAt.$d - Date.now()) /
+                            Math.abs(resolution.expiredAt.$d - Date.now()) /
                                 (1000 * 60 * 60 * 24)
                         )}
                     </Typography>
                     <Typography sx={{ textAlign: "center" }}>
-                        {resolution.expireAt.$d.toLocaleString("default", {
-                            month: "long",
-                        })}{" "}
-                        {resolution.expireAt.$d.getDay()}{" "}
-                        {resolution.expireAt.$d.getFullYear()}
+                    
                     </Typography>
                 </Paper>
             </Stack>
             <Box sx={{ marginTop: theme.homeMarginTop }}>
                 <Paper elevation={3} padding="dense">
-                    <Chart dataVotes={resolution.votes.items} />
+                    <Chart dataVotes={resolution.votes.vote} />
                 </Paper>
             </Box>
         </Box>

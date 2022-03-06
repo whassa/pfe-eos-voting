@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GridViewIcon from "@mui/icons-material/GridView";
-import { useState, useReducer } from "react";
+import { useReducer, useEffect } from "react";
 import Header from "component/Head/Header";
 import { styled } from "@mui/system";
 import LiveChat from "../../src/component/Proposals/LiveChat/LiveChat";
@@ -23,18 +23,23 @@ import ProsCons from "../../src/component/Proposals/ProsCons/ProsCons";
 import Overview from "../../src/component/Proposals/Overview/Overview";
 import Statistics from "component/Proposals/Statistic/Statistic";
 
+import { getProposal } from "../../src/utils/ContractActions/Contract";
+
 const views = ["Overview", "Pros & Cons", "Statistics", "News", "Live Chat"];
 
 const initialState = {
     view: views[0],
     open: false,
     position: "",
+    resolution: {},
+    loading: true,
 };
 
 const types = {
     VIEW_CHANGED: "TITLE_CHANGED",
     OPEN_CHANGED: "CONTENT_CHANGED",
     POSITION_CHANGED: "POSITION_CHANGED",
+    RESOLUTION_CHANGED: "RESOLUTION_CHANGED",
 };
 
 const reducer = (state, action) => {
@@ -45,15 +50,15 @@ const reducer = (state, action) => {
             return { ...state, open: action.value };
         case types.POSITION_CHANGED:
             return { ...state, position: action.value };
+        case types.RESOLUTION_CHANGED:
+            return { ...state, resolution: action.value, loading: false };
         default:
             return { ...state };
     }
 };
 
-export default function pid({ ual, encryptionKey, pid }) {
+export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountName }) {
     const [state, dispatch] = useReducer(reducer, initialState);
-
-    const resolution = resolutions.find((res) => res.id === pid);
 
     //TODO Change for theme
     const style = {
@@ -70,6 +75,14 @@ export default function pid({ ual, encryptionKey, pid }) {
         pb: 3,
     };
 
+    useEffect( () => {
+        getProposal(pid, privateKey, eosAccountName).then( (value) => {
+          console.log( value.rows[0] );
+          dispatch({type: types.RESOLUTION_CHANGED, value: ( value.rows ? value.rows[0] :  {} )});
+        });
+    }, []);
+      
+
     return (
         <>
             <Header />
@@ -81,7 +94,9 @@ export default function pid({ ual, encryptionKey, pid }) {
                     paddingTop: { xs: "40px" },
                 }}
             >
-                {resolution ? (
+                { state.loading ? (
+                    <Box> loading some stuff </Box>
+                ) : state.resolution  ?  (
                     <>
                         <Box sx={{ display: "flex" }}>
                             <Box sx={{ marginLeft: "10px" }}>
@@ -102,11 +117,11 @@ export default function pid({ ual, encryptionKey, pid }) {
                             >
                                 <Typography variant="h5">
                                     {/**TODO change it to .title*/}
-                                    {resolution.name}
+                                    {state.resolution.title}
                                 </Typography>
                                 <Typography variant="h6">
                                     {/*TODO change it for .author.userName*/}
-                                    {resolution.author.user.displayName}
+                                    {state.resolution.author.userName}
                                 </Typography>
                             </Box>
                             <Box
@@ -204,7 +219,6 @@ export default function pid({ ual, encryptionKey, pid }) {
                                         type: types.VIEW_CHANGED,
                                         value: newValue,
                                     });
-                                    //setView(newValue);
                                 }}
                                 aria-label="Resolution tabs"
                             >
@@ -214,21 +228,21 @@ export default function pid({ ual, encryptionKey, pid }) {
                             </Tabs>
                         </Box>
                         {state.view === views[0] && (
-                            <Overview resolution={resolution}></Overview>
+                            <Overview resolution={state.resolution}></Overview>
                         )}
                         {state.view === views[1] && (
                             <ProsCons
                                 ual={ual}
-                                resolution={resolution}
+                                resolution={state.resolution}
                             ></ProsCons>
                         )}
                         {state.view === views[2] && (
-                            <Statistics resolution={resolution}></Statistics>
+                            <Statistics resolution={state.resolution}></Statistics>
                         )}
                         {state.view === views[4] && (
                             <LiveChat
                                 ual={ual}
-                                resolution={resolution}
+                                resolution={state.resolution}
                                 encryptionKey={encryptionKey}
                             />
                         )}
@@ -247,7 +261,10 @@ export async function getServerSideProps(context) {
     return {
         props: {
             pid: pid,
+            // GunJs encryption key
             encryptionKey: process.env.ENCRYPTION_KEY || "",
+            privateKey: process.env.PRIVATE_KEY,
+            eosAccountName: process.env.EOS_ACCOUNT_NAME,
         },
     };
-}
+};
