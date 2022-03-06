@@ -65,15 +65,12 @@ export async function getProposals( privateKey, eosAccountName){
 export async function getProposal( primaryKey, privateKey, eosAccountName){
     let contract = await setup(privateKey, eosAccountName);
 
-    const primKey = BigInt(primaryKey);
-    console.log(primKey.toString());
-
     const proposals = await contract.rpc.get_table_rows({
         json: true,               // Get the response as json
         code: eosAccountName,      // Contract that we target
         scope: eosAccountName,     // Account that owns the data
         table: 'proposals',        // Table name
-        lower_bound: primKey.toString(),
+        lower_bound: parseInt(primaryKey),
         limit: 1,                // Maximum number of rows that we want to get
         reverse: false,           // Optional: Get reversed data
       }).catch((e) => { console.log(e); throw  'Error fetching the proposals'});
@@ -104,7 +101,6 @@ export async function createProposal(
                             ],
                             data: {
                                 from: ual.activeUser.accountName,
-                                primaryKey: formInformations.primaryKey,
                                 title: formInformations.title,
                                 summary: formInformations.summary,
                                 content: formInformations.content,

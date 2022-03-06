@@ -31,7 +31,8 @@ const initialState = {
     view: views[0],
     open: false,
     position: "",
-    resolution: [],
+    resolution: {},
+    loading: true,
 };
 
 const types = {
@@ -50,7 +51,7 @@ const reducer = (state, action) => {
         case types.POSITION_CHANGED:
             return { ...state, position: action.value };
         case types.RESOLUTION_CHANGED:
-            return { ...state, resolution: action.value };
+            return { ...state, resolution: action.value, loading: false };
         default:
             return { ...state };
     }
@@ -76,15 +77,11 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
 
     useEffect( () => {
         getProposal(pid, privateKey, eosAccountName).then( (value) => {
-
-          dispatch({type: types.RESOLUTION_CHANGED, value: value.rows});
+          console.log( value.rows[0] );
+          dispatch({type: types.RESOLUTION_CHANGED, value: ( value.rows ? value.rows[0] :  {} )});
         });
     }, []);
       
-
-    const sendVote = () => {
-        
-    }
 
     return (
         <>
@@ -97,7 +94,9 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
                     paddingTop: { xs: "40px" },
                 }}
             >
-                {state.resolution && state.resolution.length > 0 ? (
+                { state.loading ? (
+                    <Box> loading some stuff </Box>
+                ) : state.resolution  ?  (
                     <>
                         <Box sx={{ display: "flex" }}>
                             <Box sx={{ marginLeft: "10px" }}>
@@ -122,7 +121,7 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
                                 </Typography>
                                 <Typography variant="h6">
                                     {/*TODO change it for .author.userName*/}
-                                    {state.resolution.author}
+                                    {state.resolution.author.userName}
                                 </Typography>
                             </Box>
                             <Box

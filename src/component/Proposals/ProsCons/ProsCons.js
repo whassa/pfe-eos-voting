@@ -30,7 +30,7 @@ export default function Menu({ ual, resolution }) {
                 consList={consList.slice(0, 5)}
             ></ListBestProsCons>
             <FormProsCons ual={ual} resolution={resolution}></FormProsCons>
-            <ListProsCons ual={ual} prosAndCons={resolution.arguments.items}></ListProsCons>
+            { resolution.arguments && <ListProsCons ual={ual} prosAndCons={resolution.arguments}></ListProsCons>}
         </Box>
     );
 }

@@ -58,7 +58,6 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
         //TODO send it to the contract
         const formInformations = {
             ...formTemplate,
-            primaryKey: BigInt("0x" + uuidv4().replace(/-/g, "")),
             title: state.title,
             summary: state.summary,
             content: state.content,

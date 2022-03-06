@@ -61,7 +61,7 @@ export default function Overview({ resolution }) {
                     </Typography>
                     {/*TODO change it to .createdAt*/}
                     <Typography component="div" sx={{ textAlign: "center" }}>
-                        Created on {daysjs(resolution.createdAt).format('mm-dd-YYYY').toString()}
+                        Created on {dayjs(resolution.createdAt).format('mm-dd-YYYY').toString()}
                     </Typography>
                 </Paper>
 

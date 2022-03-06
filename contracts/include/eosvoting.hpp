@@ -53,7 +53,8 @@ CONTRACT eosvoting : public contract {
       std::vector<argument> argument;
     };
 
-    ACTION crtproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status, author author, time_point_sec expiredAt );
+    ACTION crtproposal(name from, string title, string summary, string content, string category, string status, author author, time_point_sec expiredAt );
+    ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status, author author, time_point_sec expiredAt );
     ACTION makevote(name from, uint64_t primaryKey, string publicKey, char value);
     ACTION clear();
 
@@ -80,5 +81,5 @@ CONTRACT eosvoting : public contract {
       votes votes;
       uint64_t primary_key() const { return primaryKey; }
     };
-    typedef multi_index<name("proposals"), proposals> proposals_table;
+    typedef multi_index<name("proposals"), proposals> proposals_index;
 };

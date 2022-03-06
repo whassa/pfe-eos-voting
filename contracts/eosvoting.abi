@@ -31,10 +31,6 @@
                     "type": "name"
                 },
                 {
-                    "name": "primaryKey",
-                    "type": "uint64"
-                },
-                {
                     "name": "title",
                     "type": "string"
                 },
@@ -181,6 +177,48 @@
             ]
         },
         {
+            "name": "upproposal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "summary",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                },
+                {
+                    "name": "category",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "type": "string"
+                },
+                {
+                    "name": "author",
+                    "type": "author"
+                },
+                {
+                    "name": "expiredAt",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
             "name": "vote",
             "base": "",
             "fields": [
@@ -235,6 +273,11 @@
         {
             "name": "makevote",
             "type": "makevote",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "upproposal",
+            "type": "upproposal",
             "ricardian_contract": ""
         }
     ],
