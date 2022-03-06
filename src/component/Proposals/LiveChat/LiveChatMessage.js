@@ -1,10 +1,12 @@
 import { Box, Typography } from "@mui/material";
+import { useTheme } from "@mui/styles";
+import dayjs from 'dayjs';
 
 export default function LiveChatMessage({ ual, message }) {
-  const date = new Date(message.when);
+  const date = dayjs(message.when);
+  const theme = useTheme();
 
   const ownMessage = ( ual.activeUser && JSON.stringify(message.publicKey) === JSON.stringify(ual.activeUser.session.publicKey.data.array) );
-  console.log(ownMessage);
 
   return (
     <Box sx={{ 
@@ -15,14 +17,13 @@ export default function LiveChatMessage({ ual, message }) {
       <Typography component="span" variant="caption" sx={{ 
           display: 'inline-block',
           marginBottom: "5px",
-          color: '#BDBDBD',
+          color: theme.palette.primary.main,
           ...(ownMessage) && {
             float: "right",
             direction: 'rtl',
           }
         }}>
-        {message.who} on {date &&
-          `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`}
+        {message.who} on {date.toString() && date.format('YYYY-MM-DD HH:mm:ss')}
       </Typography>
       <Box>
         <Typography
@@ -36,7 +37,7 @@ export default function LiveChatMessage({ ual, message }) {
             display: 'inline-block',
             ...(ownMessage) && {
                 color: 'white',
-                backgroundColor: '#324856',
+                backgroundColor: theme.palette.primary.main,
                 float: "right"
             }
           }}

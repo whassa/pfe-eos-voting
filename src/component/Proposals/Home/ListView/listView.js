@@ -15,6 +15,7 @@ const defaultProps = {
 
 
 const ListView = ({ resolutions, elevation, cardOnClick }) => {
+  console.log(resolutions);
   return resolutions ? (
     <Grid container spacing={3} sx={{marginTop: '5px', flexGrow: 1}}>
       {resolutions.map((el, index) => {

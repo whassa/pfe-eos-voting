@@ -57,6 +57,10 @@
                 {
                     "name": "author",
                     "type": "author"
+                },
+                {
+                    "name": "expiredAt",
+                    "type": "time_point_sec"
                 }
             ]
         },
@@ -121,16 +125,20 @@
                     "type": "string"
                 },
                 {
+                    "name": "expiredAt",
+                    "type": "time_point_sec"
+                },
+                {
                     "name": "createdAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "updatedAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "deletedAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "integrity",
@@ -164,11 +172,11 @@
                 },
                 {
                     "name": "createdAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "updatedAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 }
             ]
         },
@@ -178,11 +186,11 @@
             "fields": [
                 {
                     "name": "createdAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "updatedAt",
-                    "type": "uint64"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "publicKey",

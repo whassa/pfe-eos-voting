@@ -47,8 +47,6 @@ const Cards = ({resolution, elevation, isLast, cardOnClick}) => {
     </Typography>
   );
 
-  const numberOfComment = resolution.comments.totalCount;
-
   return (
     <Grid
       item
@@ -58,28 +56,29 @@ const Cards = ({resolution, elevation, isLast, cardOnClick}) => {
       <VotingCard
         elevation={elevation}
       >
-        <CardActionArea onClick={()=> {cardOnClick(resolution.id) }}>
+        <CardActionArea onClick={()=> {cardOnClick(resolution.primaryKey) }}>
           <Box sx={{ display: 'flex' }}>
-            {resolution.pictureThumbUrl && (
-              <CardMedia
-                image={resolution.pictureThumbUrl}
-              />
-            )}
+            <CardMedia
+              image={'/DataSources/EOSIO_logo.png'}
+            />
             <CardContent sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center',}}>
               <Typography gutterBottom variant="h5" component="h2">
-                {resolution.name}
+                {resolution.title}
                 {resolution.published === false ? (
                   <em> (Draft)</em>
                 ) : null}
               </Typography>
+              <Typography variant="subtitle1" component="p">
+                  {resolution.category} - {resolution.author.userName} 
+              </Typography>
               <Typography variant="subtitle2" component="p">
-                  swag life 
+                {resolution.summary}
               </Typography>
             </CardContent>
           </Box>
           <Box sx={{marginRight: '60px'}}>
             <Typography component="span">
-                <span>{resolution.votes.totalCount}</span>
+                <span>{resolution.votes.actualVote}</span>
               </Typography>
           </Box>
         </CardActionArea>
