@@ -53,7 +53,6 @@ CONTRACT eosvoting : public contract {
       std::vector<argument> argument;
     };
 
-
     ACTION crtproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status, author author, time_point_sec expiredAt );
     ACTION makevote(name from, uint64_t primaryKey, string publicKey, char value);
     ACTION clear();
