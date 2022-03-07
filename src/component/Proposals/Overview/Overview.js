@@ -10,16 +10,20 @@ export default function Overview({ resolution }) {
     return (
         <Stack
             direction="row"
-            spacing={1}
+            spacing={2}
             sx={{ marginTop: theme.homeMarginTop }}
         >
             <Box sx={{ flex: 1 }}>
                 <Typography variant="h5" component="div">
                     {resolution.title}
                 </Typography>
-                <Typography component="div" sx={{ marginTop: "5px" }}>
-                    {resolution.content}
-                </Typography>
+                <Box sx={{ marginTop: '5px' }}>
+
+                    <Typography component="pre" sx={{ display: 'inline-block', verticalAlign: 'top', whiteSpace: 'pre-wrap' }}>
+                        {resolution.content}
+                    </Typography>
+                </Box>
+                
             </Box>
             <Box>
                 <Paper
@@ -61,7 +65,7 @@ export default function Overview({ resolution }) {
                     </Typography>
                     {/*TODO change it to .createdAt*/}
                     <Typography component="div" sx={{ textAlign: "center" }}>
-                        Created on {dayjs(resolution.createdAt).format('mm-dd-YYYY').toString()}
+                        Created on {dayjs(resolution.createdAt).format('MM-DD-YYYY').toString()}
                     </Typography>
                 </Paper>
 

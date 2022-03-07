@@ -17,8 +17,6 @@ export default function ListProsCons({ argument }) {
     )
     const [votes, setVotes] = useState(tmpVote);
 
-    console.log(argument);
-
     return (
         <Paper elevation={3} padding="dense" sx={{padding: '10px'}}>
             <Stack

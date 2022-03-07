@@ -5,6 +5,8 @@ import {
     FormControl,
     TextField,
     Button,
+    Snackbar,
+    Alert
 } from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -26,6 +28,10 @@ const types = {
     CONTENT_CHANGED: "CONTENT_CHANGED",
     CATEGORY_CHANGED: "CATEGORY_CHANGED",
     EXPIRATION_DATE_CHANGED: "EXPIRATION_DATE_CHANGED",
+    SUBMIT_BUTTON_CLICKED: "SUBMIT_BUTTON_CLICKED",
+    SUBMIT_BUTTON_RESPONSE: "SUBMIT_BUTTON_RESPONSE",
+    ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE",
+    CLOSE_SNACKBAR: "CLOSE_SNACKBAR",
 };
 
 const reducer = (state, action) => {
@@ -38,8 +44,18 @@ const reducer = (state, action) => {
             return { ...state, content: action.value };
         case types.CATEGORY_CHANGED:
             return { ...state, category: action.value };
+        case types.TITLE_CHANGED:
+                return { ...state, title: action.value };
+        case types.SUBMIT_BUTTON_CLICKED:
+            return { ...state, submitDisable: true };
+        case types.SUBMIT_BUTTON_RESPONSE:
+            return { ...state, submitDisable: false };
+        case types.ERROR_FORM_RESPONSE: 
+            return { ...state, submitDisable: false, error: action.value, open: true }
+        case types.CLOSE_SNACKBAR: 
+            return { ...state, open: false }
         case types.EXPIRATION_DATE_CHANGED:
-            return { ...state, expirationDate: action.value };
+            return { ...state, expirationDate: action.value, };
     }
 };
 
@@ -49,13 +65,20 @@ const initialState = {
     content: "",
     category: "",
     expirationDate: "",
+    submitDisable: false,
+    errorMsg: "",
+    open: false,
 };
 
 export default function proposalForm({ ual, privateKey, eosAccountName }) {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const router = useRouter();
 
     const sendForm = () => {
         //TODO send it to the contract
+        dispatch({
+            type: types.SUBMIT_BUTTON_CLICKED,
+        });
         const formInformations = {
             ...formTemplate,
             title: state.title,
@@ -73,13 +96,19 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
             status: "Open",
         };
 
-        console.log(formInformations);
         createProposal(ual, formInformations, privateKey, eosAccountName)
             .then(() => {
-              console.log("success");
+                dispatch({
+                    type: types.SUBMIT_BUTTON_RESPONSE,
+                });
+                router.push('/')
             })
             .catch((error) => {
-                console.log(error);
+                console.log(error)
+                dispatch({
+                    value: error,
+                    type: types.ERROR_FORM_RESPONSE,
+                });
             });
     };
 
@@ -92,9 +121,9 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
             justify="center"
             style={{ minHeight: "100vh", padding: "16px", marginTop: "70px" }}
         >
-            <Container maxWidth="sm">
-                <Paper elevation={3} padding="dense">
-                    <FormControl>
+            <Container >
+                <Paper elevation={3} padding="dense" sx={{ padding: '10px', maxWidth: '500px', margin: 'auto' }}>
+                    <FormControl sx={{ width: '100%'}}>
                         <TextField
                             id="Title"
                             label="Title"
@@ -105,6 +134,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                                 });
                             }}
                             value={state.title}
+                            sx={{ marginBottom: '10px',}}
                             required
                         />
 
@@ -119,20 +149,23 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                                 });
                             }}
                             value={state.summary}
+                            sx={{ marginBottom: '10px', }}
                             required
                         />
 
                         <TextField
                             label="Content"
                             variant="outlined"
-                            multiline
                             onChange={(e) => {
                                 dispatch({
                                     type: types.CONTENT_CHANGED,
                                     value: e.target.value,
                                 });
                             }}
+                            rows={4}
                             value={state.content}
+                            sx={{ marginBottom: '10px',}}
+                            multiline
                             required
                         />
 
@@ -145,6 +178,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                                     value: e.target.value,
                                 });
                             }}
+                            sx={{ marginBottom: '10px',}}
                             value={state.category}
                         />
 
@@ -160,18 +194,18 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                                     });
                                 }}
                                 renderInput={(params) => (
-                                    <TextField {...params} />
+                                    <TextField {...params}  sx={{ marginBottom: '10px',}} />
                                 )}
                                 required
                             />
                         </LocalizationProvider>
-
                         <Button
                             disabled={
                                 state.title === "" ||
                                 state.summary === "" ||
                                 state.content === "" ||
-                                state.expirationDate === ""
+                                state.expirationDate === "" ||
+                                state.submitDisable 
                             }
                             onClick={(e) => {
                                 e.preventDefault();
@@ -184,6 +218,19 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                         </Button>
                     </FormControl>
                 </Paper>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                     }}
+                     autoHideDuration={5000}
+                    open={state.open}
+                    onClose={() => { dispatch({type: types.CLOSE_SNACKBAR})}}
+                >
+                    <Alert onClose={() => { dispatch({type: types.CLOSE_SNACKBAR})}} severity="error" sx={{ width: '100%' }}>
+                        {state.error}
+                    </Alert>
+                </Snackbar>
             </Container>
         </Grid>
     );

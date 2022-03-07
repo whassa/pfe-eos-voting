@@ -27,7 +27,6 @@ export default function Home({ ual, privateKey, eosAccountName }) {
 
   useEffect( () => {
     getProposals(privateKey, eosAccountName).then( (value) => {
-      console.log(value.rows);
       setResolutions(value.rows);
     });
   }, []);

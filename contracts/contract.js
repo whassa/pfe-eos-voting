@@ -9,8 +9,8 @@ export default async function setupContract(privateKey, eosAccountName) {
     const signatureProvider = new JsSignatureProvider([privateKey])
     const rpc = new JsonRpc('http://127.0.0.1:8888', {fetch})
     const api = new Api({rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder()});
-    console.log("api:")
-    console.log(api)
+    //console.log("api:")
+    //console.log(api)
     //https://developers.eos.io/manuals/eosjs/v21.0/how-to-guides/how-to-deploy-a-smart-contract
     // //prologue: setcode du vote contract
     // const wasmFilePath = 'contracts/eosvoting.wasm'

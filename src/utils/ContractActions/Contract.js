@@ -25,7 +25,6 @@ export const formTemplate = {
 
 export const voteTemplate = {
     proposalID: "",
-    argumentID:"",
     publicKey: "",
     value: null,
 };
@@ -56,8 +55,8 @@ export async function getProposals( privateKey, eosAccountName){
         scope: eosAccountName,     // Account that owns the data
         table: 'proposals',        // Table name
         limit: 10,                // Maximum number of rows that we want to get
-        reverse: false,           // Optional: Get reversed data
-      }).catch((e) => { console.log(e); throw  'Error fetching the proposals'});
+        reverse: true,           // Optional: Get reversed data
+      }).catch((e) => { throw  'Error fetching the proposals'});
     return proposals;
 }
 
@@ -73,7 +72,7 @@ export async function getProposal( primaryKey, privateKey, eosAccountName){
         lower_bound: parseInt(primaryKey),
         limit: 1,                // Maximum number of rows that we want to get
         reverse: false,           // Optional: Get reversed data
-      }).catch((e) => { console.log(e); throw  'Error fetching the proposals'});
+      }).catch((e) => { throw  'Error fetching the proposals'});
     return proposals;
 }
 
@@ -84,7 +83,6 @@ export async function createProposal(
     eosAccountName
 ) {
     let contract = await setup(privateKey, eosAccountName);
-    console.log(contract);
     try {
         const response = await contract.api
             .transact(
@@ -118,7 +116,6 @@ export async function createProposal(
                 }
             )
             .catch((error) => {
-                console.log("error :", error);
                 throw "Error creating the proposal";
             });
     } catch (e) {
@@ -126,14 +123,13 @@ export async function createProposal(
     }
 }
 
-export async function createVote(
+export async function vote(
     ual,
     voteInformation,
     privateKey,
     eosAccountName
 ) {
     let contract = await setup(privateKey, eosAccountName);
-    console.log(contract);
     try {
         const response = await contract.api
             .transact(
@@ -150,8 +146,7 @@ export async function createVote(
                             ],
                             data: {
                                 from: ual.activeUser.accountName,
-                                proposalID: voteInformation.proposalID,
-                                argumentID: voteInformation.argumentID,
+                                primaryKey: voteInformation.proposalID,
                                 publicKey: voteInformation.publicKey,
                                 value: voteInformation.value,
                             },
@@ -165,7 +160,7 @@ export async function createVote(
             )
             .catch((error) => {
                 console.log("error :", error);
-                throw "Error creating the vote";
+                throw "Error voting";
             });
     } catch (e) {
         throw e;
@@ -179,7 +174,6 @@ export async function createArgument(
     eosAccountName
 ) {
     let contract = await setup(privateKey, eosAccountName);
-    console.log(contract);
     try {
         const response = await contract.api
             .transact(
@@ -212,7 +206,6 @@ export async function createArgument(
                 }
             )
             .catch((error) => {
-                console.log("error :", error);
                 throw "Error creating the vote";
             });
     } catch (e) {
@@ -227,7 +220,6 @@ export async function createSingleNews(
     eosAccountName
 ) {
     let contract = await setup(privateKey, eosAccountName);
-    console.log(contract);
     try {
         const response = await contract.api
             .transact(
@@ -257,7 +249,6 @@ export async function createSingleNews(
                 }
             )
             .catch((error) => {
-                console.log("error :", error);
                 throw "Error creating the vote";
             });
     } catch (e) {
@@ -269,9 +260,9 @@ async function setup(privateKey, eosAccountName) {
     let contract;
     await setupContract(privateKey, eosAccountName)
         .then((value) => {
-            console.log(value);
+
             contract = value;
         })
-        .catch((error) => console.log("YO" + error));
+        .catch((error) => { throw 'Error setting up contract'});
     return contract;
 }

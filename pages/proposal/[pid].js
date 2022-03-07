@@ -7,32 +7,26 @@ import {
     Tabs,
     Tab,
     Button,
-    Modal,
-    RadioGroup,
-    Radio,
-    FormControlLabel,
 } from "@mui/material";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import GridViewIcon from "@mui/icons-material/GridView";
 import { useReducer, useEffect } from "react";
 import Header from "component/Head/Header";
-import { styled } from "@mui/system";
-import LiveChat from "../../src/component/Proposals/LiveChat/LiveChat";
-import resolutions from "../../src/component/Proposals/mockDataForTest";
-import ProsCons from "../../src/component/Proposals/ProsCons/ProsCons";
-import Overview from "../../src/component/Proposals/Overview/Overview";
+import LiveChat from "component/Proposals/LiveChat/LiveChat";
+import ProsCons from "component/Proposals/ProsCons/ProsCons";
+import Overview from "component/Proposals/Overview/Overview";
 import Statistics from "component/Proposals/Statistic/Statistic";
 
-import { getProposal } from "../../src/utils/ContractActions/Contract";
+import { getProposal, vote, voteTemplate } from "../../src/utils/ContractActions/Contract";
+import VoteModal from "component/Proposals/VoteModal/VoteModal";
 
 const views = ["Overview", "Pros & Cons", "Statistics", "News", "Live Chat"];
 
 const initialState = {
     view: views[0],
     open: false,
-    position: "",
+    position: "none",
     resolution: {},
     loading: true,
+    snackbarOpen: false,
 };
 
 const types = {
@@ -40,6 +34,7 @@ const types = {
     OPEN_CHANGED: "CONTENT_CHANGED",
     POSITION_CHANGED: "POSITION_CHANGED",
     RESOLUTION_CHANGED: "RESOLUTION_CHANGED",
+    RESOLUTION_FETCHED: "RESOLUTION_FETCHED",
 };
 
 const reducer = (state, action) => {
@@ -50,8 +45,13 @@ const reducer = (state, action) => {
             return { ...state, open: action.value };
         case types.POSITION_CHANGED:
             return { ...state, position: action.value };
+        case types.RESOLUTION_FETCHED:
+            return { ...state, resolution: action.value, loading: false, open: false }
         case types.RESOLUTION_CHANGED:
-            return { ...state, resolution: action.value, loading: false };
+            return { ...state, resolution: action.value, loading: false, open: false};
+        case types.USER_VOTED:
+
+            return { ...state};
         default:
             return { ...state };
     }
@@ -77,11 +77,43 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
 
     useEffect( () => {
         getProposal(pid, privateKey, eosAccountName).then( (value) => {
-          console.log( value.rows[0] );
-          dispatch({type: types.RESOLUTION_CHANGED, value: ( value.rows ? value.rows[0] :  {} )});
+          dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
         });
     }, []);
-      
+
+    useEffect( () => {
+        if (ual.activeUser && state.resolution.votes) {
+            
+            const vote = state.resolution.votes.vote.find((vote) => {
+                if (JSON.stringify(ual.activeUser.session.publicKey.data.array) === vote.publicKey){
+                    return vote
+                }
+            });
+            dispatch({
+                type: types.POSITION_CHANGED,
+                value: ( vote && vote.value && vote.value === 0 ? vote.value.toString() : "none"),
+            });
+        }
+    }, [ual, state.resolution])
+
+    const userVoted = () => {
+        if (state.position >= -1) {
+            const voteInformation = {
+                ...voteTemplate,
+                proposalID: pid,
+                publicKey: JSON.stringify(ual.activeUser.session.publicKey.data.array),
+                value: state.position,
+            }
+            vote( ual, voteInformation, privateKey, eosAccountName).then(() => {
+                // Fetch the actual data
+                getProposal(pid, privateKey, eosAccountName).then( (value) => {
+                    dispatch({type: types.RESOLUTION_CHANGED, value: ( value.rows ? value.rows[0] :  {} )});
+                })
+            }).catch((e) => {
+                console.error('error voting')
+            })
+        }
+    }
 
     return (
         <>
@@ -124,88 +156,32 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
                                     {state.resolution.author.userName}
                                 </Typography>
                             </Box>
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "center",
-                                    marginLeft: "auto",
-                                }}
-                            >
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    sx={{ textTransform: "none" }}
-                                    onClick={(e) => {
-                                        dispatch({
-                                            type: types.OPEN_CHANGED,
-                                            value: true,
-                                        });
-                                    }}
-                                >
-                                    Vote for this Resolution
-                                </Button>
-                            </Box>
-                            <Modal
-                                open={state.open}
-                                onClose={(e) => {
-                                    dispatch({
-                                        type: types.OPEN_CHANGED,
-                                        value: true,
-                                    });
-                                }}
-                                aria-labelledby="modal-modal-title"
-                                aria-describedby="modal-modal-description"
-                            >
-                                <Box sx={{ ...style, width: 200 }}>
-                                    <Typography
-                                        id="modal-modal-title"
-                                        variant="h6"
-                                        component="h2"
-                                    >
-                                        Please make your vote
-                                    </Typography>
-                                    <RadioGroup
-                                        row
-                                        defaultValue="Pro"
-                                        onChange={(e) => {
-                                            dispatch({
-                                                type: types.POSITION_CHANGED,
-                                                value: e.target.value,
-                                            });
+                            { ual.activeUser && (
+                                <>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            justifyContent: "center",
+                                            marginLeft: "auto",
                                         }}
                                     >
-                                        <FormControlLabel
-                                            value="Pro"
-                                            control={<Radio />}
-                                            label="Pro"
-                                        />
-                                        <FormControlLabel
-                                            value="Con"
-                                            control={<Radio />}
-                                            label="Con"
-                                        />
-                                        <FormControlLabel
-                                            value="Restrain"
-                                            control={<Radio />}
-                                            label="Restrain"
-                                        />
-                                    </RadioGroup>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        sx={{ textTransform: "none" }}
-                                        onClick={(e) => {
-                                            dispatch({
-                                                type: types.OPEN_CHANGED,
-                                                value: false,
-                                            });
-                                        }}
-                                    >
-                                        Vote
-                                    </Button>
-                                </Box>
-                            </Modal>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            sx={{ textTransform: "none" }}
+                                            onClick={(e) => {
+                                                dispatch({
+                                                    type: types.OPEN_CHANGED,
+                                                    value: true,
+                                                });
+                                            }}
+                                        >
+                                            Vote for this Resolution
+                                        </Button>
+                                    </Box>
+                                    <VoteModal open={state.open} dispatch={dispatch} userVoted={userVoted} state={state} types={types} position={state.position}  />
+                                </>)}
                         </Box>
 
                         <Box>
