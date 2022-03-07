@@ -260,7 +260,6 @@ async function setup(privateKey, eosAccountName) {
     let contract;
     await setupContract(privateKey, eosAccountName)
         .then((value) => {
-
             contract = value;
         })
         .catch((error) => { throw 'Error setting up contract'});

@@ -7,8 +7,6 @@ import ProposalForm from "../src/component/Proposals/Form/ProposalForm";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
 
-
-
 export default function Vote({ ual, privateKey, eosAccountName }) {
     return (
         <>
