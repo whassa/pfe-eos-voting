@@ -102,6 +102,11 @@ export default function Statistics({ resolution }) {
                     >
                         {dayjs(resolution.expiredAt).diff(dayjs(), 'day')}
                     </Typography>
+                    <Typography 
+                        sx={{ textAlign: "center" }}
+                    >
+                        {resolution.expiredAt.split("T")[0]}
+                    </Typography>
                 </Paper>
             </Stack>
             <Box sx={{ marginTop: theme.homeMarginTop }}>

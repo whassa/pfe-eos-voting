@@ -4,6 +4,54 @@
     "types": [],
     "structs": [
         {
+            "name": "argument",
+            "base": "",
+            "fields": [
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                },
+                {
+                    "name": "author",
+                    "type": "author"
+                },
+                {
+                    "name": "createdAt",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updatedAt",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "votes",
+                    "type": "votes"
+                },
+                {
+                    "name": "value",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "arguments",
+            "base": "",
+            "fields": [
+                {
+                    "name": "argument",
+                    "type": "argument[]"
+                }
+            ]
+        },
+        {
             "name": "author",
             "base": "",
             "fields": [
@@ -21,6 +69,36 @@
             "name": "clear",
             "base": "",
             "fields": []
+        },
+        {
+            "name": "crtargument",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                },
+                {
+                    "name": "author",
+                    "type": "author"
+                },
+                {
+                    "name": "value",
+                    "type": "bool"
+                }
+            ]
         },
         {
             "name": "crtproposal",
@@ -145,6 +223,10 @@
                     "type": "author"
                 },
                 {
+                    "name": "arguments",
+                    "type": "arguments"
+                },
+                {
                     "name": "news",
                     "type": "news"
                 },
@@ -263,6 +345,11 @@
         {
             "name": "clear",
             "type": "clear",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "crtargument",
+            "type": "crtargument",
             "ricardian_contract": ""
         },
         {

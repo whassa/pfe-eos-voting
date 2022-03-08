@@ -5,24 +5,17 @@ import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { v4 as uuidv4 } from "uuid";
 import { useTheme } from "@mui/styles";
-import ProsConsItem from "./ProsConsItem";
+import NewsItem from "./NewsItem";
 
-export default function ListProsCons({ ual, prosAndCons }) {
+export default function ListNews({ ual, news }) {
     const theme = useTheme();
 
-    prosAndCons.sort(function (a, b) {
-        return new Date(b.updatedAt) - new Date(a.updatedAt);
-    });
-
     return (
-        <Grid sx={{ marginTop: theme.homeMarginTop }}>
-            {prosAndCons &&
-                prosAndCons.map((argument) => {
+        <Grid sx={{ marginTop: theme.homeMarginTop}}>
+            {news &&
+                news.map((singleNew) => {
                     return (
-                        <ProsConsItem
-                            key={argument.createdAt}
-                            argument={argument}
-                        />
+                      <NewsItem key={singleNew.createdAt} news={singleNew} />
                     );
                 })}
         </Grid>

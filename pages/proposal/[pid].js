@@ -17,6 +17,7 @@ import Statistics from "component/Proposals/Statistic/Statistic";
 
 import { getProposal, vote, voteTemplate } from "../../src/utils/ContractActions/Contract";
 import VoteModal from "component/Proposals/VoteModal/VoteModal";
+import ListNews from "component/Proposals/News/ListNews";
 
 const views = ["Overview", "Pros & Cons", "Statistics", "News", "Live Chat"];
 
@@ -83,7 +84,6 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
 
     useEffect( () => {
         if (ual.activeUser && state.resolution.votes) {
-            
             const vote = state.resolution.votes.vote.find((vote) => {
                 if (JSON.stringify(ual.activeUser.session.publicKey.data.array) === vote.publicKey){
                     return vote
@@ -210,10 +210,20 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
                             <ProsCons
                                 ual={ual}
                                 resolution={state.resolution}
+                                privateKey={privateKey} 
+                                eosAccountName={eosAccountName}
+                                refreshProsCons={() => {
+                                    return getProposal(pid, privateKey, eosAccountName).then( (value) => {
+                                        dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
+                                    });
+                                }}
                             ></ProsCons>
                         )}
                         {state.view === views[2] && (
                             <Statistics resolution={state.resolution}></Statistics>
+                        )}
+                        {state.view === views[3] && (
+                            <ListNews news={state.resolution.singleNews}></ListNews>
                         )}
                         {state.view === views[4] && (
                             <LiveChat

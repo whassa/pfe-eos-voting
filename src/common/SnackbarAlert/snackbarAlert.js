@@ -24,7 +24,7 @@ const SnackbarAlert = ({ severity, open, onClose, message }) => (
     onClose={onClose}
     anchorOrigin={{
       vertical: "bottom",
-      horizontal: "right",
+      horizontal: "center",
     }}
   >
     <Alert onClose={onClose} severity={severity} elevation={6} variant="filled">

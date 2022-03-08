@@ -24,8 +24,6 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
       proposal_info.updatedAt = time;
       proposal_info.integrity = true;
       proposal_info.author = author; });
-      
-  
 }
 
 ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status, author author, time_point_sec expiredAt) {
@@ -101,6 +99,39 @@ ACTION eosvoting::makevote(name from, uint64_t primaryKey, string publicKey, cha
   }
 }
 
+ACTION eosvoting::crtargument(name from, uint64_t primaryKey, string title, string content, author author, bool value)
+{
+  
+   // Init the _votes table
+  proposals_index _proposals(get_self(), get_self().value);
+
+  auto primary_key_itr = _proposals.find(primaryKey);
+
+  if (primary_key_itr != _proposals.end()) {
+
+    auto proposal = _proposals.get(primaryKey);
+    // Generate the primary key based on other primary key
+    uint64_t primaryKey = 0;
+    for (size_t i = 0; i < proposal.arguments.argument.size(); i++)
+    {
+      if(primaryKey <= proposal.arguments.argument[i].primaryKey){
+        primaryKey = proposal.arguments.argument[i].primaryKey + 1;
+      }
+    }
+
+    time_point_sec time = current_time_point_sec();
+    
+    struct argument argument = {primaryKey, title, content, author, time, time};
+    argument.value = value;
+    _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info) {
+        proposal_info.arguments.argument.insert(proposal_info.arguments.argument.end(), argument);
+    });
+  }
+}
+
+
+
+
 ACTION eosvoting::clear()
 {
   require_auth(get_self());
@@ -115,4 +146,4 @@ ACTION eosvoting::clear()
   }
 }
 
-EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal));
+EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument));

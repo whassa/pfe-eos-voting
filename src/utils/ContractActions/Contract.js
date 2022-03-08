@@ -29,9 +29,15 @@ export const voteTemplate = {
     value: null,
 };
 
+export const argumentVoteTemplate = {
+    proposalID: "",
+    argumentID: "",
+    publicKey: "",
+    value: null,
+};
+
 export const argumentTemplate = {
     proposalID: "",
-    argumentID:"",
     title: "",
     content: "",
     author: {
@@ -189,11 +195,10 @@ export async function createArgument(
                                 },
                             ],
                             data: {
-                                argumentID:ual.activeUser.argumentID,
                                 from: ual.activeUser.accountName,
+                                primaryKey: argumentInformations.proposalID,
                                 title: argumentInformations.title,
                                 content: argumentInformations.content,
-                                proposalID: argumentInformations.proposalID,
                                 author: argumentInformations.author,
                                 value: argumentInformations.value,
                             },
@@ -206,7 +211,7 @@ export async function createArgument(
                 }
             )
             .catch((error) => {
-                throw "Error creating the vote";
+                throw error;
             });
     } catch (e) {
         throw e;
@@ -249,7 +254,7 @@ export async function createSingleNews(
                 }
             )
             .catch((error) => {
-                throw "Error creating the vote";
+                throw "Error creating the news";
             });
     } catch (e) {
         throw e;

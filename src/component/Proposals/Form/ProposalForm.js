@@ -5,8 +5,6 @@ import {
     FormControl,
     TextField,
     Button,
-    Snackbar,
-    Alert
 } from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -19,6 +17,7 @@ import {
     formTemplate,
     createProposal,
 } from "../../../utils/ContractActions/Contract";
+import SnackbarAlert from 'common/SnackbarAlert/snackbarAlert';
 import dayjs from "dayjs";
 dayjs.extend(customParseFormat);
 
@@ -218,19 +217,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                         </Button>
                     </FormControl>
                 </Paper>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                     }}
-                     autoHideDuration={5000}
-                    open={state.open}
-                    onClose={() => { dispatch({type: types.CLOSE_SNACKBAR})}}
-                >
-                    <Alert onClose={() => { dispatch({type: types.CLOSE_SNACKBAR})}} severity="error" sx={{ width: '100%' }}>
-                        {state.error}
-                    </Alert>
-                </Snackbar>
+                <SnackbarAlert severity={"error"} open={state.open}  onClose={() => { dispatch({type: types.CLOSE_SNACKBAR})}} message={state.error} />
             </Container>
         </Grid>
     );
