@@ -92,19 +92,19 @@ export default function Chart({ dataVotes }) {
         datasets: [
             {
                 label: "Yes",
-                data: valueOverTime(dataVotes, true).y,
+                data: valueOverTime(dataVotes, 1).y,
                 fill: false,
                 borderColor: 'rgb(0, 255, 0)'
               },
               {
                 label: "No",
-                data: valueOverTime(dataVotes, false).y,
+                data: valueOverTime(dataVotes, -1).y,
                 fill: false,
                 borderColor: 'rgb(255, 0, 0)'
               },
               {
                 label: "Refrain",
-                data: valueOverTime(dataVotes, null).y,
+                data: valueOverTime(dataVotes, 0).y,
                 fill: false,
                 borderColor: 'rgb(0, 0, 255)'
               }

@@ -14,6 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import Header from "component/Head/Header";
 
 // import { Ledger } from 'ual-ledger';
@@ -62,11 +63,11 @@ export default function loginComponent({ ual }) {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Button onClick={ual.showModal} fullWidth variant="contained">
-                    <Icon>
-                      <img alt="wallet-login" src="Login/eos-logo.svg" />
-                    </Icon>
+                  <Button startIcon={<AccountBalanceWalletOutlinedIcon />} onClick={ual.showModal} fullWidth variant="contained" sx={{marginBottom: '5px'}}>
                     Login
+                  </Button>
+                  <Button onClick={() => {router.push('/')}} fullWidth variant="outlined">
+                      Return to home page
                   </Button>
                 </Grid>
               </Grid>

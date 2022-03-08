@@ -35,14 +35,14 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
     };
     const secret = await SEA.encrypt(messageToEncrypt, encryptionKey);
     // const message = user.get('all').set({ what: secret });
-    gun.get("liveChat:" + resolution.id).put({ [index]: secret });
+    gun.get("liveChat:" + resolution.primaryKey).put({ [index]: secret });
     setNewMessage("");
   }
   
 
   useEffect(async () => {
     gun
-      .get("liveChat:" + resolution.id)
+      .get("liveChat:" + resolution.primaryKey)
       .map(match)
       .once(async (data, id) => {
         if (data) {

@@ -164,8 +164,7 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
                                 onClick={(e) => {
                                     dispatch({ type: types.CANCEL_CLICKED });
                                 }}
-                                type="cancel"
-                                variant="contained"
+                                variant="outlined"
                             >
                                 Cancel
                             </Button>
