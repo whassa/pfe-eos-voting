@@ -1,6 +1,6 @@
 #include <eosvoting.hpp>
 
-ACTION eosvoting::crtproposal(name from, string title, string summary, string content, string category, string status, author author, time_point_sec expiredAt)
+ACTION eosvoting::crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, author author, time_point_sec expiredAt)
 {
 
   require_auth(from);
@@ -18,15 +18,15 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
       proposal_info.summary = summary;
       proposal_info.content = content;
       proposal_info.category =  category;
+      proposal_info.voteMargin = voteMargin;
       proposal_info.status = status;
       proposal_info.expiredAt = expiredAt;
       proposal_info.createdAt = time;
       proposal_info.updatedAt = time;
-      proposal_info.integrity = true;
       proposal_info.author = author; });
 }
 
-ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status, author author, time_point_sec expiredAt) {
+ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, author author, time_point_sec expiredAt) {
   require_auth(from);
 
   // Init the _votes table
@@ -41,10 +41,10 @@ ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, strin
       proposal_info.summary = summary;
       proposal_info.content = content;
       proposal_info.category =  category;
+      proposal_info.voteMargin = voteMargin;
       proposal_info.status = status;
       proposal_info.expiredAt = expiredAt;
-      proposal_info.updatedAt = current_time_point_sec();
-      proposal_info.integrity = true; });
+      proposal_info.updatedAt = current_time_point_sec(); });
     } 
 }
 

@@ -68,29 +68,6 @@ export default function Overview({ resolution }) {
                         Created on {dayjs(resolution.createdAt).format('MM-DD-YYYY').toString()}
                     </Typography>
                 </Paper>
-
-                <Paper elevation={3} padding="dense" sx={{ padding: "10px" }}>
-                    <Typography variant="h6" component="div">
-                        Resolution integrity check
-                    </Typography>
-                    {resolution.integrity ? (
-                        <CheckCircleOutlineIcon
-                            sx={{
-                                width: 300,
-                                height: 75,
-                                color: theme.palette.colors.success,
-                            }}
-                        />
-                    ) : (
-                        <CancelOutlinedIcon
-                            sx={{
-                                width: 300,
-                                height: 75,
-                                color: theme.palette.colors.error,
-                            }}
-                        />
-                    )}
-                </Paper>
             </Box>
         </Stack>
     );
