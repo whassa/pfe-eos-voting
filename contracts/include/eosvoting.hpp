@@ -55,7 +55,7 @@ CONTRACT eosvoting : public contract {
     };
 
     ACTION crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, author author, time_point_sec expiredAt );
-    ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status, author author, time_point_sec expiredAt );
+    ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, author author, time_point_sec expiredAt );
     ACTION makevote(name from, uint64_t primaryKey, string publicKey, char value);
     ACTION crtargument(name from, uint64_t primaryKey, string title, string content, author author, bool value);
     ACTION clear();

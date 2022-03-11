@@ -125,6 +125,10 @@
                     "type": "string"
                 },
                 {
+                    "name": "voteMargin",
+                    "type": "uint64"
+                },
+                {
                     "name": "status",
                     "type": "string"
                 },
@@ -195,6 +199,10 @@
                     "type": "string"
                 },
                 {
+                    "name": "voteMargin",
+                    "type": "uint64"
+                },
+                {
                     "name": "status",
                     "type": "string"
                 },
@@ -213,10 +221,6 @@
                 {
                     "name": "deletedAt",
                     "type": "time_point_sec"
-                },
-                {
-                    "name": "integrity",
-                    "type": "bool"
                 },
                 {
                     "name": "author",
@@ -285,6 +289,10 @@
                 {
                     "name": "category",
                     "type": "string"
+                },
+                {
+                    "name": "voteMargin",
+                    "type": "uint64"
                 },
                 {
                     "name": "status",

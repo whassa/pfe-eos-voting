@@ -119,7 +119,7 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
                     label="Title"
                     placeholder="Title"
                     inputProps={{
-                        maxlength: 50
+                        maxLength: 50
                       }}
                     onChange={(e) => {
                         dispatch({
