@@ -129,6 +129,25 @@ ACTION eosvoting::crtargument(name from, uint64_t primaryKey, string title, stri
   }
 }
 
+ACTION eosvoting::crtsinglenews(name from, uint64_t primaryKey, string title, string content)
+{
+  
+   // Init the _votes table
+  proposals_index _proposals(get_self(), get_self().value);
+
+  auto primary_key_itr = _proposals.find(primaryKey);
+
+  if (primary_key_itr != _proposals.end()) {
+
+    time_point_sec time = current_time_point_sec();
+    
+    struct singlenews singlenews = {title, content, time, time};
+    _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info) {
+        proposal_info.news.singlenews.insert(proposal_info.news.singlenews.end(), singlenews);
+    });
+  }
+}
+
 
 
 

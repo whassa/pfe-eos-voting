@@ -1,13 +1,6 @@
 import Image from "next/image";
 import Menu, { drawerWidth } from "../../src/component/Menu/Menu";
-import {
-    Box,
-    Container,
-    Typography,
-    Tabs,
-    Tab,
-    Button,
-} from "@mui/material";
+import { Box, Container, Typography, Tabs, Tab, Button } from "@mui/material";
 import { useReducer, useEffect } from "react";
 import Header from "component/Head/Header";
 import LiveChat from "component/Proposals/LiveChat/LiveChat";
@@ -15,9 +8,13 @@ import ProsCons from "component/Proposals/ProsCons/ProsCons";
 import Overview from "component/Proposals/Overview/Overview";
 import Statistics from "component/Proposals/Statistic/Statistic";
 
-import { getProposal, vote, voteTemplate } from "../../src/utils/ContractActions/Contract";
+import {
+    getProposal,
+    vote,
+    voteTemplate,
+} from "../../src/utils/ContractActions/Contract";
 import VoteModal from "component/Proposals/VoteModal/VoteModal";
-import ListNews from "component/Proposals/News/ListNews";
+import News from "component/Proposals/News/News";
 
 const views = ["Overview", "Pros & Cons", "Statistics", "News", "Live Chat"];
 
@@ -47,18 +44,33 @@ const reducer = (state, action) => {
         case types.POSITION_CHANGED:
             return { ...state, position: action.value };
         case types.RESOLUTION_FETCHED:
-            return { ...state, resolution: action.value, loading: false, open: false }
+            return {
+                ...state,
+                resolution: action.value,
+                loading: false,
+                open: false,
+            };
         case types.RESOLUTION_CHANGED:
-            return { ...state, resolution: action.value, loading: false, open: false};
+            return {
+                ...state,
+                resolution: action.value,
+                loading: false,
+                open: false,
+            };
         case types.USER_VOTED:
-
-            return { ...state};
+            return { ...state };
         default:
             return { ...state };
     }
 };
 
-export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountName }) {
+export default function pid({
+    ual,
+    encryptionKey,
+    pid,
+    privateKey,
+    eosAccountName,
+}) {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     //TODO Change for theme
@@ -76,44 +88,63 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
         pb: 3,
     };
 
-    useEffect( () => {
-        getProposal(pid, privateKey, eosAccountName).then( (value) => {
-          dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
+    useEffect(() => {
+        getProposal(pid, privateKey, eosAccountName).then((value) => {
+            dispatch({
+                type: types.RESOLUTION_FETCHED,
+                value: value.rows ? value.rows[0] : {},
+            });
         });
     }, []);
 
-    useEffect( () => {
+    useEffect(() => {
         if (ual.activeUser && state.resolution.votes) {
             const vote = state.resolution.votes.vote.find((vote) => {
-                if (JSON.stringify(ual.activeUser.session.publicKey.data.array) === vote.publicKey){
-                    return vote
+                if (
+                    JSON.stringify(
+                        ual.activeUser.session.publicKey.data.array
+                    ) === vote.publicKey
+                ) {
+                    return vote;
                 }
             });
             dispatch({
                 type: types.POSITION_CHANGED,
-                value: ( vote && vote.value && vote.value === 0 ? vote.value.toString() : "none"),
+                value:
+                    vote && vote.value && vote.value === 0
+                        ? vote.value.toString()
+                        : "none",
             });
         }
-    }, [ual, state.resolution])
+    }, [ual, state.resolution]);
 
     const userVoted = () => {
         if (state.position >= -1) {
             const voteInformation = {
                 ...voteTemplate,
                 proposalID: pid,
-                publicKey: JSON.stringify(ual.activeUser.session.publicKey.data.array),
+                publicKey: JSON.stringify(
+                    ual.activeUser.session.publicKey.data.array
+                ),
                 value: state.position,
-            }
-            vote( ual, voteInformation, privateKey, eosAccountName).then(() => {
-                // Fetch the actual data
-                getProposal(pid, privateKey, eosAccountName).then( (value) => {
-                    dispatch({type: types.RESOLUTION_CHANGED, value: ( value.rows ? value.rows[0] :  {} )});
+            };
+            vote(ual, voteInformation, privateKey, eosAccountName)
+                .then(() => {
+                    // Fetch the actual data
+                    getProposal(pid, privateKey, eosAccountName).then(
+                        (value) => {
+                            dispatch({
+                                type: types.RESOLUTION_CHANGED,
+                                value: value.rows ? value.rows[0] : {},
+                            });
+                        }
+                    );
                 })
-            }).catch((e) => {
-                console.error('error voting')
-            })
+                .catch((e) => {
+                    console.error("error voting");
+                });
         }
-    }
+    };
 
     return (
         <>
@@ -126,9 +157,9 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
                     paddingTop: { xs: "40px" },
                 }}
             >
-                { state.loading ? (
+                {state.loading ? (
                     <Box> loading some stuff </Box>
-                ) : state.resolution  ?  (
+                ) : state.resolution ? (
                     <>
                         <Box sx={{ display: "flex" }}>
                             <Box sx={{ marginLeft: "10px" }}>
@@ -156,7 +187,7 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
                                     {state.resolution.author.userName}
                                 </Typography>
                             </Box>
-                            { ual.activeUser && (
+                            {ual.activeUser && (
                                 <>
                                     <Box
                                         sx={{
@@ -180,8 +211,16 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
                                             Vote for this Resolution
                                         </Button>
                                     </Box>
-                                    <VoteModal open={state.open} dispatch={dispatch} userVoted={userVoted} state={state} types={types} position={state.position}  />
-                                </>)}
+                                    <VoteModal
+                                        open={state.open}
+                                        dispatch={dispatch}
+                                        userVoted={userVoted}
+                                        state={state}
+                                        types={types}
+                                        position={state.position}
+                                    />
+                                </>
+                            )}
                         </Box>
 
                         <Box>
@@ -210,20 +249,52 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
                             <ProsCons
                                 ual={ual}
                                 resolution={state.resolution}
-                                privateKey={privateKey} 
+                                privateKey={privateKey}
                                 eosAccountName={eosAccountName}
                                 refreshProsCons={() => {
-                                    return getProposal(pid, privateKey, eosAccountName).then( (value) => {
-                                        dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
+                                    return getProposal(
+                                        pid,
+                                        privateKey,
+                                        eosAccountName
+                                    ).then((value) => {
+                                        dispatch({
+                                            type: types.RESOLUTION_FETCHED,
+                                            value: value.rows
+                                                ? value.rows[0]
+                                                : {},
+                                        });
                                     });
                                 }}
                             ></ProsCons>
                         )}
                         {state.view === views[2] && (
-                            <Statistics resolution={state.resolution}></Statistics>
+                            <Statistics
+                                resolution={state.resolution}
+                            ></Statistics>
                         )}
                         {state.view === views[3] && (
-                            <ListNews news={state.resolution.singleNews}></ListNews>
+                            <News
+                                ual={ual}
+                                news={state.resolution.singleNews}
+                                resolutionID={state.resolution.privateKey}
+                                resolutionAuthor={state.resolution.author.userName}
+                                privateKey={privateKey}
+                                eosAccountName={eosAccountName}
+                                refreshNews={() => {
+                                    return getProposal(
+                                        pid,
+                                        privateKey,
+                                        eosAccountName
+                                    ).then((value) => {
+                                        dispatch({
+                                            type: types.RESOLUTION_FETCHED,
+                                            value: value.rows
+                                                ? value.rows[0]
+                                                : {},
+                                        });
+                                    });
+                                }}
+                            ></News>
                         )}
                         {state.view === views[4] && (
                             <LiveChat
@@ -253,4 +324,4 @@ export async function getServerSideProps(context) {
             eosAccountName: process.env.EOS_ACCOUNT_NAME,
         },
     };
-};
+}

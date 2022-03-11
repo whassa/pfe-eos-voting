@@ -15,16 +15,15 @@ import { useState, useReducer } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useTheme } from "@mui/styles";
 import {
-    argumentTemplate,
-    createArgument,
+    newsTemplate,
+    createSingleNews,
 } from "../../../utils/ContractActions/Contract";
-import SnackbarAlert from 'common/SnackbarAlert/snackbarAlert';
+import SnackbarAlert from "common/SnackbarAlert/snackbarAlert";
 import dayjs from "dayjs";
 
 const initialState = {
     title: "",
     content: "",
-    position: "",
     snackBarOpen: false,
     snackBarMessage: "",
     snackBarStatus: "error",
@@ -33,10 +32,9 @@ const initialState = {
 const types = {
     TITLE_CHANGED: "TITLE_CHANGED",
     CONTENT_CHANGED: "CONTENT_CHANGED",
-    POSITION_CHANGED: "POSITION_CHANGED",
     CANCEL_CLICKED: "CANCEL_CLICKED",
-    ARGUMENT_CREATED: "ARGUMENT_CREATED",
-    ARGUMENT_NOT_CREATED: "ARGUMENT_NOT_CREATED",
+    NEWS_CREATED: "NEWS_CREATED",
+    NEWS_NOT_CREATED: "NEWS_NOT_CREATED",
     CLOSE_SNACKBAR: "CLOSE_SNACKBAR",
 };
 
@@ -46,8 +44,6 @@ const reducer = (state, action) => {
             return { ...state, title: action.value };
         case types.CONTENT_CHANGED:
             return { ...state, content: action.value };
-        case types.POSITION_CHANGED:
-            return { ...state, position: action.value };
         case types.CLOSE_SNACKBAR:
             return { ...state, snackBarOpen: false };
         case types.CANCEL_CLICKED:
@@ -55,19 +51,17 @@ const reducer = (state, action) => {
                 ...state,
                 title: initialState.title,
                 content: initialState.content,
-                position: initialState.position,                
-            }; 
-        case types.ARGUMENT_CREATED:
+            };
+        case types.NEWS_CREATED:
             return {
                 ...state,
                 title: initialState.title,
                 content: initialState.content,
-                position: initialState.position,
                 snackBarOpen: true,
                 snackBarMessage: "Argument created successfully",
                 snackBarStatus: "success",
             };
-        case types.ARGUMENT_NOT_CREATED:
+        case types.NEWS_NOT_CREATED:
             return {
                 ...state,
                 snackBarOpen: true,
@@ -79,19 +73,24 @@ const reducer = (state, action) => {
     }
 };
 
-export default function FormProsCons({ ual, resolution, privateKey, eosAccountName, refreshProsCons }) {
+export default function FormNews({
+    ual,
+    resolutionID,
+    privateKey,
+    eosAccountName,
+    refreshNews,
+}) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const theme = useTheme();
 
-    function createProsCons() {
+    function createNews() {
         //TODO send it to GunJS and contract
-        const argument = {
-            ...argumentTemplate,
+        const news = {
+            ...newsTemplate,
             //changer pour .primaryKey
-            proposalID: resolution.primaryKey,
+            proposalID: resolutionID,
             title: state.title,
             content: state.content,
-            value: (state.position === "true" ? true:false),
             author: {
                 userName: ual.activeUser.accountName,
                 publicKey: JSON.stringify(
@@ -99,12 +98,14 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
                 ),
             },
         };
-        createArgument(ual, argument, privateKey, eosAccountName).then(() => {
-            dispatch({ type: types.ARGUMENT_CREATED });
-            refreshProsCons();
-        }).catch((e) => {
-            dispatch({ type: types.ARGUMENT_NOT_CREATED, value: e });
-        });
+        createSingleNews(ual, news, privateKey, eosAccountName)
+            .then(() => {
+                dispatch({ type: types.ARGUMENT_CREATED });
+                refreshProsCons();
+            })
+            .catch((e) => {
+                dispatch({ type: types.ARGUMENT_NOT_CREATED, value: e });
+            });
     }
 
     return (
@@ -119,8 +120,8 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
                     label="Title"
                     placeholder="Title"
                     inputProps={{
-                        maxlength: 50
-                      }}
+                        maxlength: 50,
+                    }}
                     onChange={(e) => {
                         dispatch({
                             type: types.TITLE_CHANGED,
@@ -154,43 +155,19 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
                     sx={{ marginTop: "10px" }}
                 >
                     <Grid item>
-                        <RadioGroup
-                            row
-                            defaultValue="Pro"
-                            onChange={(e) => {
-                                dispatch({
-                                    type: types.POSITION_CHANGED,
-                                    value: e.target.value,
-                                });
-                            }}
-                        >
-                            <FormControlLabel
-                                value={true}
-                                control={<Radio />}
-                                label="Pro"
-                            />
-                            <FormControlLabel
-                                value={false}
-                                control={<Radio />}
-                                label="Con"
-                            />
-                        </RadioGroup>
-                    </Grid>
-                    <Grid item>
                         <Stack spacing={2} direction="row">
                             <Button
                                 disabled={
-                                    state.title === "" ||
-                                    state.content === ""
+                                    state.title === "" || state.content === ""
                                 }
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    createProsCons();
+                                    createNews();
                                 }}
                                 type="submit"
                                 variant="contained"
                             >
-                                Propose
+                                Create
                             </Button>
                             <Button
                                 onClick={(e) => {
@@ -204,7 +181,14 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
                     </Grid>
                 </Grid>
             </FormControl>
-            <SnackbarAlert severity={state.snackBarStatus} open={state.snackBarOpen}  onClose={() => { dispatch({type: types.CLOSE_SNACKBAR})}} message={state.snackBarMessage} />
+            <SnackbarAlert
+                severity={state.snackBarStatus}
+                open={state.snackBarOpen}
+                onClose={() => {
+                    dispatch({ type: types.CLOSE_SNACKBAR });
+                }}
+                message={state.snackBarMessage}
+            />
         </Paper>
     );
 }
