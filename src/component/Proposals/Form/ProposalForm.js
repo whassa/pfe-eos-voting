@@ -142,6 +142,9 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                         <TextField
                             id="Title"
                             label="Title"
+                            inputProps={{
+                                maxlength: 50
+                              }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.TITLE_CHANGED,
@@ -157,6 +160,9 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                             label="Summary"
                             variant="outlined"
                             multiline
+                            inputProps={{
+                                maxlength: 200
+                              }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.SUMMARY_CHANGED,
@@ -187,6 +193,9 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                         <TextField
                             id="Category"
                             label="Category"
+                            inputProps={{
+                                maxlength: 50
+                              }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.CATEGORY_CHANGED,
