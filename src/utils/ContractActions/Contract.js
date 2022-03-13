@@ -91,39 +91,33 @@ export async function createProposal(
 ) {
     let contract = await setup(privateKey, eosAccountName);
     try {
-        const response = await contract.api
-            .transact(
-                {
-                    actions: [
+        const response =  await ual.activeUser.signTransaction(
+            {
+                actions: [{
+                    account: eosAccountName, //env variable
+                    name: "crtproposal",
+                    authorization: [
                         {
-                            account: ual.activeUser.accountName, //env variable
-                            name: "crtproposal",
-                            authorization: [
-                                {
-                                    actor: ual.activeUser.accountName,
-                                    permission: "active",
-                                },
-                            ],
-                            data: {
-                                from: ual.activeUser.accountName,
-                                title: formInformations.title,
-                                summary: formInformations.summary,
-                                content: formInformations.content,
-                                category: formInformations.category,
-                                voteMargin: formInformations.voteMargin,
-                                status: formInformations.status,
-                                author: formInformations.author,
-                                expiredAt: formInformations.expiredAt,
-                            },
+                            actor: ual.activeUser.accountName,
+                            permission: "active",
                         },
                     ],
-                },
-                {
-                    blocksBehind: 3,
-                    expireSeconds: 30,
-                }
-            )
-            .catch((error) => {
+                    data: {
+                        from: ual.activeUser.accountName,
+                        title: formInformations.title,
+                        summary: formInformations.summary,
+                        content: formInformations.content,
+                        category: formInformations.category,
+                        voteMargin: formInformations.voteMargin,
+                        status: formInformations.status,
+                        author: formInformations.author,
+                        expiredAt: formInformations.expiredAt,
+                    },
+                }],
+              }
+            
+            , { broadcast: true }).catch((error) => {
+                console.log("error :", error);
                 throw "Error creating the proposal";
             });
     } catch (e) {
@@ -139,12 +133,11 @@ export async function vote(
 ) {
     let contract = await setup(privateKey, eosAccountName);
     try {
-        const response = await contract.api
-            .transact(
+        const response = await ual.activeUser.signTransaction(
                 {
                     actions: [
                         {
-                            account: ual.activeUser.accountName, //env variable
+                            account: eosAccountName, //env variable
                             name: "makevote",
                             authorization: [
                                 {
@@ -183,12 +176,11 @@ export async function createArgument(
 ) {
     let contract = await setup(privateKey, eosAccountName);
     try {
-        const response = await contract.api
-            .transact(
+        const response = await ual.activeUser.signTransaction(
                 {
                     actions: [
                         {
-                            account: ual.activeUser.accountName, //env variable
+                            account: eosAccountName, //env variable
                             name: "crtargument",
                             authorization: [
                                 {
@@ -228,12 +220,11 @@ export async function createSingleNews(
 ) {
     let contract = await setup(privateKey, eosAccountName);
     try {
-        const response = await contract.api
-            .transact(
+        const response = await ual.activeUser.signTransaction(
                 {
                     actions: [
                         {
-                            account: ual.activeUser.accountName, //env variable
+                            account: eosAccountName, //env variable
                             name: "crtproposalsinglenews",
                             authorization: [
                                 {

@@ -18,7 +18,7 @@ export default function Statistics({ resolution }) {
         resolution.votes.vote.map((vote) => {
             if (vote.value === 0) {
                 refrainVotes++;
-            } else if (vote.value) {
+            } else if (vote.value === 1) {
                 prosVotes++;
             } else {
                 consVotes++;
