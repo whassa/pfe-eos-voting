@@ -1,6 +1,6 @@
 import setupContract from "../contracts/contract";
 
-
+//DEPRECATED DO NOT USE
 import {
     Button,
     Container,
