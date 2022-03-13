@@ -74,7 +74,7 @@ const initialState = {
     voteMargin: 0,
     expirationDate: "",
     submitDisable: false,
-    errorMsg: "",
+    error: "",
     open: false,
 };
 
