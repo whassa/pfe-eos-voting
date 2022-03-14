@@ -91,13 +91,8 @@ export default function FormNews({
             primaryKey: resolutionID,
             title: state.title,
             content: state.content,
-            author: {
-                userName: ual.activeUser.accountName,
-                publicKey: JSON.stringify(
-                    ual.activeUser.session.publicKey.data.array
-                ),
-            },
-    };
+            author: ual.activeUser.accountName,
+        };
         
         createSingleNews(ual, news, privateKey, eosAccountName)
             .then(() => {

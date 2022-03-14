@@ -69,7 +69,7 @@ const Cards = ({resolution, elevation, isLast, cardOnClick}) => {
                 ) : null}
               </Typography>
               <Typography variant="subtitle1" component="p">
-                  {resolution.category} - {resolution.author.userName} 
+                  {resolution.category} - {resolution.author} 
               </Typography>
               <Typography variant="subtitle2" component="p">
                 {resolution.summary}

@@ -17,7 +17,6 @@ export default function ListBestProsCons({ prosList, consList }) {
                     <Typography variant="h5"> Pros </Typography>
                     {prosList &&
                         prosList.map((argument) => {
-                            console.log(argument);
                             return (
                                 <Box key={argument.primaryKey} sx={{paddingLeft: '20px'}}>
                                     {/*TODO changer .content par .title et items.length par .vote*/}

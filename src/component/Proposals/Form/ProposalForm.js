@@ -98,12 +98,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                 "YYYY-MM-DD HH:mm:ss"
             ),
             integrity: true,
-            author: {
-                userName: ual.activeUser.accountName,
-                publicKey: JSON.stringify(
-                    ual.activeUser.session.publicKey.data.array
-                ),
-            },
+            author: ual.activeUser.accountName,
             status: "Open",
         };
 

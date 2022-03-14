@@ -106,19 +106,14 @@ export default function pid({
         if (ual.activeUser && state.resolution.votes) {
             const vote = state.resolution.votes.vote.find((vote) => {
                 if (
-                    JSON.stringify(
-                        ual.activeUser.session.publicKey.data.array
-                    ) === vote.publicKey
+                    ual.activeUser.accountName === vote.user
                 ) {
                     return vote;
                 }
             });
             dispatch({
                 type: types.POSITION_CHANGED,
-                value:
-                    vote && vote.value && vote.value === 0
-                        ? vote.value.toString()
-                        : "none",
+                value: vote && vote.value,
             });
         }
     }, [ual, state.resolution]);
@@ -128,7 +123,6 @@ export default function pid({
             const voteInformation = {
                 ...voteTemplate,
                 proposalID: pid,
-                publicKey: JSON.stringify(ual.activeUser.session.publicKey.data.array),
                 value: state.position,
             }
             vote( ual, voteInformation, privateKey, eosAccountName).then(() => {
@@ -144,7 +138,6 @@ export default function pid({
             })
         }
     }
-    console.log(state.resolution)
 
     return (
         <>
@@ -184,7 +177,7 @@ export default function pid({
                                 </Typography>
                                 <Typography variant="h6">
                                     {/*TODO change it for .author.userName*/}
-                                    {state.resolution.author.userName}
+                                    {state.resolution.author}
                                 </Typography>
                             </Box>
                             {ual.activeUser && (

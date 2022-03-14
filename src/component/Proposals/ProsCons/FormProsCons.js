@@ -92,12 +92,6 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
             title: state.title,
             content: state.content,
             value: (state.position === "true" ? true:false),
-            author: {
-                userName: ual.activeUser.accountName,
-                publicKey: JSON.stringify(
-                    ual.activeUser.session.publicKey.data.array
-                ),
-            },
         };
         createArgument(ual, argument, privateKey, eosAccountName).then(() => {
             dispatch({ type: types.ARGUMENT_CREATED });

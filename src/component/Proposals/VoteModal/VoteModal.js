@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 
 export default function VoteModal({ dispatch, userVoted, open, position, types }) {
+
     return (
         <Modal
             open={open}

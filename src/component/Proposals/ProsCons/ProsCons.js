@@ -7,7 +7,6 @@ export default function Menu({ ual, resolution, privateKey, eosAccountName, refr
     // list
     let prosList = [];
     let consList = [];
-    console.log(refreshProsCons);
     resolution &&
         resolution.arguments &&
         resolution.arguments.argument &&

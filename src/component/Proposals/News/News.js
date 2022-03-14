@@ -18,11 +18,10 @@ export default function News({
     refreshNews,
 }) {
     const theme = useTheme();
-    console.log(news);
     return (
         <>
             <Paper elevation={3} padding="dense" sx={{ padding: "10px" }}>
-                {ual && resolutionAuthor.userName === ual.activeUser.accountName && (
+                {ual && resolutionAuthor === ual.activeUser.accountName && (
                     <Box sx={{ flex: 1 }}>
                         <FormNews
                             ual={ual}
