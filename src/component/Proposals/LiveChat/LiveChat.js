@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 
 import { Grid, Paper, FormControl, Box, Input, Button } from "@mui/material";
 
-const gun = GUN();
+const gun = ( process.env.NEXT_PUBLIC_PEER_NETWORK_LIVE_CHAT ? GUN( process.env.NEXT_PUBLIC_PEER_NETWORK_LIVE_CHAT+'/gun') : GUN())
 
 const match = {
   // lexical queries are kind of like a limited RegEx or Glob.

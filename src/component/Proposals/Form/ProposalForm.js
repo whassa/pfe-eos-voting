@@ -5,8 +5,6 @@ import {
     FormControl,
     TextField,
     Button,
-    Snackbar,
-    Alert
 } from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -19,6 +17,7 @@ import {
     formTemplate,
     createProposal,
 } from "../../../utils/ContractActions/Contract";
+import SnackbarAlert from "common/SnackbarAlert/snackbarAlert";
 import dayjs from "dayjs";
 dayjs.extend(customParseFormat);
 
@@ -32,6 +31,7 @@ const types = {
     SUBMIT_BUTTON_RESPONSE: "SUBMIT_BUTTON_RESPONSE",
     ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE",
     CLOSE_SNACKBAR: "CLOSE_SNACKBAR",
+    VOTEMARGIN_CHANGED: "VOTEMARGIN_CHANGED",
 };
 
 const reducer = (state, action) => {
@@ -45,17 +45,24 @@ const reducer = (state, action) => {
         case types.CATEGORY_CHANGED:
             return { ...state, category: action.value };
         case types.TITLE_CHANGED:
-                return { ...state, title: action.value };
+            return { ...state, title: action.value };
+        case types.VOTEMARGIN_CHANGED:
+            return { ...state, voteMargin: action.value };
         case types.SUBMIT_BUTTON_CLICKED:
             return { ...state, submitDisable: true };
         case types.SUBMIT_BUTTON_RESPONSE:
             return { ...state, submitDisable: false };
-        case types.ERROR_FORM_RESPONSE: 
-            return { ...state, submitDisable: false, error: action.value, open: true }
-        case types.CLOSE_SNACKBAR: 
-            return { ...state, open: false }
+        case types.ERROR_FORM_RESPONSE:
+            return {
+                ...state,
+                submitDisable: false,
+                error: action.value,
+                open: true,
+            };
+        case types.CLOSE_SNACKBAR:
+            return { ...state, open: false };
         case types.EXPIRATION_DATE_CHANGED:
-            return { ...state, expirationDate: action.value, };
+            return { ...state, expirationDate: action.value };
     }
 };
 
@@ -64,9 +71,10 @@ const initialState = {
     summary: "",
     content: "",
     category: "",
+    voteMargin: 0,
     expirationDate: "",
     submitDisable: false,
-    errorMsg: "",
+    error: "",
     open: false,
 };
 
@@ -85,7 +93,10 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
             summary: state.summary,
             content: state.content,
             category: state.category,
-            expiredAt: dayjs(state.expirationDate).format("YYYY-MM-DD HH:mm:ss"),
+            voteMargin: state.voteMargin,
+            expiredAt: dayjs(state.expirationDate).format(
+                "YYYY-MM-DD HH:mm:ss"
+            ),
             integrity: true,
             author: {
                 userName: ual.activeUser.accountName,
@@ -101,12 +112,11 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                 dispatch({
                     type: types.SUBMIT_BUTTON_RESPONSE,
                 });
-                router.push('/')
+                router.push("/");
             })
             .catch((error) => {
-                console.log(error)
                 dispatch({
-                    value: error,
+                    value: (error instanceof String ? error : error.toString()),
                     type: types.ERROR_FORM_RESPONSE,
                 });
             });
@@ -121,12 +131,19 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
             justify="center"
             style={{ minHeight: "100vh", padding: "16px", marginTop: "70px" }}
         >
-            <Container >
-                <Paper elevation={3} padding="dense" sx={{ padding: '10px', maxWidth: '500px', margin: 'auto' }}>
-                    <FormControl sx={{ width: '100%'}}>
+            <Container>
+                <Paper
+                    elevation={3}
+                    padding="dense"
+                    sx={{ padding: "10px", maxWidth: "500px", margin: "auto" }}
+                >
+                    <FormControl sx={{ width: "100%" }}>
                         <TextField
                             id="Title"
                             label="Title"
+                            inputProps={{
+                                maxLength: 50
+                              }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.TITLE_CHANGED,
@@ -134,7 +151,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                                 });
                             }}
                             value={state.title}
-                            sx={{ marginBottom: '10px',}}
+                            sx={{ marginBottom: "10px" }}
                             required
                         />
 
@@ -142,6 +159,9 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                             label="Summary"
                             variant="outlined"
                             multiline
+                            inputProps={{
+                                maxLength: 200
+                              }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.SUMMARY_CHANGED,
@@ -149,7 +169,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                                 });
                             }}
                             value={state.summary}
-                            sx={{ marginBottom: '10px', }}
+                            sx={{ marginBottom: "10px" }}
                             required
                         />
 
@@ -164,7 +184,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                             }}
                             rows={4}
                             value={state.content}
-                            sx={{ marginBottom: '10px',}}
+                            sx={{ marginBottom: "10px" }}
                             multiline
                             required
                         />
@@ -172,14 +192,39 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                         <TextField
                             id="Category"
                             label="Category"
+                            inputProps={{
+                                maxLength: 50
+                              }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.CATEGORY_CHANGED,
                                     value: e.target.value,
                                 });
                             }}
-                            sx={{ marginBottom: '10px',}}
+                            sx={{ marginBottom: "10px" }}
                             value={state.category}
+                        />
+
+                        <TextField
+                            id="VoteMargin"
+                            label="Vote Margin"
+                            type="number"
+                            onChange={(e) => {
+                                e.target.value > 0 && !isNaN(e.target.value) &&
+                                parseInt(Number(e.target.value)) ==
+                                    e.target.value &&
+                                !isNaN(parseInt(e.target.value, 10))
+                                    ? dispatch({
+                                          type: types.VOTEMARGIN_CHANGED,
+                                          value: e.target.value,
+                                      })
+                                    : dispatch({
+                                          type: types.VOTEMARGIN_CHANGED,
+                                          value: 0,
+                                      });
+                            }}
+                            sx={{ marginBottom: "10px" }}
+                            value={state.voteMargin}
                         />
 
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -194,7 +239,10 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                                     });
                                 }}
                                 renderInput={(params) => (
-                                    <TextField {...params}  sx={{ marginBottom: '10px',}} />
+                                    <TextField
+                                        {...params}
+                                        sx={{ marginBottom: "10px" }}
+                                    />
                                 )}
                                 required
                             />
@@ -205,7 +253,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                                 state.summary === "" ||
                                 state.content === "" ||
                                 state.expirationDate === "" ||
-                                state.submitDisable 
+                                state.submitDisable
                             }
                             onClick={(e) => {
                                 e.preventDefault();
@@ -218,19 +266,14 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                         </Button>
                     </FormControl>
                 </Paper>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                     }}
-                     autoHideDuration={5000}
+                <SnackbarAlert
+                    severity={"error"}
                     open={state.open}
-                    onClose={() => { dispatch({type: types.CLOSE_SNACKBAR})}}
-                >
-                    <Alert onClose={() => { dispatch({type: types.CLOSE_SNACKBAR})}} severity="error" sx={{ width: '100%' }}>
-                        {state.error}
-                    </Alert>
-                </Snackbar>
+                    onClose={() => {
+                        dispatch({ type: types.CLOSE_SNACKBAR });
+                    }}
+                    message={state.error}
+                />
             </Container>
         </Grid>
     );

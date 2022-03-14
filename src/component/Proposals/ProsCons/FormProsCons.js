@@ -18,12 +18,16 @@ import {
     argumentTemplate,
     createArgument,
 } from "../../../utils/ContractActions/Contract";
+import SnackbarAlert from 'common/SnackbarAlert/snackbarAlert';
 import dayjs from "dayjs";
 
 const initialState = {
     title: "",
     content: "",
     position: "",
+    snackBarOpen: false,
+    snackBarMessage: "",
+    snackBarStatus: "error",
 };
 
 const types = {
@@ -31,6 +35,9 @@ const types = {
     CONTENT_CHANGED: "CONTENT_CHANGED",
     POSITION_CHANGED: "POSITION_CHANGED",
     CANCEL_CLICKED: "CANCEL_CLICKED",
+    ARGUMENT_CREATED: "ARGUMENT_CREATED",
+    ARGUMENT_NOT_CREATED: "ARGUMENT_NOT_CREATED",
+    CLOSE_SNACKBAR: "CLOSE_SNACKBAR",
 };
 
 const reducer = (state, action) => {
@@ -41,19 +48,38 @@ const reducer = (state, action) => {
             return { ...state, content: action.value };
         case types.POSITION_CHANGED:
             return { ...state, position: action.value };
+        case types.CLOSE_SNACKBAR:
+            return { ...state, snackBarOpen: false };
         case types.CANCEL_CLICKED:
             return {
                 ...state,
                 title: initialState.title,
                 content: initialState.content,
+                position: initialState.position,                
+            }; 
+        case types.ARGUMENT_CREATED:
+            return {
+                ...state,
+                title: initialState.title,
+                content: initialState.content,
                 position: initialState.position,
+                snackBarOpen: true,
+                snackBarMessage: "Argument created successfully",
+                snackBarStatus: "success",
+            };
+        case types.ARGUMENT_NOT_CREATED:
+            return {
+                ...state,
+                snackBarOpen: true,
+                snackBarMessage: action.value,
+                snackBarStatus: "error",
             };
         default:
             return { ...state };
     }
 };
 
-export default function FormProsCons({ ual, resolution, privateKey, eosAccountName }) {
+export default function FormProsCons({ ual, resolution, privateKey, eosAccountName, refreshProsCons }) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const theme = useTheme();
 
@@ -61,19 +87,24 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
         //TODO send it to GunJS and contract
         const argument = {
             ...argumentTemplate,
-            id: BigInt("0x" + uuidv4().replace(/-/g, "")),
             //changer pour .primaryKey
-            proposalID: resolution.id,
+            proposalID: resolution.primaryKey,
             title: state.title,
             content: state.content,
-            value: state.position,
+            value: (state.position === "true" ? true:false),
             author: {
                 userName: ual.activeUser.accountName,
-                userPublicKey: ual.activeUser.session.publicKey.data.array,
+                publicKey: JSON.stringify(
+                    ual.activeUser.session.publicKey.data.array
+                ),
             },
         };
-
-        createArgument(ual, argument, privateKey, eosAccountName);
+        createArgument(ual, argument, privateKey, eosAccountName).then(() => {
+            dispatch({ type: types.ARGUMENT_CREATED });
+            refreshProsCons();
+        }).catch((e) => {
+            dispatch({ type: types.ARGUMENT_NOT_CREATED, value: (e instanceof String ? e : e.toString()) });
+        });
     }
 
     return (
@@ -87,6 +118,9 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
                     id="Title"
                     label="Title"
                     placeholder="Title"
+                    inputProps={{
+                        maxLength: 50
+                      }}
                     onChange={(e) => {
                         dispatch({
                             type: types.TITLE_CHANGED,
@@ -172,6 +206,7 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
                     </Grid>
                 </Grid>
             </FormControl>
+            <SnackbarAlert severity={state.snackBarStatus} open={state.snackBarOpen}  onClose={() => { dispatch({type: types.CLOSE_SNACKBAR})}} message={state.snackBarMessage} />
         </Paper>
     );
 }

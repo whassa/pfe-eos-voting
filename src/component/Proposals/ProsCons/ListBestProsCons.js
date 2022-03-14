@@ -17,12 +17,13 @@ export default function ListBestProsCons({ prosList, consList }) {
                     <Typography variant="h5"> Pros </Typography>
                     {prosList &&
                         prosList.map((argument) => {
+                            console.log(argument);
                             return (
-                                <Box key={argument.id} sx={{paddingLeft: '20px'}}>
+                                <Box key={argument.primaryKey} sx={{paddingLeft: '20px'}}>
                                     {/*TODO changer .content par .title et items.length par .vote*/}
                                     <Typography>
                                         {argument.title}{" "}
-                                        {argument.votes.items.length}{" "}
+                                        {argument.votes.actualVote}{" "}
                                         <ArrowCircleUpIcon />
                                     </Typography>
                                 </Box>
@@ -34,12 +35,12 @@ export default function ListBestProsCons({ prosList, consList }) {
                     {consList &&
                         consList.map((argument) => {
                             return (
-                                <Box key={argument.id} sx={{paddingLeft: '20px'}}>
+                                <Box key={argument.primaryKey} sx={{paddingLeft: '20px'}}>
                                     {/*TODO changer .content par .title et items.length par .vote*/}
                                     <Typography>
                                         {argument.title}{" "}
-                                        {argument.votes.items.length}{" "}
-                                        <ArrowCircleUpIcon />
+                                        {argument.votes.vote.length}{" "}
+                                        <ArrowCircleDownIcon />
                                     </Typography>
                                 </Box>
                             );

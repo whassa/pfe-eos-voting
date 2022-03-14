@@ -14,9 +14,10 @@ import LiveChat from "component/Proposals/LiveChat/LiveChat";
 import ProsCons from "component/Proposals/ProsCons/ProsCons";
 import Overview from "component/Proposals/Overview/Overview";
 import Statistics from "component/Proposals/Statistic/Statistic";
-
+import SnackbarAlert from "common/SnackbarAlert/snackbarAlert";
 import { getProposal, vote, voteTemplate } from "../../src/utils/ContractActions/Contract";
 import VoteModal from "component/Proposals/VoteModal/VoteModal";
+import ListNews from "component/Proposals/News/ListNews";
 
 const views = ["Overview", "Pros & Cons", "Statistics", "News", "Live Chat"];
 
@@ -27,6 +28,8 @@ const initialState = {
     resolution: {},
     loading: true,
     snackbarOpen: false,
+    submitDisable: false,
+    error: "",
 };
 
 const types = {
@@ -35,6 +38,7 @@ const types = {
     POSITION_CHANGED: "POSITION_CHANGED",
     RESOLUTION_CHANGED: "RESOLUTION_CHANGED",
     RESOLUTION_FETCHED: "RESOLUTION_FETCHED",
+    ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE",
 };
 
 const reducer = (state, action) => {
@@ -49,6 +53,15 @@ const reducer = (state, action) => {
             return { ...state, resolution: action.value, loading: false, open: false }
         case types.RESOLUTION_CHANGED:
             return { ...state, resolution: action.value, loading: false, open: false};
+        case types.ERROR_FORM_RESPONSE:
+            return {
+                ...state,
+                submitDisable: false,
+                error: action.value,
+                snackbarOpen: true,
+            };
+        case types.CLOSE_SNACKBAR:
+            return { ...state, open: false };
         case types.USER_VOTED:
 
             return { ...state};
@@ -78,12 +91,16 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
     useEffect( () => {
         getProposal(pid, privateKey, eosAccountName).then( (value) => {
           dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
+        }).catch((error) => {
+            dispatch({
+                value: (error instanceof String ? error : error.toString()),
+                type: types.ERROR_FORM_RESPONSE,
+            });
         });
     }, []);
 
     useEffect( () => {
         if (ual.activeUser && state.resolution.votes) {
-            
             const vote = state.resolution.votes.vote.find((vote) => {
                 if (JSON.stringify(ual.activeUser.session.publicKey.data.array) === vote.publicKey){
                     return vote
@@ -109,8 +126,11 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
                 getProposal(pid, privateKey, eosAccountName).then( (value) => {
                     dispatch({type: types.RESOLUTION_CHANGED, value: ( value.rows ? value.rows[0] :  {} )});
                 })
-            }).catch((e) => {
-                console.error('error voting')
+            }).catch((error) => {
+                dispatch({
+                    value: (error instanceof String ? error : error.toString()),
+                    type: types.ERROR_FORM_RESPONSE,
+                });
             })
         }
     }
@@ -210,10 +230,25 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
                             <ProsCons
                                 ual={ual}
                                 resolution={state.resolution}
+                                privateKey={privateKey} 
+                                eosAccountName={eosAccountName}
+                                refreshProsCons={() => {
+                                    return getProposal(pid, privateKey, eosAccountName).then( (value) => {
+                                        dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
+                                    }).catch((e) => {
+                                        dispatch({
+                                            value: (error instanceof String ? error : error.toString()),
+                                            type: types.ERROR_FORM_RESPONSE,
+                                        });
+                                    });
+                                }}
                             ></ProsCons>
                         )}
                         {state.view === views[2] && (
                             <Statistics resolution={state.resolution}></Statistics>
+                        )}
+                        {state.view === views[3] && (
+                            <ListNews news={state.resolution.singleNews}></ListNews>
                         )}
                         {state.view === views[4] && (
                             <LiveChat
@@ -226,6 +261,14 @@ export default function pid({ ual, encryptionKey, pid, privateKey, eosAccountNam
                 ) : (
                     <Box> Are you lost ? This is not a valid resolution. </Box>
                 )}
+                <SnackbarAlert
+                    severity={"error"}
+                    open={state.snackbarOpen}
+                    onClose={() => {
+                        dispatch({ type: types.CLOSE_SNACKBAR });
+                    }}
+                    message={state.error}
+                />
             </Container>
         </>
     );

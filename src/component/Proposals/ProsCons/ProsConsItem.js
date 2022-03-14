@@ -11,14 +11,14 @@ export default function ListProsCons({ argument }) {
     const theme = useTheme();
 
     let tmpVote = 0;
-    argument.votes.items.map((vote) => {
+    argument.votes.vote.map((vote) => {
             (vote.value ? tmpVote++ : tmpVote --)
         }
     )
     const [votes, setVotes] = useState(tmpVote);
 
     return (
-        <Paper elevation={3} padding="dense" sx={{padding: '10px'}}>
+        <Paper elevation={3} padding="dense" sx={{padding: '10px', marginBottom: '5px'}}>
             <Stack
                 direction="row"
                 justifyContent="space-between"
@@ -26,7 +26,7 @@ export default function ListProsCons({ argument }) {
                 spacing={1}
             >
                 <Box sx={{ marginLeft: '10px', marginRight: '10px'}}>
-                    {argument.pro ? (
+                    {argument.value ? (
                         <AddCircleOutlineIcon sx={{ fontSize: 40 }} />
                     ) : (
                         <RemoveCircleOutlineIcon sx={{ fontSize: 40 }} />
@@ -36,8 +36,8 @@ export default function ListProsCons({ argument }) {
                     <Typography variant="h5" display="block">{argument.title}</Typography>
                     {/*TODO change for argument.author.userName*/}
                     <Typography display="block" variant="caption" sx={{ color: theme.palette.grey[400], marginTop: '-2px'}}>
-                        {argument.member.user.displayName} -{" "}
-                        {argument.createdAt.format('YYYY-MM-DD').toString()}
+                        {argument.author.userName} -{" "}
+                        {argument.createdAt}
                     </Typography>
                     <Typography display="block" sx={{ marginTop: '5px'}}>{argument.content}
                     </Typography>

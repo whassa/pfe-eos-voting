@@ -1,6 +1,6 @@
 import { Grid, Paper, Stack, Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import relativeTime  from 'dayjs/plugin/relativeTime'
+import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import Chart from "./Chart";
 
@@ -18,7 +18,7 @@ export default function Statistics({ resolution }) {
         resolution.votes.vote.map((vote) => {
             if (vote.value === 0) {
                 refrainVotes++;
-            } else if (vote.value) {
+            } else if (vote.value === 1) {
                 prosVotes++;
             } else {
                 consVotes++;
@@ -61,7 +61,7 @@ export default function Statistics({ resolution }) {
                             </Typography>
                         </Box>
                         <Box>
-                            <Typography>No</Typography>
+                            <Typography>Refrain</Typography>
                             <Typography sx={{ textAlign: "center" }}>
                                 {refrainVotes}
                             </Typography>
@@ -82,7 +82,18 @@ export default function Statistics({ resolution }) {
                             fontSize: "64px",
                         }}
                     >
-                        ???
+                        <Typography
+                            sx={{
+                                textAlign: "center",
+                                color: theme.palette.colors.coolSage,
+                                fontSize: "64px",
+                            }}
+                        >
+                            {((prosVotes/resolution.voteMargin) > 1)?100:prosVotes/resolution.voteMargin*100}%
+                            <Typography sx={{ textAlign: "center" }}>
+                                {resolution.voteMargin} votes to pass
+                            </Typography>
+                        </Typography>
                     </Typography>
                     <Typography sx={{ textAlign: "center" }}>???</Typography>
                 </Paper>
@@ -100,7 +111,10 @@ export default function Statistics({ resolution }) {
                             fontSize: "64px",
                         }}
                     >
-                        {dayjs(resolution.expiredAt).diff(dayjs(), 'day')}
+                        {dayjs(resolution.expiredAt).diff(dayjs(), "day")}
+                    </Typography>
+                    <Typography sx={{ textAlign: "center" }}>
+                        {resolution.expiredAt.split("T")[0]}
                     </Typography>
                 </Paper>
             </Stack>

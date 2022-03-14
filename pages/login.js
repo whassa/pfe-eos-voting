@@ -25,11 +25,11 @@ import Header from "component/Head/Header";
 // http://localhost:8888/v1/chain/get_info
 
 const network = {
-  chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f",
-  rpcEndpoints: [{ protocol: "http", host: "localhost", port: 8888 }],
+  chainId:  process.env.NEXT_PUBLIC_CHAIN_ID,
+  rpcEndpoints: [{ protocol: process.env.NEXT_PUBLIC_RPC_PROTOCOL, host: process.env.NEXT_PUBLIC_RPC_HOST, port: parseInt(process.env.NEXT_PUBLIC_RPC_PORT) }],
 };
 
-export default function loginComponent({ ual }) {
+export default function loginComponent({ ual, chainId, rpcEndpoints }) {
   const router = useRouter();
 
   useEffect(() => {
@@ -79,11 +79,11 @@ export default function loginComponent({ ual }) {
   );
 }
 
+
 export function LoginWrapper({ children }) {
   const appName = "Eos voting";
   const scatter = new Scatter([network], { appName });
   const anchor = new Anchor([network], { appName });
-
   return (
     <UALProvider chains={[network]} authenticators={[anchor]} appName={appName}>
       {children}

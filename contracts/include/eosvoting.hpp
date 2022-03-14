@@ -40,6 +40,7 @@ CONTRACT eosvoting : public contract {
     };
 
     struct argument {
+      uint64_t primaryKey;
       string title;
       string content;
       author author;
@@ -53,9 +54,10 @@ CONTRACT eosvoting : public contract {
       std::vector<argument> argument;
     };
 
-    ACTION crtproposal(name from, string title, string summary, string content, string category, string status, author author, time_point_sec expiredAt );
-    ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status, author author, time_point_sec expiredAt );
+    ACTION crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, author author, time_point_sec expiredAt );
+    ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, author author, time_point_sec expiredAt );
     ACTION makevote(name from, uint64_t primaryKey, string publicKey, char value);
+    ACTION crtargument(name from, uint64_t primaryKey, string title, string content, author author, bool value);
     ACTION clear();
 
     public:
@@ -70,13 +72,14 @@ CONTRACT eosvoting : public contract {
       string summary; 
       string content;
       string category;
+      uint64_t voteMargin;
       string status;
       time_point_sec expiredAt;
       time_point_sec createdAt;
       time_point_sec updatedAt;
       time_point_sec deletedAt;
-      bool integrity;
       author author;
+      arguments arguments;
       news news;
       votes votes;
       uint64_t primary_key() const { return primaryKey; }
