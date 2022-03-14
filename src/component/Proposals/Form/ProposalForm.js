@@ -74,7 +74,7 @@ const initialState = {
     voteMargin: 0,
     expirationDate: "",
     submitDisable: false,
-    errorMsg: "",
+    error: "",
     open: false,
 };
 
@@ -115,9 +115,8 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                 router.push("/");
             })
             .catch((error) => {
-                console.log(error);
                 dispatch({
-                    value: error,
+                    value: (error instanceof String ? error : error.toString()),
                     type: types.ERROR_FORM_RESPONSE,
                 });
             });
@@ -143,7 +142,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                             id="Title"
                             label="Title"
                             inputProps={{
-                                maxlength: 50
+                                maxLength: 50
                               }}
                             onChange={(e) => {
                                 dispatch({
@@ -161,7 +160,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                             variant="outlined"
                             multiline
                             inputProps={{
-                                maxlength: 200
+                                maxLength: 200
                               }}
                             onChange={(e) => {
                                 dispatch({
@@ -194,7 +193,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                             id="Category"
                             label="Category"
                             inputProps={{
-                                maxlength: 50
+                                maxLength: 50
                               }}
                             onChange={(e) => {
                                 dispatch({

@@ -1,4 +1,4 @@
-import { Grid, Paper, Box } from "@mui/material";
+import {Paper, Box, Stack } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
@@ -18,31 +18,38 @@ export default function News({
     refreshNews,
 }) {
     const theme = useTheme();
-
+    console.log(news);
     return (
-        <Paper elevation={3} padding="dense" sx={{ padding: "10px" }}>
-            {resolutionAuthor.userName === ual.activeUser.accountName && (
-                <Box sx={{ flex: 1 }}>
-                    <FormNews
-                        ual={ual}
-                        resolutionID={resolutionID}
-                        privateKey={privateKey}
-                        eosAccountName={eosAccountName}
-                        refreshNews={refreshNews}
-                    />
-                </Box>
-            )}
-            <Grid sx={{ marginTop: theme.homeMarginTop }}>
+        <>
+            <Paper elevation={3} padding="dense" sx={{ padding: "10px" }}>
+                {ual && resolutionAuthor.userName === ual.activeUser.accountName && (
+                    <Box sx={{ flex: 1 }}>
+                        <FormNews
+                            ual={ual}
+                            resolutionID={resolutionID}
+                            privateKey={privateKey}
+                            eosAccountName={eosAccountName}
+                            refreshNews={refreshNews}
+                        />
+                    </Box>
+                )}
+            </Paper>
+            <Stack
+                direction="column"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={1}
+            >
                 {news &&
                     news.map((singleNew) => {
                         return (
                             <NewsItem
                                 key={singleNew.createdAt}
-                                news={singleNew}
+                                singleNew={singleNew}
                             />
                         );
                     })}
-            </Grid>
-        </Paper>
+            </Stack>
+        </>
     );
 }

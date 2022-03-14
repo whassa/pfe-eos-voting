@@ -7,12 +7,8 @@ import LiveChat from "component/Proposals/LiveChat/LiveChat";
 import ProsCons from "component/Proposals/ProsCons/ProsCons";
 import Overview from "component/Proposals/Overview/Overview";
 import Statistics from "component/Proposals/Statistic/Statistic";
-
-import {
-    getProposal,
-    vote,
-    voteTemplate,
-} from "../../src/utils/ContractActions/Contract";
+import SnackbarAlert from "common/SnackbarAlert/snackbarAlert";
+import { getProposal, vote, voteTemplate } from "../../src/utils/ContractActions/Contract";
 import VoteModal from "component/Proposals/VoteModal/VoteModal";
 import News from "component/Proposals/News/News";
 
@@ -25,6 +21,8 @@ const initialState = {
     resolution: {},
     loading: true,
     snackbarOpen: false,
+    submitDisable: false,
+    error: "",
 };
 
 const types = {
@@ -33,6 +31,7 @@ const types = {
     POSITION_CHANGED: "POSITION_CHANGED",
     RESOLUTION_CHANGED: "RESOLUTION_CHANGED",
     RESOLUTION_FETCHED: "RESOLUTION_FETCHED",
+    ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE",
 };
 
 const reducer = (state, action) => {
@@ -51,12 +50,16 @@ const reducer = (state, action) => {
                 open: false,
             };
         case types.RESOLUTION_CHANGED:
+            return { ...state, resolution: action.value, loading: false, open: false};
+        case types.ERROR_FORM_RESPONSE:
             return {
                 ...state,
-                resolution: action.value,
-                loading: false,
-                open: false,
+                submitDisable: false,
+                error: action.value,
+                snackbarOpen: true,
             };
+        case types.CLOSE_SNACKBAR:
+            return { ...state, open: false };
         case types.USER_VOTED:
             return { ...state };
         default:
@@ -88,11 +91,13 @@ export default function pid({
         pb: 3,
     };
 
-    useEffect(() => {
-        getProposal(pid, privateKey, eosAccountName).then((value) => {
+    useEffect( () => {
+        getProposal(pid, privateKey, eosAccountName).then( (value) => {
+          dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
+        }).catch((error) => {
             dispatch({
-                type: types.RESOLUTION_FETCHED,
-                value: value.rows ? value.rows[0] : {},
+                value: (error instanceof String ? error : error.toString()),
+                type: types.ERROR_FORM_RESPONSE,
             });
         });
     }, []);
@@ -123,28 +128,23 @@ export default function pid({
             const voteInformation = {
                 ...voteTemplate,
                 proposalID: pid,
-                publicKey: JSON.stringify(
-                    ual.activeUser.session.publicKey.data.array
-                ),
+                publicKey: JSON.stringify(ual.activeUser.session.publicKey.data.array),
                 value: state.position,
-            };
-            vote(ual, voteInformation, privateKey, eosAccountName)
-                .then(() => {
-                    // Fetch the actual data
-                    getProposal(pid, privateKey, eosAccountName).then(
-                        (value) => {
-                            dispatch({
-                                type: types.RESOLUTION_CHANGED,
-                                value: value.rows ? value.rows[0] : {},
-                            });
-                        }
-                    );
+            }
+            vote( ual, voteInformation, privateKey, eosAccountName).then(() => {
+                // Fetch the actual data
+                getProposal(pid, privateKey, eosAccountName).then( (value) => {
+                    dispatch({type: types.RESOLUTION_CHANGED, value: ( value.rows ? value.rows[0] :  {} )});
                 })
-                .catch((e) => {
-                    console.error("error voting");
+            }).catch((error) => {
+                dispatch({
+                    value: (error instanceof String ? error : error.toString()),
+                    type: types.ERROR_FORM_RESPONSE,
                 });
+            })
         }
-    };
+    }
+    console.log(state.resolution)
 
     return (
         <>
@@ -252,16 +252,12 @@ export default function pid({
                                 privateKey={privateKey}
                                 eosAccountName={eosAccountName}
                                 refreshProsCons={() => {
-                                    return getProposal(
-                                        pid,
-                                        privateKey,
-                                        eosAccountName
-                                    ).then((value) => {
+                                    return getProposal(pid, privateKey, eosAccountName).then( (value) => {
+                                        dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
+                                    }).catch((e) => {
                                         dispatch({
-                                            type: types.RESOLUTION_FETCHED,
-                                            value: value.rows
-                                                ? value.rows[0]
-                                                : {},
+                                            value: (error instanceof String ? error : error.toString()),
+                                            type: types.ERROR_FORM_RESPONSE,
                                         });
                                     });
                                 }}
@@ -275,9 +271,9 @@ export default function pid({
                         {state.view === views[3] && (
                             <News
                                 ual={ual}
-                                news={state.resolution.singleNews}
-                                resolutionID={state.resolution.privateKey}
-                                resolutionAuthor={state.resolution.author.userName}
+                                news={state.resolution.news.singlenews}
+                                resolutionID={pid}
+                                resolutionAuthor={state.resolution.author}
                                 privateKey={privateKey}
                                 eosAccountName={eosAccountName}
                                 refreshNews={() => {
@@ -307,6 +303,14 @@ export default function pid({
                 ) : (
                     <Box> Are you lost ? This is not a valid resolution. </Box>
                 )}
+                <SnackbarAlert
+                    severity={"error"}
+                    open={state.snackbarOpen}
+                    onClose={() => {
+                        dispatch({ type: types.CLOSE_SNACKBAR });
+                    }}
+                    message={state.error}
+                />
             </Container>
         </>
     );

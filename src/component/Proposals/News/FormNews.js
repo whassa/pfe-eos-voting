@@ -58,7 +58,7 @@ const reducer = (state, action) => {
                 title: initialState.title,
                 content: initialState.content,
                 snackBarOpen: true,
-                snackBarMessage: "Argument created successfully",
+                snackBarMessage: "News created successfully",
                 snackBarStatus: "success",
             };
         case types.NEWS_NOT_CREATED:
@@ -88,7 +88,7 @@ export default function FormNews({
         const news = {
             ...newsTemplate,
             //changer pour .primaryKey
-            proposalID: resolutionID,
+            primaryKey: resolutionID,
             title: state.title,
             content: state.content,
             author: {
@@ -97,30 +97,27 @@ export default function FormNews({
                     ual.activeUser.session.publicKey.data.array
                 ),
             },
-        };
+    };
+        
         createSingleNews(ual, news, privateKey, eosAccountName)
             .then(() => {
-                dispatch({ type: types.ARGUMENT_CREATED });
-                refreshProsCons();
+                dispatch({ type: types.NEWS_CREATED });
+                refreshNews();
             })
             .catch((e) => {
-                dispatch({ type: types.ARGUMENT_NOT_CREATED, value: e });
+                dispatch({ type: types.NEWS_NOT_CREATED,  value: (e instanceof String ? e : e.toString()), });
             });
     }
 
     return (
-        <Paper
-            elevation={3}
-            padding="dense"
-            sx={{ marginTop: "20px", padding: "10px" }}
-        >
+        <>
             <FormControl sx={{ width: "100%" }}>
                 <Input
                     id="Title"
                     label="Title"
                     placeholder="Title"
                     inputProps={{
-                        maxlength: 50,
+                        maxLength: 50,
                     }}
                     onChange={(e) => {
                         dispatch({
@@ -189,6 +186,6 @@ export default function FormNews({
                 }}
                 message={state.snackBarMessage}
             />
-        </Paper>
+        </>
     );
 }

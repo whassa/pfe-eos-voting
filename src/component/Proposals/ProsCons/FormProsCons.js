@@ -103,7 +103,7 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
             dispatch({ type: types.ARGUMENT_CREATED });
             refreshProsCons();
         }).catch((e) => {
-            dispatch({ type: types.ARGUMENT_NOT_CREATED, value: e });
+            dispatch({ type: types.ARGUMENT_NOT_CREATED, value: (e instanceof String ? e : e.toString()) });
         });
     }
 
@@ -119,7 +119,7 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
                     label="Title"
                     placeholder="Title"
                     inputProps={{
-                        maxlength: 50
+                        maxLength: 50
                       }}
                     onChange={(e) => {
                         dispatch({

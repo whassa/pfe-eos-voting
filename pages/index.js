@@ -30,7 +30,6 @@ export default function Home({ ual, privateKey, eosAccountName }) {
       setResolutions(value.rows);
     });
   }, []);
-  
 
   return (
     <>

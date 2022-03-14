@@ -9,13 +9,7 @@ CONTRACT eosvoting : public contract
 public:
   using contract::contract;
 
-  struct author
-  {
-    string userName;
-    string publicKey;
-  };
-
-  struct singleNews
+  struct singlenews
   {
     string title;
     string content;
@@ -28,13 +22,13 @@ public:
   {
     time_point_sec createdAt;
     time_point_sec updatedAt;
-    string publicKey;
+    name user;
     char value;
   };
 
   struct news
   {
-    std::vector<singleNews> singleNews;
+    std::vector<singlenews> singlenews;
   };
 
   struct votes
@@ -49,7 +43,7 @@ public:
     uint64_t primaryKey;
     string title;
     string content;
-    author author;
+    name author;
     time_point_sec createdAt;
     time_point_sec updatedAt;
     votes votes;
@@ -61,11 +55,14 @@ public:
     std::vector<argument> argument;
   };
 
-  ACTION crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, author author, time_point_sec expiredAt);
-  ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, string status, author author, time_point_sec expiredAt);
-  ACTION makevote(name from, uint64_t primaryKey, string publicKey, char value);
-  ACTION crtargument(name from, uint64_t primaryKey, string title, string content, author author, bool value);
-  ACTION crtsinglenews(name from, uint64_t primaryKey, string title, string content);
+  ACTION crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, time_point_sec expiredAt);
+  ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, time_point_sec expiredAt);
+  ACTION makevote(name from, uint64_t primaryKey, char value);
+  ACTION crtargument(name from, uint64_t primaryKey, string title, string content, bool value);
+  ACTION voteargument(name from, uint64_t primaryKey, uint64_t argumentPrimaryKey, char value );
+  ACTION crtnews(name from, uint64_t primaryKey, string title, string content);
+  ACTION upargument(name from, uint64_t primaryKey, string title, string content, bool value);
+  ACTION upnews(name from, uint64_t primaryKey, string title, string content);
   ACTION clear();
 
 public:
@@ -87,7 +84,7 @@ public:
     time_point_sec createdAt;
     time_point_sec updatedAt;
     time_point_sec deletedAt;
-    author author;
+    name author;
     arguments arguments;
     news news;
     votes votes;

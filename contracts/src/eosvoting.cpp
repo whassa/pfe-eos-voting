@@ -1,6 +1,6 @@
 #include <eosvoting.hpp>
 
-ACTION eosvoting::crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, author author, time_point_sec expiredAt)
+ACTION eosvoting::crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, time_point_sec expiredAt)
 {
 
   require_auth(from);
@@ -23,10 +23,10 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
       proposal_info.expiredAt = expiredAt;
       proposal_info.createdAt = time;
       proposal_info.updatedAt = time;
-      proposal_info.author = author; });
+      proposal_info.author = from; });
 }
 
-ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, author author, time_point_sec expiredAt) {
+ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, time_point_sec expiredAt) {
   require_auth(from);
 
   // Init the _votes table
@@ -49,7 +49,7 @@ ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, strin
 }
 
 
-ACTION eosvoting::makevote(name from, uint64_t primaryKey, string publicKey, char value)
+ACTION eosvoting::makevote(name from, uint64_t primaryKey, char value)
 {
   require_auth(from);
   // Init the _votes table
@@ -62,7 +62,7 @@ ACTION eosvoting::makevote(name from, uint64_t primaryKey, string publicKey, cha
     bool found = 0;
     for (size_t i = 0; i < proposals.votes.vote.size(); i++)
     {
-      if (proposals.votes.vote[i].publicKey == publicKey)
+      if (proposals.votes.vote[i].user == from)
       {
         found = 1;
         if (proposals.votes.vote[i].value != value)
@@ -89,7 +89,7 @@ ACTION eosvoting::makevote(name from, uint64_t primaryKey, string publicKey, cha
     if (!found)
     {
       time_point_sec time = current_time_point_sec();
-      struct vote vote = {time, time, publicKey, value};
+      struct vote vote = {time, time, from, value};
       _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
                         {
         proposal_info.votes.totalVotes = proposal_info.votes.totalVotes + 1;
@@ -99,9 +99,10 @@ ACTION eosvoting::makevote(name from, uint64_t primaryKey, string publicKey, cha
   }
 }
 
-ACTION eosvoting::crtargument(name from, uint64_t primaryKey, string title, string content, author author, bool value)
+ACTION eosvoting::crtargument(name from, uint64_t primaryKey, string title, string content, bool value)
 {
   
+  require_auth(from);
    // Init the _votes table
   proposals_index _proposals(get_self(), get_self().value);
 
@@ -121,7 +122,7 @@ ACTION eosvoting::crtargument(name from, uint64_t primaryKey, string title, stri
 
     time_point_sec time = current_time_point_sec();
     
-    struct argument argument = {primaryKey, title, content, author, time, time};
+    struct argument argument = {primaryKey, title, content, from, time, time};
     argument.value = value;
     _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info) {
         proposal_info.arguments.argument.insert(proposal_info.arguments.argument.end(), argument);
@@ -129,9 +130,9 @@ ACTION eosvoting::crtargument(name from, uint64_t primaryKey, string title, stri
   }
 }
 
-ACTION eosvoting::crtsinglenews(name from, uint64_t primaryKey, string title, string content)
+ACTION eosvoting::crtnews(name from, uint64_t primaryKey, string title, string content)
 {
-  
+  require_auth(from);
    // Init the _votes table
   proposals_index _proposals(get_self(), get_self().value);
 
@@ -141,15 +142,12 @@ ACTION eosvoting::crtsinglenews(name from, uint64_t primaryKey, string title, st
 
     time_point_sec time = current_time_point_sec();
     
-    struct singlenews singlenews = {title, content, time, time};
+    struct singlenews singleNews = {title, content, time, time};
     _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info) {
-        proposal_info.news.singlenews.insert(proposal_info.news.singlenews.end(), singlenews);
+        proposal_info.news.singlenews.insert(proposal_info.news.singlenews.end(), singleNews);
     });
   }
 }
-
-
-
 
 ACTION eosvoting::clear()
 {
@@ -165,4 +163,4 @@ ACTION eosvoting::clear()
   }
 }
 
-EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument));
+EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument)(crtnews));

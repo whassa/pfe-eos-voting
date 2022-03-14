@@ -15,19 +15,12 @@ import { useRouter } from 'next/router'
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps, router}) {
-
+function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps, router,}) {
   const App = ({ ual }) => {
-    /** WE CAN REMOVE IF WE WANT TO HIDE ALL PAGES BY DEFAULT 
-    if ( ual.activeUser === null && router.route != "/login" ){
-      return null;
-    } 
-    */
     return (<Component ual={ual} {...pageProps} />)
   }
 
   const AppWithUAL = withUAL(App);
-
 
   return (
     <CacheProvider value={emotionCache}>
