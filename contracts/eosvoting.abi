@@ -21,7 +21,7 @@
                 },
                 {
                     "name": "author",
-                    "type": "author"
+                    "type": "name"
                 },
                 {
                     "name": "createdAt",
@@ -52,20 +52,6 @@
             ]
         },
         {
-            "name": "author",
-            "base": "",
-            "fields": [
-                {
-                    "name": "userName",
-                    "type": "string"
-                },
-                {
-                    "name": "publicKey",
-                    "type": "string"
-                }
-            ]
-        },
-        {
             "name": "clear",
             "base": "",
             "fields": []
@@ -91,12 +77,30 @@
                     "type": "string"
                 },
                 {
-                    "name": "author",
-                    "type": "author"
-                },
-                {
                     "name": "value",
                     "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "crtnews",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
                 }
             ]
         },
@@ -133,10 +137,6 @@
                     "type": "string"
                 },
                 {
-                    "name": "author",
-                    "type": "author"
-                },
-                {
                     "name": "expiredAt",
                     "type": "time_point_sec"
                 }
@@ -155,10 +155,6 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "publicKey",
-                    "type": "string"
-                },
-                {
                     "name": "value",
                     "type": "int8"
                 }
@@ -169,8 +165,8 @@
             "base": "",
             "fields": [
                 {
-                    "name": "singleNews",
-                    "type": "singleNews[]"
+                    "name": "singlenews",
+                    "type": "singlenews[]"
                 }
             ]
         },
@@ -224,7 +220,7 @@
                 },
                 {
                     "name": "author",
-                    "type": "author"
+                    "type": "name"
                 },
                 {
                     "name": "arguments",
@@ -241,7 +237,7 @@
             ]
         },
         {
-            "name": "singleNews",
+            "name": "singlenews",
             "base": "",
             "fields": [
                 {
@@ -299,10 +295,6 @@
                     "type": "string"
                 },
                 {
-                    "name": "author",
-                    "type": "author"
-                },
-                {
                     "name": "expiredAt",
                     "type": "time_point_sec"
                 }
@@ -321,8 +313,8 @@
                     "type": "time_point_sec"
                 },
                 {
-                    "name": "publicKey",
-                    "type": "string"
+                    "name": "user",
+                    "type": "name"
                 },
                 {
                     "name": "value",
@@ -358,6 +350,11 @@
         {
             "name": "crtargument",
             "type": "crtargument",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "crtnews",
+            "type": "crtnews",
             "ricardian_contract": ""
         },
         {

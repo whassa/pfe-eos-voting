@@ -82,20 +82,14 @@ export default function Statistics({ resolution }) {
                             fontSize: "64px",
                         }}
                     >
-                        <Typography
-                            sx={{
-                                textAlign: "center",
-                                color: theme.palette.colors.coolSage,
-                                fontSize: "64px",
-                            }}
-                        >
-                            {((prosVotes/resolution.voteMargin) > 1)?100:prosVotes/resolution.voteMargin*100}%
-                            <Typography sx={{ textAlign: "center" }}>
-                                {resolution.voteMargin} votes to pass
-                            </Typography>
-                        </Typography>
+                        {prosVotes / resolution.voteMargin > 1
+                            ? 100
+                            : (prosVotes / resolution.voteMargin) * 100}
+                        %
                     </Typography>
-                    <Typography sx={{ textAlign: "center" }}>???</Typography>
+                    <Typography sx={{ textAlign: "center" }}>
+                        {resolution.voteMargin} votes to pass
+                    </Typography>
                 </Paper>
 
                 <Paper

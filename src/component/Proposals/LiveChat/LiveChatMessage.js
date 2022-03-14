@@ -6,7 +6,7 @@ export default function LiveChatMessage({ ual, message }) {
   const date = dayjs(message.when);
   const theme = useTheme();
 
-  const ownMessage = ( ual.activeUser && JSON.stringify(message.publicKey) === JSON.stringify(ual.activeUser.session.publicKey.data.array) );
+  const ownMessage = ( ual.activeUser &&  message.who === ual.activeUser.accountName );
 
   return (
     <Box sx={{ 

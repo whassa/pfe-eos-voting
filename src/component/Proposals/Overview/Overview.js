@@ -44,7 +44,7 @@ export default function Overview({ resolution }) {
                     </Box>
                     <Typography component="div" sx={{ textAlign: "center" }}>
                         {/*TODO change it for .author.userName*/}
-                        {resolution.author.userName}
+                        {resolution.author}
                     </Typography>
                 </Paper>
 

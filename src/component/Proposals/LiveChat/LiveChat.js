@@ -27,11 +27,9 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
   const sendMessage = async() => {
     const index = dayjs().toISOString();
     // new TextDecoder().decode(uin8arry)
-    const publicKey = ual.activeUser.session.publicKey.data.array;
     const messageToEncrypt = {
       message: newMessage,
       userName: ual.activeUser.accountName,
-      userPublicKey: publicKey,
     };
     const secret = await SEA.encrypt(messageToEncrypt, encryptionKey);
     // const message = user.get('all').set({ what: secret });
@@ -40,7 +38,8 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
   }
   
 
-  useEffect(async () => {
+  useEffect(() => {
+    const gunFunction = async () => {
     gun
       .get("liveChat:" + resolution.primaryKey)
       .map(match)
@@ -50,7 +49,6 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
           const messageDecrypted = await SEA.decrypt(data, encryptionKey);
           var message = {
             // transform the data
-            publicKey: messageDecrypted.userPublicKey,
             who: messageDecrypted.userName,
             what: messageDecrypted.message + "", // force decrypt as text.
             when: id, // get the internal timestamp for the what property.
@@ -60,7 +58,9 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
           }
         }
       });
-  }, []);
+    }
+    gunFunction();
+  }, [resolution.primaryKey, encryptionKey]);
 
   return (
     <Grid

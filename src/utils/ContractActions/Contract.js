@@ -10,10 +10,7 @@ export const formTemplate = {
     expiredAt: "",
     status: "open",
     integrity: true,
-    author: {
-        publicKey: "",
-        userName: "",
-    },
+    author: "",
     news: {
         singleNews: [],
     },
@@ -26,14 +23,14 @@ export const formTemplate = {
 
 export const voteTemplate = {
     proposalID: "",
-    publicKey: "",
+    user: "",
     value: null,
 };
 
 export const argumentVoteTemplate = {
     proposalID: "",
     argumentID: "",
-    publicKey: "",
+    user: "",
     value: null,
 };
 
@@ -41,15 +38,12 @@ export const argumentTemplate = {
     proposalID: "",
     title: "",
     content: "",
-    author: {
-        publicKey: "",
-        userName: "",
-    },
+    author: "",
     value: null,
 };
 
 export const newsTemplate = {
-    proposalID: "",
+    primaryKey: "",
     title: "",
     content: "",
 };
@@ -110,7 +104,6 @@ export async function createProposal(
                         category: formInformations.category,
                         voteMargin: formInformations.voteMargin,
                         status: formInformations.status,
-                        author: formInformations.author,
                         expiredAt: formInformations.expiredAt,
                     },
                 }],
@@ -148,7 +141,6 @@ export async function vote(
                             data: {
                                 from: ual.activeUser.accountName,
                                 primaryKey: voteInformation.proposalID,
-                                publicKey: voteInformation.publicKey,
                                 value: voteInformation.value,
                             },
                         },
@@ -193,7 +185,6 @@ export async function createArgument(
                                 primaryKey: argumentInformations.proposalID,
                                 title: argumentInformations.title,
                                 content: argumentInformations.content,
-                                author: argumentInformations.author,
                                 value: argumentInformations.value,
                             },
                         },
@@ -219,13 +210,14 @@ export async function createSingleNews(
     eosAccountName
 ) {
     let contract = await setup(privateKey, eosAccountName);
+    
     try {
         const response = await ual.activeUser.signTransaction(
                 {
                     actions: [
                         {
                             account: eosAccountName, //env variable
-                            name: "crtproposalsinglenews",
+                            name: "crtnews",
                             authorization: [
                                 {
                                     actor: ual.activeUser.accountName,
@@ -234,7 +226,7 @@ export async function createSingleNews(
                             ],
                             data: {
                                 from: ual.activeUser.accountName,
-                                proposalID: singleNewsInformation.proposalID,
+                                primaryKey: parseInt(singleNewsInformation.primaryKey),
                                 title: singleNewsInformation.title,
                                 content: singleNewsInformation.content,
                             },

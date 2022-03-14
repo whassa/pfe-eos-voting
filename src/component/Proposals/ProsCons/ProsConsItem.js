@@ -36,7 +36,7 @@ export default function ListProsCons({ argument }) {
                     <Typography variant="h5" display="block">{argument.title}</Typography>
                     {/*TODO change for argument.author.userName*/}
                     <Typography display="block" variant="caption" sx={{ color: theme.palette.grey[400], marginTop: '-2px'}}>
-                        {argument.author.userName} -{" "}
+                        {argument.author} -{" "}
                         {argument.createdAt}
                     </Typography>
                     <Typography display="block" sx={{ marginTop: '5px'}}>{argument.content}
