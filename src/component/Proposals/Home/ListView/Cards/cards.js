@@ -2,9 +2,7 @@ import { Card, CardContent, CardActionArea, CardMedia, Divider, Box } from "@mui
 import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import React from "react";
-import { useRouter } from 'next/router'
 import { styled } from '@mui/material/styles';
 
 const VotingCard = styled(Card)(({ theme }) => ({
@@ -32,21 +30,6 @@ const VotingCard = styled(Card)(({ theme }) => ({
 
 const Cards = ({resolution, elevation, isLast, cardOnClick}) => {
   //const classes = useStyles;
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const router = useRouter();
-
-  const summary = (
-    <Typography
-      variant="body2"
-      color="textSecondary"
-      component="p"
-    >
-      {resolution.summary}
-    </Typography>
-  );
-
   return (
     <Grid
       item
@@ -64,9 +47,6 @@ const Cards = ({resolution, elevation, isLast, cardOnClick}) => {
             <CardContent sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center',}}>
               <Typography gutterBottom variant="h5" component="h2">
                 {resolution.title}
-                {resolution.published === false ? (
-                  <em> (Draft)</em>
-                ) : null}
               </Typography>
               <Typography variant="subtitle1" component="p">
                   {resolution.category} - {resolution.author} 

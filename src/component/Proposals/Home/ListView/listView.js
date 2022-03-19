@@ -24,7 +24,7 @@ const ListView = ({ resolutions, elevation, cardOnClick }) => {
             key={index}
             id={el.id}
             elevation={elevation}
-            isLast={index !== resolutions.length - 1}
+            isLast={true}
             cardOnClick={cardOnClick}
           />
         );
@@ -32,8 +32,5 @@ const ListView = ({ resolutions, elevation, cardOnClick }) => {
     </Grid>
   ) : null;
 };
-
-ListView.propTypes = propTypes;
-ListView.defaultProps = defaultProps;
 
 export default ListView;

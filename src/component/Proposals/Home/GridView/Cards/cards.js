@@ -3,7 +3,6 @@ import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { useRouter } from 'next/router'
 
 import { styled } from '@mui/material/styles';
 
@@ -27,25 +26,6 @@ const VotingCard = styled(Card)(({ theme }) => ({
 
 const Cards = ({resolution, elevation, isLast, cardOnClick}) => {
   //const classes = useStyles;
-
-  const theme = useTheme();
-  const router = useRouter();
-
-  const summary = (
-    <Typography
-      variant="body2"
-      color="textSecondary"
-      component="p"
-    >
-      {resolution.summary}
-    </Typography>
-  );
-
-
-  const handleVoteButtonClick = (e) => {
-    //TODO changer pour push vers le show.js en passant la resolution qui contient tout
-    router.push("/Proposals/Show/show");
-  }
 
   return (
     <Grid

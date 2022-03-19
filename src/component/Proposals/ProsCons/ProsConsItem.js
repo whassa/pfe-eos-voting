@@ -1,21 +1,98 @@
-import { Grid, Box, Paper, IconButton, Typography, Stack, Item} from "@mui/material";
+import { useEffect, useReducer } from "react";
+import { Box, Paper, IconButton, Typography, Stack,} from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
-import { v4 as uuidv4 } from "uuid";
 import { useTheme } from "@mui/styles";
-import { useState } from "react";
+import SnackbarAlert from 'common/SnackbarAlert/snackbarAlert';
+import {
+    argumentVoteTemplate,
+    voteArgument,
+} from "../../../utils/ContractActions/Contract";
 
-export default function ListProsCons({ argument }) {
+const initialState = {
+    vote: 0,
+    snackBarOpen: false,
+    snackBarMessage: "",
+    snackBarStatus: "error",
+};
+
+const types = {
+    ARGUMENT_VOTED: "ARGUMENT_VOTED",
+    ARGUMENT_NOT_VOTED: "ARGUMENT_NOT_VOTED",
+    CLOSE_SNACKBAR: "CLOSE_SNACKBAR",
+    VOTE_CHANGE: "VOTE_CHANGE",
+};
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case types.ARGUMENT_VOTED:
+            return {
+                ...state,
+                snackBarOpen: true,
+                snackBarMessage: "Argument Voted successfully",
+                snackBarStatus: "success",
+            };
+        case types.ARGUMENT_NOT_VOTED:
+            return {
+                ...state,
+                snackBarOpen: true,
+                snackBarMessage: action.value,
+                snackBarStatus: "error",
+            };
+        case types.VOTE_CHANGE:
+            return {
+                ...state,
+                vote: action.value,
+            }
+        case types.CLOSE_SNACKBAR:
+            return { ...state, snackBarOpen: false };
+        default:
+            return { ...state };
+    }
+};
+
+
+
+export default function ListProsCons({ ual, pid, argument, eosAccountName, refreshProsCons }) {
     const theme = useTheme();
 
-    let tmpVote = 0;
-    argument.votes.vote.map((vote) => {
-            (vote.value ? tmpVote++ : tmpVote --)
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    const voteForUser = (voteValue) => {
+        const vote = {
+            ...argumentVoteTemplate,
+            proposalID: pid,
+            argumentID: argument.primaryKey,
+            value: voteValue,
         }
-    )
-    const [votes, setVotes] = useState(tmpVote);
+        voteArgument(ual, vote, eosAccountName).then(() => {
+            dispatch({ type: types.ARGUMENT_VOTED });
+            refreshProsCons();
+        }).catch((e) => {
+            dispatch({ type: types.ARGUMENT_NOT_VOTED, value: (e instanceof String ? e : e.toString()) });
+        });
+    }
+
+    useEffect( () => {
+        if ( argument && argument.votes && argument.votes.vote)
+        {
+            const vote = argument.votes.vote.find((vote) => {
+                if (
+                    ual.activeUser.accountName === vote.user
+                ) {
+                    return vote;
+                }
+            });
+            dispatch({
+                type: types.VOTE_CHANGE,
+                value: vote && vote.value,
+            });
+        }
+    }, [argument]);
+    
+ 
 
     return (
         <Paper elevation={3} padding="dense" sx={{padding: '10px', marginBottom: '5px'}}>
@@ -43,18 +120,16 @@ export default function ListProsCons({ argument }) {
                     </Typography>
                 </Box>
                 <Box sx={{ marginRight: '10px'}}>
-                    <IconButton onClick={() => {setVotes(votes+1)}} sx={{ padding: '4px'}}>
-                        <ArrowCircleUpIcon sx={{ fontSize: 24 }} />
+                    <IconButton onClick={() => {voteForUser(1);}} sx={{ padding: '4px'}}>
+                        <ArrowCircleUpIcon sx={{ fontSize: 24 }} color={(state.vote === 1 ? 'secondary' : 'primary')} />
                     </IconButton>
-                    <Typography sx={{ textAlign: 'center', marginTop: '-5px', marginBottom: '-5px'}}>{votes}</Typography>
-                    <IconButton  onClick={() => {setVotes(votes-1)}} sx={{ padding: '4px'}}>
-                        <ArrowCircleDownIcon sx={{ fontSize: 24 }} />
+                    <Typography sx={{ textAlign: 'center', marginTop: '-5px', marginBottom: '-5px'}}>{argument.votes.actualVote}</Typography>
+                    <IconButton  onClick={() => {voteForUser(-1);}} sx={{ padding: '4px'}}>
+                        <ArrowCircleDownIcon sx={{ fontSize: 24 }} color={(state.vote === -1 ? 'secondary' : 'primary')}/>
                     </IconButton>
                 </Box>
             </Stack>
-          
-            {/*TODO change for .value===1*/}
-            
+            <SnackbarAlert severity={state.snackBarStatus} open={state.snackBarOpen}  onClose={() => { dispatch({type: types.CLOSE_SNACKBAR})}} message={state.snackBarMessage} />
         </Paper>
     );
 }
