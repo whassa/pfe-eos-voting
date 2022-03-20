@@ -29,7 +29,7 @@ const network = {
   rpcEndpoints: [{ protocol: process.env.NEXT_PUBLIC_RPC_PROTOCOL, host: process.env.NEXT_PUBLIC_RPC_HOST, port: parseInt(process.env.NEXT_PUBLIC_RPC_PORT) }],
 };
 
-export default function loginComponent({ ual, chainId, rpcEndpoints }) {
+export default function loginComponent({ ual }) {
   const router = useRouter();
 
   useEffect(() => {

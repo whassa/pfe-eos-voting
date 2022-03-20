@@ -30,7 +30,6 @@ export const voteTemplate = {
 export const argumentVoteTemplate = {
     proposalID: "",
     argumentID: "",
-    user: "",
     value: null,
 };
 
@@ -48,14 +47,15 @@ export const newsTemplate = {
     content: "",
 };
 
-export async function getProposals( privateKey, eosAccountName){
+export async function getProposals( privateKey, eosAccountName, upperBound){
     let contract = await setup(privateKey, eosAccountName);
     const proposals = await contract.rpc.get_table_rows({
         json: true,               // Get the response as json
         code: eosAccountName,      // Contract that we target
         scope: eosAccountName,     // Account that owns the data
         table: 'proposals',        // Table name
-        limit: 10,                // Maximum number of rows that we want to get
+        limit: 3,                // Maximum number of rows that we want to get
+        ...(upperBound && { upper_bound: upperBound}),
         reverse: true,           // Optional: Get reversed data
       }).catch((e) => { throw  'Error fetching the proposals'});
     return proposals;
@@ -110,7 +110,6 @@ export async function createProposal(
               }
             
             , { broadcast: true }).catch((error) => {
-                console.log("error :", error);
                 throw "Error creating the proposal";
             });
     } catch (e) {
@@ -152,7 +151,6 @@ export async function vote(
                 }
             )
             .catch((error) => {
-                console.log("error :", error);
                 throw "Error voting";
             });
     } catch (e) {
@@ -186,6 +184,48 @@ export async function createArgument(
                                 title: argumentInformations.title,
                                 content: argumentInformations.content,
                                 value: argumentInformations.value,
+                            },
+                        },
+                    ],
+                },
+                {
+                    blocksBehind: 3,
+                    expireSeconds: 30,
+                }
+            )
+            .catch((error) => {
+                throw error;
+            });
+    } catch (e) {
+        throw e;
+    }
+}
+
+
+export async function voteArgument(
+    ual,
+    argumentVote,
+    eosAccountName
+) {
+    let contract = await setup('', eosAccountName);
+    try {
+        const response = await ual.activeUser.signTransaction(
+                {
+                    actions: [
+                        {
+                            account: eosAccountName, //env variable
+                            name: "voteargument",
+                            authorization: [
+                                {
+                                    actor: ual.activeUser.accountName,
+                                    permission: "active",
+                                },
+                            ],
+                            data: {
+                                from: ual.activeUser.accountName,
+                                primaryKey: argumentVote.proposalID,
+                                argumentKey: argumentVote.argumentID,
+                                value: argumentVote.value,
                             },
                         },
                     ],

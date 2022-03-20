@@ -323,6 +323,28 @@
             ]
         },
         {
+            "name": "voteargument",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "argumentKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "value",
+                    "type": "int8"
+                }
+            ]
+        },
+        {
             "name": "votes",
             "base": "",
             "fields": [
@@ -370,6 +392,11 @@
         {
             "name": "upproposal",
             "type": "upproposal",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "voteargument",
+            "type": "voteargument",
             "ricardian_contract": ""
         }
     ],

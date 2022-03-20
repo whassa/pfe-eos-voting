@@ -13,7 +13,7 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
   proposals_index proposal_index(get_self(), get_self().value);
 
   _proposals.end();
-  
+
   _proposals.emplace(get_self(), [&](auto &proposal_info)
                      {
       proposal_info.primaryKey = proposal_index.available_primary_key();
@@ -70,9 +70,9 @@ ACTION eosvoting::makevote(name from, uint64_t primaryKey, char value)
       if (proposals.votes.vote[i].user == from)
       {
         found = 1;
+        int tmpValue = 0;
         if (proposals.votes.vote[i].value != value)
         {
-          int tmpValue = 0;
           if (proposals.votes.vote[i].value == 1)
           {
             tmpValue = -1;
@@ -81,12 +81,12 @@ ACTION eosvoting::makevote(name from, uint64_t primaryKey, char value)
           {
             tmpValue = 1;
           }
-          _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
-                            {
-            proposal_info.votes.actualVote = proposal_info.votes.actualVote + value + tmpValue;
-            proposal_info.votes.vote[i].value = value;
-            proposal_info.votes.vote[i].updatedAt = current_time_point_sec(); });
         }
+        _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
+                          {
+          proposal_info.votes.actualVote = proposal_info.votes.actualVote + value + tmpValue;
+          proposal_info.votes.vote[i].value = value;
+          proposal_info.votes.vote[i].updatedAt = current_time_point_sec(); });
         break;
       }
     }
@@ -136,6 +136,69 @@ ACTION eosvoting::crtargument(name from, uint64_t primaryKey, string title, stri
   }
 }
 
+ACTION eosvoting::voteargument(name from, uint64_t primaryKey, uint64_t argumentKey, char value)
+{
+  require_auth(from);
+  // Init the _votes table
+  proposals_index _proposals(get_self(), get_self().value);
+
+  auto primary_key_itr = _proposals.find(primaryKey);
+  if (primary_key_itr != _proposals.end())
+  {
+    auto proposals = _proposals.get(primaryKey);
+    bool found = 0;
+    for (size_t i = 0; i < proposals.arguments.argument.size(); i++)
+    {
+      if (proposals.arguments.argument[i].primaryKey == argumentKey)
+      {
+        found = 1;
+        bool foundVote = 0;
+        for (size_t j = 0; j < proposals.arguments.argument[i].votes.vote.size(); j++)
+        {
+          if (proposals.arguments.argument[i].votes.vote[j].user == from)
+          {
+            foundVote = 1;
+            int tmpValue = 0;
+            if (proposals.arguments.argument[i].votes.vote[j].value != value)
+            {
+              if (proposals.arguments.argument[i].votes.vote[j].value == 1)
+              {
+                tmpValue = -1;
+              }
+              else if (proposals.arguments.argument[i].votes.vote[j].value == -1)
+              {
+                tmpValue = 1;
+              }
+            }
+            _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
+                              {
+            proposal_info.arguments.argument[i].votes.actualVote = proposal_info.arguments.argument[i].votes.actualVote + value + tmpValue;
+            proposal_info.arguments.argument[i].votes.vote[j].value = value;
+            proposal_info.arguments.argument[i].votes.vote[j].updatedAt = current_time_point_sec(); });
+            break;
+          }
+        }
+        if (!foundVote)
+        {
+          time_point_sec time = current_time_point_sec();
+          struct vote vote = {time, time, from, value};
+          _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
+                            {
+            proposal_info.arguments.argument[i].votes.totalVotes = proposal_info.arguments.argument[i].votes.totalVotes + 1;
+            proposal_info.arguments.argument[i].votes.actualVote = proposal_info.arguments.argument[i].votes.actualVote + value;
+            proposal_info.arguments.argument[i].votes.vote.insert(proposal_info.arguments.argument[i].votes.vote.end(), vote); });
+        }
+        // Vote not found in argument
+        break;
+      }
+    }
+    if (!found)
+    {
+      // Not found
+    }
+  }
+}
+
 ACTION eosvoting::crtnews(name from, uint64_t primaryKey, string title, string content)
 {
   require_auth(from);
@@ -169,4 +232,4 @@ ACTION eosvoting::clear()
   }
 }
 
-EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument)(crtnews));
+EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument)(voteargument)(crtnews));
