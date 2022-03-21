@@ -12,6 +12,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import { useRouter } from "next/router";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ContactSupportIcon from "@mui/icons-material/ContactSupport"
 import { Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { useTheme } from "@mui/styles";
@@ -78,6 +79,20 @@ export default function Menu({ ual }) {
         <Divider />
         {ual.activeUser ? (
           <List>
+            {ual.activeUser && (
+                <ListItem
+                    button
+                    key={"User guide"}
+                    onClick={() => {
+                      router.push("/guide");
+                    }}
+                >
+                  <ListItemIcon>
+                    <ContactSupportIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={"User guide"} />
+                </ListItem>
+            )}
             <ListItem
               button
               key={"Logout"}
