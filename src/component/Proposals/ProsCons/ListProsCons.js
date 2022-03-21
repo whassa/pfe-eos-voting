@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useTheme } from "@mui/styles";
 import ProsConsItem from "./ProsConsItem";
 
-export default function ListProsCons({ ual, pid, prosAndCons, eosAccountName, refreshProsCons}) {
+export default function ListProsCons({ ual, pid, prosAndCons, eosAccountName, refreshProsCons, canVote}) {
     const theme = useTheme();
 
     prosAndCons.sort(function (a, b) {
@@ -26,6 +26,7 @@ export default function ListProsCons({ ual, pid, prosAndCons, eosAccountName, re
                             refreshProsCons={refreshProsCons}
                             key={argument.createdAt}
                             argument={argument}
+                            canVote={canVote}
                         />
                     );
                 })}

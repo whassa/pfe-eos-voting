@@ -9,6 +9,24 @@ CONTRACT eosvoting : public contract
 public:
   using contract::contract;
 
+  bool checkwhitelist(std::vector<name> whitelist, name from, name owner){
+    if ( from == owner ) {
+      return 1;
+    }
+    if (whitelist.size() >= 1)
+    {
+      for (size_t i = 0; i < whitelist.size(); i++)
+      {
+        if ( whitelist[i] == from)
+        {
+          return 1;
+        }
+      }
+      return 0;
+    } 
+    return 1;
+  };
+
   struct singlenews
   {
     string title;
@@ -55,7 +73,7 @@ public:
     std::vector<argument> argument;
   };
 
-  ACTION crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, time_point_sec expiredAt);
+  ACTION crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt);
   ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, time_point_sec expiredAt);
   ACTION makevote(name from, uint64_t primaryKey, char value);
   ACTION crtargument(name from, uint64_t primaryKey, string title, string content, bool value);
@@ -86,6 +104,7 @@ public:
     arguments arguments;
     news news;
     votes votes;
+    std::vector<name> whitelist;
     uint64_t primary_key() const { return primaryKey; }
   };
   typedef multi_index<name("proposals"), proposals> proposals_index;

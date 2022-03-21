@@ -82,7 +82,7 @@ export default function Statistics({ resolution }) {
                             fontSize: "64px",
                         }}
                     >
-                        {prosVotes / resolution.voteMargin > 1
+                        {(prosVotes / resolution.voteMargin > 1 || resolution.voteMargin == 0)
                             ? 100
                             : (prosVotes / resolution.voteMargin) * 100}
                         %

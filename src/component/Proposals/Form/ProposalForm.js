@@ -5,6 +5,8 @@ import {
     FormControl,
     TextField,
     Button,
+    FormControlLabel,
+    Checkbox,
 } from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -18,6 +20,7 @@ import {
     createProposal,
 } from "../../../utils/ContractActions/Contract";
 import SnackbarAlert from "common/SnackbarAlert/snackbarAlert";
+import UserList from './UserList';
 import dayjs from "dayjs";
 dayjs.extend(customParseFormat);
 
@@ -32,6 +35,8 @@ const types = {
     ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE",
     CLOSE_SNACKBAR: "CLOSE_SNACKBAR",
     VOTEMARGIN_CHANGED: "VOTEMARGIN_CHANGED",
+    WHITELIST_BOOL_CHANGED: "WHITELIST_BOOL_CHANGED",
+    WHITELIST_CHANGED: "WHITELIST_CHANGED",
 };
 
 const reducer = (state, action) => {
@@ -48,6 +53,10 @@ const reducer = (state, action) => {
             return { ...state, title: action.value };
         case types.VOTEMARGIN_CHANGED:
             return { ...state, voteMargin: action.value };
+        case types.WHITELIST_BOOL_CHANGED:
+            return { ...state, whiteListBool: action.value };
+        case types.WHITELIST_CHANGED:
+            return { ...state, whiteList: action.value };
         case types.SUBMIT_BUTTON_CLICKED:
             return { ...state, submitDisable: true };
         case types.SUBMIT_BUTTON_RESPONSE:
@@ -72,6 +81,8 @@ const initialState = {
     content: "",
     category: "",
     voteMargin: 0,
+    whiteListBool: false,
+    whiteList: [],
     expirationDate: "",
     submitDisable: false,
     error: "",
@@ -83,7 +94,6 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
     const router = useRouter();
 
     const sendForm = () => {
-        //TODO send it to the contract
         dispatch({
             type: types.SUBMIT_BUTTON_CLICKED,
         });
@@ -97,9 +107,8 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
             expiredAt: dayjs(state.expirationDate).format(
                 "YYYY-MM-DD HH:mm:ss"
             ),
-            integrity: true,
-            author: ual.activeUser.accountName,
             status: "Open",
+            whiteList: state.whiteList,
         };
 
         createProposal(ual, formInformations, privateKey, eosAccountName)
@@ -111,10 +120,18 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
             })
             .catch((error) => {
                 dispatch({
-                    value: (error instanceof String ? error : error.toString()),
+                    value: error instanceof String ? error : error.toString(),
                     type: types.ERROR_FORM_RESPONSE,
                 });
             });
+    };
+
+    const valueArguments = (array) => {
+        console.log(array)
+        dispatch({
+            type: types.WHITELIST_CHANGED,
+            value: array,
+        });
     };
 
     return (
@@ -137,8 +154,8 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                             id="Title"
                             label="Title"
                             inputProps={{
-                                maxLength: 50
-                              }}
+                                maxLength: 50,
+                            }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.TITLE_CHANGED,
@@ -155,8 +172,8 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                             variant="outlined"
                             multiline
                             inputProps={{
-                                maxLength: 200
-                              }}
+                                maxLength: 200,
+                            }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.SUMMARY_CHANGED,
@@ -188,8 +205,8 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                             id="Category"
                             label="Category"
                             inputProps={{
-                                maxLength: 50
-                              }}
+                                maxLength: 50,
+                            }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.CATEGORY_CHANGED,
@@ -205,7 +222,8 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                             label="Vote Margin"
                             type="number"
                             onChange={(e) => {
-                                e.target.value > 0 && !isNaN(e.target.value) &&
+                                e.target.value > 0 &&
+                                !isNaN(e.target.value) &&
                                 parseInt(Number(e.target.value)) ==
                                     e.target.value &&
                                 !isNaN(parseInt(e.target.value, 10))
@@ -242,6 +260,26 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                                 required
                             />
                         </LocalizationProvider>
+
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={state.whiteListBool}
+                                    onChange={(e) => {
+                                        dispatch({
+                                            type: types.WHITELIST_BOOL_CHANGED,
+                                            value: e.target.checked,
+                                        });
+                                    }}
+                                />
+                            }
+                            label="Limit who can vote and create arguments"
+                        />
+
+                        {state.whiteListBool && (
+                          <UserList whiteList={state.whiteList} valueArguments={valueArguments} />
+                        )}
+
                         <Button
                             disabled={
                                 state.title === "" ||
