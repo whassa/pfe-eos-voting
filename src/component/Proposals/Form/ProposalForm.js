@@ -5,7 +5,9 @@ import {
     FormControl,
     TextField,
     Button,
+    RadioGroup,
     FormControlLabel,
+    Radio,
     Checkbox,
 } from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
@@ -35,8 +37,8 @@ const types = {
     ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE",
     CLOSE_SNACKBAR: "CLOSE_SNACKBAR",
     VOTEMARGIN_CHANGED: "VOTEMARGIN_CHANGED",
-    WHITELIST_BOOL_CHANGED: "WHITELIST_BOOL_CHANGED",
     WHITELIST_CHANGED: "WHITELIST_CHANGED",
+    VOTETYPE_CHANGED: "VOTETYPE_CHANGED",
 };
 
 const reducer = (state, action) => {
@@ -53,10 +55,10 @@ const reducer = (state, action) => {
             return { ...state, title: action.value };
         case types.VOTEMARGIN_CHANGED:
             return { ...state, voteMargin: action.value };
-        case types.WHITELIST_BOOL_CHANGED:
-            return { ...state, whiteListBool: action.value };
         case types.WHITELIST_CHANGED:
             return { ...state, whiteList: action.value };
+        case types.VOTETYPE_CHANGED:
+            return { ...state, voteType: action.value };
         case types.SUBMIT_BUTTON_CLICKED:
             return { ...state, submitDisable: true };
         case types.SUBMIT_BUTTON_RESPONSE:
@@ -81,7 +83,7 @@ const initialState = {
     content: "",
     category: "",
     voteMargin: 0,
-    whiteListBool: false,
+    voteType: "Public",
     whiteList: [],
     expirationDate: "",
     submitDisable: false,
@@ -108,8 +110,22 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                 "YYYY-MM-DD HH:mm:ss"
             ),
             status: "Open",
-            whiteList: state.whiteList,
+            
         };
+
+        switch (state.voteType) {
+            case 'Public': 
+                formInformations.whiteList = []; break;
+            case 'Eden': 
+            //TODO change logic when eden is implemented
+                formInformations.whiteList = []; break;
+            case 'Custom': 
+                formInformations.whiteList = state.whiteList; break;
+            default:
+                formInformations.whiteList = []; break;
+                
+        }
+        
 
         createProposal(ual, formInformations, privateKey, eosAccountName)
             .then(() => {
@@ -261,22 +277,34 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                             />
                         </LocalizationProvider>
 
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={state.whiteListBool}
-                                    onChange={(e) => {
-                                        dispatch({
-                                            type: types.WHITELIST_BOOL_CHANGED,
-                                            value: e.target.checked,
-                                        });
-                                    }}
-                                />
-                            }
-                            label="Limit who can vote and create arguments"
-                        />
+                        <RadioGroup
+                            row
+                            defaultValue="Public"
+                            onChange={(e) => {
+                                dispatch({
+                                    type: types.VOTETYPE_CHANGED,
+                                    value: e.target.value,
+                                });
+                            }}
+                        >
+                            <FormControlLabel
+                                value={"Public"}
+                                control={<Radio />}
+                                label="Public"
+                            />
+                            <FormControlLabel
+                                value={"Eden"}
+                                control={<Radio />}
+                                label="Eden members only"
+                            />
+                            <FormControlLabel
+                                value={"Custom"}
+                                control={<Radio />}
+                                label="Select users who can vote"
+                            />
+                        </RadioGroup>
 
-                        {state.whiteListBool && (
+                        {state.voteType === "Custom" && (
                           <UserList whiteList={state.whiteList} valueArguments={valueArguments} />
                         )}
 
