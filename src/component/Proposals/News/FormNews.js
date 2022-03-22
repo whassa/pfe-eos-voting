@@ -76,7 +76,6 @@ const reducer = (state, action) => {
 export default function FormNews({
     ual,
     resolutionID,
-    privateKey,
     eosAccountName,
     refreshNews,
 }) {
@@ -94,7 +93,7 @@ export default function FormNews({
             author: ual.activeUser.accountName,
         };
         
-        createSingleNews(ual, news, privateKey, eosAccountName)
+        createSingleNews(ual, news, eosAccountName)
             .then(() => {
                 dispatch({ type: types.NEWS_CREATED });
                 refreshNews();

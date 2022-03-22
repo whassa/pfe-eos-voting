@@ -9,14 +9,12 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
   proposals_index _proposals(get_self(), get_self().value);
   // Create a vote if it doesnt exist
   time_point_sec time = current_time_point_sec();
-  // proposal index for finding primary key
-  proposals_index proposal_index(get_self(), get_self().value);
 
   _proposals.end();
 
   _proposals.emplace(get_self(), [&](auto &proposal_info)
                      {
-      proposal_info.primaryKey = proposal_index.available_primary_key();
+      proposal_info.primaryKey = _proposals.available_primary_key();
       proposal_info.title = title;
       proposal_info.summary = summary;
       proposal_info.content = content;

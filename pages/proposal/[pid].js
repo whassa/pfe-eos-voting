@@ -11,6 +11,7 @@ import SnackbarAlert from "common/SnackbarAlert/snackbarAlert";
 import { getProposal, vote, voteTemplate } from "../../src/utils/ContractActions/Contract";
 import VoteModal from "component/Proposals/VoteModal/VoteModal";
 import News from "component/Proposals/News/News";
+import { useRouter } from "next/router";
 
 const views = ["Overview", "Pros & Cons", "Statistics", "News", "Live Chat"];
 
@@ -71,10 +72,11 @@ export default function pid({
     ual,
     encryptionKey,
     pid,
-    privateKey,
     eosAccountName,
 }) {
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    const router = useRouter();
 
     //TODO Change for theme
     const style = {
@@ -92,7 +94,7 @@ export default function pid({
     };
 
     useEffect( () => {
-        getProposal(pid, privateKey, eosAccountName).then( (value) => {
+        getProposal(pid, eosAccountName).then( (value) => {
           dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
         }).catch((error) => {
             dispatch({
@@ -125,9 +127,9 @@ export default function pid({
                 proposalID: pid,
                 value: state.position,
             }
-            vote( ual, voteInformation, privateKey, eosAccountName).then(() => {
+            vote( ual, voteInformation, eosAccountName).then(() => {
                 // Fetch the actual data
-                getProposal(pid, privateKey, eosAccountName).then( (value) => {
+                getProposal(pid, eosAccountName).then( (value) => {
                     dispatch({type: types.RESOLUTION_CHANGED, value: ( value.rows ? value.rows[0] :  {} )});
                 })
             }).catch((error) => {
@@ -175,7 +177,11 @@ export default function pid({
                                     {/**TODO change it to .title*/}
                                     {state.resolution.title}
                                 </Typography>
-                                <Typography variant="h6">
+                                <Typography variant="h6" onClick={() => {
+                                   router.push("/user/"+state.resolution.author);
+                                }}
+                                    sx={{ cursor: 'pointer' }}
+                                >
                                     {/*TODO change it for .author.userName*/}
                                     {state.resolution.author}
                                 </Typography>
@@ -242,10 +248,9 @@ export default function pid({
                             <ProsCons
                                 ual={ual}
                                 resolution={state.resolution}
-                                privateKey={privateKey}
                                 eosAccountName={eosAccountName}
                                 refreshProsCons={() => {
-                                    return getProposal(pid, privateKey, eosAccountName).then( (value) => {
+                                    return getProposal(pid, eosAccountName).then( (value) => {
                                         dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
                                     }).catch((e) => {
                                         dispatch({
@@ -267,12 +272,10 @@ export default function pid({
                                 news={state.resolution.news.singlenews}
                                 resolutionID={pid}
                                 resolutionAuthor={state.resolution.author}
-                                privateKey={privateKey}
                                 eosAccountName={eosAccountName}
                                 refreshNews={() => {
                                     return getProposal(
                                         pid,
-                                        privateKey,
                                         eosAccountName
                                     ).then((value) => {
                                         dispatch({
@@ -317,7 +320,6 @@ export async function getServerSideProps(context) {
             pid: pid,
             // GunJs encryption key
             encryptionKey: process.env.ENCRYPTION_KEY || "",
-            privateKey: process.env.PRIVATE_KEY,
             eosAccountName: process.env.EOS_ACCOUNT_NAME,
         },
     };

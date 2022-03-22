@@ -36,7 +36,15 @@ export default function Menu({ ual }) {
     >
       <Box >
         <List>
-          <ListItem button key={"Avatar"}>
+          <ListItem button key={"Avatar"}
+            onClick={() => {
+              if (ual.activeUser ) {
+                router.push("/user/"+ual.activeUser.accountName);
+              } else {
+                router.push("/login");
+              }
+            }}>
+          >
             <ListItemAvatar>
               <Avatar>
                 <AccountCircleIcon />
@@ -47,9 +55,7 @@ export default function Menu({ ual }) {
             ) : (
               <ListItemText primary="Anonymous" />
             )}
-          </ListItem>
-
-          
+          </ListItem>          
         </List>
       </Box>
 

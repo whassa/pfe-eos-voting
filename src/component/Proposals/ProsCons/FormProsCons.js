@@ -79,7 +79,7 @@ const reducer = (state, action) => {
     }
 };
 
-export default function FormProsCons({ ual, resolution, privateKey, eosAccountName, refreshProsCons }) {
+export default function FormProsCons({ ual, resolution, eosAccountName, refreshProsCons }) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const theme = useTheme();
 
@@ -93,7 +93,7 @@ export default function FormProsCons({ ual, resolution, privateKey, eosAccountNa
             content: state.content,
             value: (state.position === "true" ? true:false),
         };
-        createArgument(ual, argument, privateKey, eosAccountName).then(() => {
+        createArgument(ual, argument, eosAccountName).then(() => {
             dispatch({ type: types.ARGUMENT_CREATED });
             refreshProsCons();
         }).catch((e) => {

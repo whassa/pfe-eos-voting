@@ -72,6 +72,7 @@ public:
   TABLE proposals
   {
     uint64_t primaryKey;
+    name author;
     string title;
     string summary;
     string content;
@@ -82,11 +83,17 @@ public:
     time_point_sec createdAt;
     time_point_sec updatedAt;
     time_point_sec deletedAt;
-    name author;
+
     arguments arguments;
     news news;
     votes votes;
     uint64_t primary_key() const { return primaryKey; }
+    uint64_t secondary_key() const { return author.value; }
   };
-  typedef multi_index<name("proposals"), proposals> proposals_index;
+
+
+  typedef eosio::multi_index<name("proposals"), proposals, 
+    indexed_by<name("author"), const_mem_fun<proposals, uint64_t, &proposals::secondary_key>>
+  > proposals_index;
+
 };

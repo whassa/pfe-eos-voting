@@ -4,13 +4,8 @@ import setupContract from "../contracts/contract";
 import {
     Button,
     Container,
-    Divider,
     Grid,
-    Icon,
-    makeStyles,
     Paper,
-    TextField,
-    Typography,
 } from "@mui/material";
 
 let contract
@@ -63,15 +58,14 @@ async function getVotes(eosAccountName, contract){
 
 export async function getStaticProps(context) {
     return {
-        props: {privateKey: process.env.PRIVATE_KEY,
-                eosAccountName: process.env.EOS_ACCOUNT_NAME}, // will be passed to the page component as props
+        props: { eosAccountName: process.env.EOS_ACCOUNT_NAME}, // will be passed to the page component as props
     }
 }
 
 
-export default function transactionComponent({privateKey, eosAccountName, ual}) {
+export default function transactionComponent({ eosAccountName, ual}) {
     let contract;
-    setupContract(privateKey, eosAccountName).then((value)=>{console.log(value);contract=value}).catch((error) => console.log("YO" + error))
+    setupContract(eosAccountName).then((value)=>{console.log(value);contract=value}).catch((error) => console.log("YO" + error))
     return (
         <Grid
             container

@@ -1,6 +1,6 @@
 import * as React from "react";
 import Faq from "react-faq-component";
-import { Box, Container, Typography, Tabs, Tab, Button } from "@mui/material";
+import { Paper, Container, } from "@mui/material";
 import Header from "../src/component/Head/Header";
 import Menu, {drawerWidth} from "../src/component/Menu/Menu";
 
@@ -55,14 +55,17 @@ return (
                 sx={{
                     width: { xs: `calc(100% - ${drawerWidth}px)` },
                     paddingTop: { xs: "40px" },
+                    paddingLeft: { xs: "144px" },
                 }}
             >
-            <Faq
-                data={data}
-                styles={styles}
-                config={config}
-            />
+                <Paper sx={{ padding: "10px", }}>
+                    <Faq
+                        data={data}
+                        styles={styles}
+                        config={config}
+                    />
+                </Paper>
             </Container>
-            </>
+        </>
     );
 };
