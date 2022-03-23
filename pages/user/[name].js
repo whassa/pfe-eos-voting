@@ -10,11 +10,12 @@ import ListView from "/src/component/Proposals/Home/ListView/listView";
 import GridView from "/src/component/Proposals/Home/GridView/gridView";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GridViewIcon from "@mui/icons-material/GridView";
+import Loading from "/src/common/Loading";
 
 const initialState = {
   position: "none",
   resolutions: null,
-  loading: false,
+  loading: true,
   view: "listView",
 };
 
@@ -59,7 +60,7 @@ export default function pid({ ual, userName, eosAccountName }) {
         }}
       >
         {state.loading ? (
-          <Box> loading some stuff </Box>
+          <Loading />
         ) : (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Stack direction="row">
