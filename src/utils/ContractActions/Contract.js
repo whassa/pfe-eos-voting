@@ -47,8 +47,8 @@ export const newsTemplate = {
     content: "",
 };
 
-export async function getProposals( privateKey, eosAccountName, upperBound){
-    let contract = await setup(privateKey, eosAccountName);
+export async function getProposals( eosAccountName, upperBound){
+    let contract = await setup();
     const proposals = await contract.rpc.get_table_rows({
         json: true,               // Get the response as json
         code: eosAccountName,      // Contract that we target
@@ -62,8 +62,8 @@ export async function getProposals( privateKey, eosAccountName, upperBound){
 }
 
 
-export async function getProposal( primaryKey, privateKey, eosAccountName){
-    let contract = await setup(privateKey, eosAccountName);
+export async function getProposal( primaryKey, eosAccountName){
+    let contract = await setup();
 
     const proposals = await contract.rpc.get_table_rows({
         json: true,               // Get the response as json
@@ -77,13 +77,28 @@ export async function getProposal( primaryKey, privateKey, eosAccountName){
     return proposals;
 }
 
+export async function getProposalsByUser( userName, eosAccountName, ){
+    let contract = await setup();
+    const proposals = await contract.rpc.get_table_rows({
+        code: eosAccountName,      // Contract that we target
+        scope: eosAccountName,     // Account that owns the data
+        table: 'proposals',        // Table name
+        key_type: 'name',
+        index_position: 2,
+        lower_bound: userName,
+        upper_bound: userName,
+        reverse: true,
+        limit: 6,                // Maximum number of rows that we want to ge
+      }).catch((e) => { throw  'Error fetching the proposals'});
+    console.log(proposals);
+    return proposals;
+}
+
 export async function createProposal(
     ual,
     formInformations,
-    privateKey,
     eosAccountName
 ) {
-    let contract = await setup(privateKey, eosAccountName);
     try {
         const response =  await ual.activeUser.signTransaction(
             {
@@ -120,10 +135,8 @@ export async function createProposal(
 export async function vote(
     ual,
     voteInformation,
-    privateKey,
     eosAccountName
 ) {
-    let contract = await setup(privateKey, eosAccountName);
     try {
         const response = await ual.activeUser.signTransaction(
                 {
@@ -161,10 +174,8 @@ export async function vote(
 export async function createArgument(
     ual,
     argumentInformations,
-    privateKey,
     eosAccountName
 ) {
-    let contract = await setup(privateKey, eosAccountName);
     try {
         const response = await ual.activeUser.signTransaction(
                 {
@@ -207,7 +218,6 @@ export async function voteArgument(
     argumentVote,
     eosAccountName
 ) {
-    let contract = await setup('', eosAccountName);
     try {
         const response = await ual.activeUser.signTransaction(
                 {
@@ -246,11 +256,8 @@ export async function voteArgument(
 export async function createSingleNews(
     ual,
     singleNewsInformation,
-    privateKey,
     eosAccountName
 ) {
-    let contract = await setup(privateKey, eosAccountName);
-    
     try {
         const response = await ual.activeUser.signTransaction(
                 {
@@ -286,9 +293,9 @@ export async function createSingleNews(
     }
 }
 
-async function setup(privateKey, eosAccountName) {
+async function setup() {
     let contract;
-    await setupContract(privateKey, eosAccountName)
+    await setupContract()
         .then((value) => {
             contract = value;
         })

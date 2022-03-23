@@ -39,7 +39,6 @@ const reducer = (state, action) => {
       case types.USER_VOTED:
           return { ...state };
       case types.RESOLUTION_FETCHED:
-          console.log(action)
           return {
             ...state,
             resolutions: action.resolutions,
@@ -51,7 +50,7 @@ const reducer = (state, action) => {
 };
 
 
-export default function Home({ ual, privateKey, eosAccountName }) {
+export default function Home({ ual, eosAccountName }) {
 
   const [state, dispatch] = useReducer(reducer, initialState); 
   const router = useRouter();
@@ -61,13 +60,13 @@ export default function Home({ ual, privateKey, eosAccountName }) {
   }
 
   useEffect( () => {
-    getProposals(privateKey, eosAccountName).then( (value) => {
+    getProposals(eosAccountName).then( (value) => {
       dispatch({type: types.RESOLUTION_FETCHED, resolutions: value.rows, sortInfo: { more: value.more, next_key: value.next_key, page: 0, }})
     });
   }, []);
 
   const fetchResolutinInfo = (page) => {
-    getProposals(privateKey, eosAccountName, state.sortInfo.next_key).then( (value) => {
+    getProposals(eosAccountName, state.sortInfo.next_key).then( (value) => {
       dispatch({type: types.RESOLUTION_FETCHED, resolutions: value.rows, sortInfo: { more: value.more, next_key: value.next_key, page, }})
     });
   }
@@ -153,7 +152,6 @@ export default function Home({ ual, privateKey, eosAccountName }) {
 export async function getStaticProps(context) {
   return {
       props: {
-          privateKey: process.env.PRIVATE_KEY,
           eosAccountName: process.env.EOS_ACCOUNT_NAME,
       }, // will be passed to the page component as props
   };

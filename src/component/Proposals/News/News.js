@@ -1,9 +1,4 @@
 import {Paper, Box, Stack } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
-import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
-import { v4 as uuidv4 } from "uuid";
 import { useTheme } from "@mui/styles";
 import NewsItem from "./NewsItem";
 import FormNews from "./FormNews";
@@ -13,7 +8,6 @@ export default function News({
     news,
     resolutionID,
     resolutionAuthor,
-    privateKey,
     eosAccountName,
     refreshNews,
 }) {
@@ -26,7 +20,6 @@ export default function News({
                         <FormNews
                             ual={ual}
                             resolutionID={resolutionID}
-                            privateKey={privateKey}
                             eosAccountName={eosAccountName}
                             refreshNews={refreshNews}
                         />
