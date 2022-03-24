@@ -12,6 +12,7 @@ import { getProposal, vote, voteTemplate } from "../../src/utils/ContractActions
 import VoteModal from "component/Proposals/VoteModal/VoteModal";
 import News from "component/Proposals/News/News";
 import { useRouter } from "next/router";
+import Loading from "/src/common/Loading";
 
 const views = ["Overview", "Pros & Cons", "Statistics", "News", "Live Chat"];
 
@@ -92,7 +93,7 @@ export default function pid({
         px: 4,
         pb: 3,
     };
-
+  
     useEffect( () => {
         getProposal(pid, eosAccountName).then( (value) => {
           dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
@@ -153,7 +154,7 @@ export default function pid({
                 }}
             >
                 {state.loading ? (
-                    <Box> loading some stuff </Box>
+                    <Loading />
                 ) : state.resolution ? (
                     <>
                         <Box sx={{ display: "flex" }}>

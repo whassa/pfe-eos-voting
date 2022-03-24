@@ -1,17 +1,14 @@
-import { CircularProgress, makeStyles } from "@mui/material";
+import { CircularProgress, Box } from "@mui/material";
 import React from "react";
 
-import styles from "./Loading.css";
-
-const useStyles = makeStyles(styles);
 
 const Loading = () => {
-  const classes = useStyles();
+ 
 
   return (
-    <div className={classes.loading}>
-      <CircularProgress />
-    </div>
+    <Box sx={{ position: 'fixed', top: 'calc(45% - 80px)', left: '50%'}}> 
+      <CircularProgress  thickness={5} size={80} />
+    </Box>
   );
 };
 
