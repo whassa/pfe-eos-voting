@@ -91,7 +91,7 @@ const initialState = {
     open: false,
 };
 
-export default function proposalForm({ ual, privateKey, eosAccountName }) {
+export default function proposalForm({ ual, eosAccountName }) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const router = useRouter();
 
@@ -126,8 +126,7 @@ export default function proposalForm({ ual, privateKey, eosAccountName }) {
                 
         }
         
-
-        createProposal(ual, formInformations, privateKey, eosAccountName)
+        createProposal(ual, formInformations, eosAccountName)
             .then(() => {
                 dispatch({
                     type: types.SUBMIT_BUTTON_RESPONSE,

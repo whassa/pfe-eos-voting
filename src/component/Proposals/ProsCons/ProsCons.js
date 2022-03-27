@@ -3,7 +3,7 @@ import FormProsCons from "./FormProsCons";
 import ListBestProsCons from "./ListBestProsCons";
 import ListProsCons from "./ListProsCons";
 
-export default function Menu({ ual, resolution, privateKey, eosAccountName, refreshProsCons }) {
+export default function Menu({ ual, resolution, eosAccountName, refreshProsCons }) {
     // list
     let prosList = [];
     let consList = [];
@@ -36,8 +36,8 @@ export default function Menu({ ual, resolution, privateKey, eosAccountName, refr
     return (
         <Box>
             <ListBestProsCons prosList={prosList.slice(0, 5)} consList={consList.slice(0, 5)} />
-            { canCreateVoteArgument && <FormProsCons ual={ual} resolution={resolution} privateKey={privateKey} eosAccountName={eosAccountName} refreshProsCons={refreshProsCons} /> }
-            { resolution.arguments && <ListProsCons pid={resolution.primaryKey} ual={ual} eosAccountName={eosAccountName} prosAndCons={resolution.arguments.argument} refreshProsCons={refreshProsCons} canVote={!canCreateVoteArgument} />}
+            <FormProsCons ual={ual} resolution={resolution} eosAccountName={eosAccountName} refreshProsCons={refreshProsCons} />
+            { resolution.arguments && <ListProsCons pid={resolution.primaryKey} ual={ual} eosAccountName={eosAccountName} prosAndCons={resolution.arguments.argument} refreshProsCons={refreshProsCons} />}
         </Box>
     );
 }

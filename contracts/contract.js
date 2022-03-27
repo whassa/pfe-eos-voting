@@ -3,7 +3,7 @@ import { JsSignatureProvider } from "eosjs/dist/eosjs-jssig";
 // const fs = require('fs')
 //TODO: mettre ca dans une variable d'environnement
 
-export default async function setupContract(privateKey, eosAccountName) {
+export default async function setupContract() {
     //https://developers.eos.io/manuals/eosjs/v21.0/basic-usage/commonjs
     //initialisation
 

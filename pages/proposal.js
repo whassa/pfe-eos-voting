@@ -7,7 +7,7 @@ import ProposalForm from "../src/component/Proposals/Form/ProposalForm";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
 
-export default function Vote({ ual, privateKey, eosAccountName }) {
+export default function Vote({ ual, eosAccountName }) {
     return (
         <>
             <Header></Header>
@@ -28,7 +28,7 @@ export default function Vote({ ual, privateKey, eosAccountName }) {
                         noValidate
                         autoComplete="off"
                     >
-                        <ProposalForm ual={ual} privateKey={privateKey} eosAccountName={eosAccountName}></ProposalForm>
+                        <ProposalForm ual={ual} eosAccountName={eosAccountName}></ProposalForm>
                     </Box>
                 )}
             </Container>
@@ -40,7 +40,6 @@ export default function Vote({ ual, privateKey, eosAccountName }) {
 export async function getStaticProps(context) {
     return {
         props: {
-            privateKey: process.env.PRIVATE_KEY,
             eosAccountName: process.env.EOS_ACCOUNT_NAME,
         },
     };

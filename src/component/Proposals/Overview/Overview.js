@@ -23,7 +23,6 @@ export default function Overview({ resolution }) {
                         {resolution.content}
                     </Typography>
                 </Box>
-                
             </Box>
             <Box>
                 <Paper

@@ -15,6 +15,8 @@ import {
 } from "../../src/utils/ContractActions/Contract";
 import VoteModal from "component/Proposals/VoteModal/VoteModal";
 import News from "component/Proposals/News/News";
+import { useRouter } from "next/router";
+import Loading from "/src/common/Loading";
 
 const views = ["Overview", "Pros & Cons", "Statistics", "News", "Live Chat"];
 
@@ -80,10 +82,11 @@ export default function pid({
     ual,
     encryptionKey,
     pid,
-    privateKey,
     eosAccountName,
 }) {
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    const router = useRouter();
 
     //TODO Change for theme
     const style = {
@@ -99,21 +102,16 @@ export default function pid({
         px: 4,
         pb: 3,
     };
-
-    useEffect(() => {
-        getProposal(pid, privateKey, eosAccountName)
-            .then((value) => {
-                dispatch({
-                    type: types.RESOLUTION_FETCHED,
-                    value: value.rows ? value.rows[0] : {},
-                });
-            })
-            .catch((error) => {
-                dispatch({
-                    value: error instanceof String ? error : error.toString(),
-                    type: types.ERROR_FORM_RESPONSE,
-                });
+  
+    useEffect( () => {
+        getProposal(pid, eosAccountName).then( (value) => {
+          dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
+        }).catch((error) => {
+            dispatch({
+                value: (error instanceof String ? error : error.toString()),
+                type: types.ERROR_FORM_RESPONSE,
             });
+        });
     }, []);
 
     useEffect(() => {
@@ -136,18 +134,11 @@ export default function pid({
                 ...voteTemplate,
                 proposalID: pid,
                 value: state.position,
-            };
-            vote(ual, voteInformation, privateKey, eosAccountName)
-                .then(() => {
-                    // Fetch the actual data
-                    getProposal(pid, privateKey, eosAccountName).then(
-                        (value) => {
-                            dispatch({
-                                type: types.RESOLUTION_CHANGED,
-                                value: value.rows ? value.rows[0] : {},
-                            });
-                        }
-                    );
+            }
+            vote( ual, voteInformation, eosAccountName).then(() => {
+                // Fetch the actual data
+                getProposal(pid, eosAccountName).then( (value) => {
+                    dispatch({type: types.RESOLUTION_CHANGED, value: ( value.rows ? value.rows[0] :  {} )});
                 })
                 .catch((error) => {
                     dispatch({
@@ -156,6 +147,7 @@ export default function pid({
                         type: types.ERROR_FORM_RESPONSE,
                     });
                 });
+            });
         }
     };
 
@@ -181,7 +173,7 @@ export default function pid({
                 }}
             >
                 {state.loading ? (
-                    <Box> loading some stuff </Box>
+                    <Loading />
                 ) : state.resolution ? (
                     <>
                         <Box sx={{ display: "flex" }}>
@@ -205,7 +197,11 @@ export default function pid({
                                     {/**TODO change it to .title*/}
                                     {state.resolution.title}
                                 </Typography>
-                                <Typography variant="h6">
+                                <Typography variant="h6" onClick={() => {
+                                   router.push("/user/"+state.resolution.author);
+                                }}
+                                    sx={{ cursor: 'pointer' }}
+                                >
                                     {/*TODO change it for .author.userName*/}
                                     {state.resolution.author}
                                 </Typography>
@@ -272,31 +268,16 @@ export default function pid({
                             <ProsCons
                                 ual={ual}
                                 resolution={state.resolution}
-                                privateKey={privateKey}
                                 eosAccountName={eosAccountName}
                                 refreshProsCons={() => {
-                                    return getProposal(
-                                        pid,
-                                        privateKey,
-                                        eosAccountName
-                                    )
-                                        .then((value) => {
-                                            dispatch({
-                                                type: types.RESOLUTION_FETCHED,
-                                                value: value.rows
-                                                    ? value.rows[0]
-                                                    : {},
-                                            });
-                                        })
-                                        .catch((e) => {
-                                            dispatch({
-                                                value:
-                                                    error instanceof String
-                                                        ? error
-                                                        : error.toString(),
-                                                type: types.ERROR_FORM_RESPONSE,
-                                            });
+                                    return getProposal(pid, eosAccountName).then( (value) => {
+                                        dispatch({type: types.RESOLUTION_FETCHED, value: ( value.rows ? value.rows[0] :  {} )});
+                                    }).catch((e) => {
+                                        dispatch({
+                                            value: (error instanceof String ? error : error.toString()),
+                                            type: types.ERROR_FORM_RESPONSE,
                                         });
+                                    });
                                 }}
                             ></ProsCons>
                         )}
@@ -311,12 +292,10 @@ export default function pid({
                                 news={state.resolution.news.singlenews}
                                 resolutionID={pid}
                                 resolutionAuthor={state.resolution.author}
-                                privateKey={privateKey}
                                 eosAccountName={eosAccountName}
                                 refreshNews={() => {
                                     return getProposal(
                                         pid,
-                                        privateKey,
                                         eosAccountName
                                     ).then((value) => {
                                         dispatch({
@@ -361,7 +340,6 @@ export async function getServerSideProps(context) {
             pid: pid,
             // GunJs encryption key
             encryptionKey: process.env.ENCRYPTION_KEY || "",
-            privateKey: process.env.PRIVATE_KEY,
             eosAccountName: process.env.EOS_ACCOUNT_NAME,
         },
     };
