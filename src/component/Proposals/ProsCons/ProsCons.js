@@ -20,6 +20,17 @@ export default function Menu({ ual, resolution, eosAccountName, refreshProsCons 
 
     prosList.sort((a, b) => b.vote - a.vote);
     consList.sort((a, b) => b.vote - a.vote);
+
+    const canCreateVoteArgument =
+        ual.activeUser &&
+        resolution &&
+        resolution.whitelist &&
+        (
+            resolution.whitelist.length == 0 ||
+            resolution.author == ual.activeUser.accountName ||
+            resolution.whitelist.includes(ual.activeUser)
+        )
+
     
     // pros and cons
     return (

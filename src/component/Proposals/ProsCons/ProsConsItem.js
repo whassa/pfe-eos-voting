@@ -55,7 +55,7 @@ const reducer = (state, action) => {
 
 
 
-export default function ListProsCons({ ual, pid, argument, eosAccountName, refreshProsCons }) {
+export default function ListProsCons({ ual, pid, argument, eosAccountName, refreshProsCons, canVote }) {
     const theme = useTheme();
 
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -91,8 +91,6 @@ export default function ListProsCons({ ual, pid, argument, eosAccountName, refre
             });
         }
     }, [argument]);
-    
- 
 
     return (
         <Paper elevation={3} padding="dense" sx={{padding: '10px', marginBottom: '5px'}}>
@@ -120,11 +118,11 @@ export default function ListProsCons({ ual, pid, argument, eosAccountName, refre
                     </Typography>
                 </Box>
                 <Box sx={{ marginRight: '10px'}}>
-                    <IconButton onClick={() => {voteForUser(1);}} sx={{ padding: '4px'}}>
+                    <IconButton disabled={canVote} onClick={() => {voteForUser(1);}} sx={{ padding: '4px'}}>
                         <ArrowCircleUpIcon sx={{ fontSize: 24 }} color={(state.vote === 1 ? 'secondary' : 'primary')} />
                     </IconButton>
                     <Typography sx={{ textAlign: 'center', marginTop: '-5px', marginBottom: '-5px'}}>{argument.votes.actualVote}</Typography>
-                    <IconButton  onClick={() => {voteForUser(-1);}} sx={{ padding: '4px'}}>
+                    <IconButton  disabled={canVote} onClick={() => {voteForUser(-1);}} sx={{ padding: '4px'}}>
                         <ArrowCircleDownIcon sx={{ fontSize: 24 }} color={(state.vote === -1 ? 'secondary' : 'primary')}/>
                     </IconButton>
                 </Box>

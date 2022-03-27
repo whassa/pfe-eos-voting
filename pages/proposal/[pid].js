@@ -8,7 +8,11 @@ import ProsCons from "component/Proposals/ProsCons/ProsCons";
 import Overview from "component/Proposals/Overview/Overview";
 import Statistics from "component/Proposals/Statistic/Statistic";
 import SnackbarAlert from "common/SnackbarAlert/snackbarAlert";
-import { getProposal, vote, voteTemplate } from "../../src/utils/ContractActions/Contract";
+import {
+    getProposal,
+    vote,
+    voteTemplate,
+} from "../../src/utils/ContractActions/Contract";
 import VoteModal from "component/Proposals/VoteModal/VoteModal";
 import News from "component/Proposals/News/News";
 import { useRouter } from "next/router";
@@ -52,7 +56,12 @@ const reducer = (state, action) => {
                 open: false,
             };
         case types.RESOLUTION_CHANGED:
-            return { ...state, resolution: action.value, loading: false, open: false};
+            return {
+                ...state,
+                resolution: action.value,
+                loading: false,
+                open: false,
+            };
         case types.ERROR_FORM_RESPONSE:
             return {
                 ...state,
@@ -108,9 +117,7 @@ export default function pid({
     useEffect(() => {
         if (ual.activeUser && state.resolution.votes) {
             const vote = state.resolution.votes.vote.find((vote) => {
-                if (
-                    ual.activeUser.accountName === vote.user
-                ) {
+                if (ual.activeUser.accountName === vote.user) {
                     return vote;
                 }
             });
@@ -133,14 +140,26 @@ export default function pid({
                 getProposal(pid, eosAccountName).then( (value) => {
                     dispatch({type: types.RESOLUTION_CHANGED, value: ( value.rows ? value.rows[0] :  {} )});
                 })
-            }).catch((error) => {
-                dispatch({
-                    value: (error instanceof String ? error : error.toString()),
-                    type: types.ERROR_FORM_RESPONSE,
+                .catch((error) => {
+                    dispatch({
+                        value:
+                            error instanceof String ? error : error.toString(),
+                        type: types.ERROR_FORM_RESPONSE,
+                    });
                 });
-            })
+            });
         }
-    }
+    };
+
+    const votable =
+        ual.activeUser &&
+        state.resolution &&
+        state.resolution.whitelist &&
+        (
+            state.resolution.whitelist.length == 0 ||
+            state.resolution.author == ual.activeUser.accountName ||
+            state.resolution.whitelist.includes(ual.activeUser)
+        )
 
     return (
         <>
@@ -187,7 +206,7 @@ export default function pid({
                                     {state.resolution.author}
                                 </Typography>
                             </Box>
-                            {ual.activeUser && (
+                            {ual.activeUser && votable && (
                                 <>
                                     <Box
                                         sx={{

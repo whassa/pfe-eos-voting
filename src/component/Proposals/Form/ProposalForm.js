@@ -5,6 +5,10 @@ import {
     FormControl,
     TextField,
     Button,
+    RadioGroup,
+    FormControlLabel,
+    Radio,
+    Checkbox,
 } from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -18,6 +22,7 @@ import {
     createProposal,
 } from "../../../utils/ContractActions/Contract";
 import SnackbarAlert from "common/SnackbarAlert/snackbarAlert";
+import UserList from './UserList';
 import dayjs from "dayjs";
 dayjs.extend(customParseFormat);
 
@@ -32,6 +37,8 @@ const types = {
     ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE",
     CLOSE_SNACKBAR: "CLOSE_SNACKBAR",
     VOTEMARGIN_CHANGED: "VOTEMARGIN_CHANGED",
+    WHITELIST_CHANGED: "WHITELIST_CHANGED",
+    VOTETYPE_CHANGED: "VOTETYPE_CHANGED",
 };
 
 const reducer = (state, action) => {
@@ -48,6 +55,10 @@ const reducer = (state, action) => {
             return { ...state, title: action.value };
         case types.VOTEMARGIN_CHANGED:
             return { ...state, voteMargin: action.value };
+        case types.WHITELIST_CHANGED:
+            return { ...state, whiteList: action.value };
+        case types.VOTETYPE_CHANGED:
+            return { ...state, voteType: action.value };
         case types.SUBMIT_BUTTON_CLICKED:
             return { ...state, submitDisable: true };
         case types.SUBMIT_BUTTON_RESPONSE:
@@ -72,6 +83,8 @@ const initialState = {
     content: "",
     category: "",
     voteMargin: 0,
+    voteType: "Public",
+    whiteList: [],
     expirationDate: "",
     submitDisable: false,
     error: "",
@@ -83,7 +96,6 @@ export default function proposalForm({ ual, eosAccountName }) {
     const router = useRouter();
 
     const sendForm = () => {
-        //TODO send it to the contract
         dispatch({
             type: types.SUBMIT_BUTTON_CLICKED,
         });
@@ -97,11 +109,23 @@ export default function proposalForm({ ual, eosAccountName }) {
             expiredAt: dayjs(state.expirationDate).format(
                 "YYYY-MM-DD HH:mm:ss"
             ),
-            integrity: true,
-            author: ual.activeUser.accountName,
             status: "Open",
+            
         };
 
+        switch (state.voteType) {
+            case 'Public': 
+                formInformations.whiteList = []; break;
+            case 'Eden': 
+            //TODO change logic when eden is implemented
+                formInformations.whiteList = []; break;
+            case 'Custom': 
+                formInformations.whiteList = state.whiteList; break;
+            default:
+                formInformations.whiteList = []; break;
+                
+        }
+        
         createProposal(ual, formInformations, eosAccountName)
             .then(() => {
                 dispatch({
@@ -111,10 +135,17 @@ export default function proposalForm({ ual, eosAccountName }) {
             })
             .catch((error) => {
                 dispatch({
-                    value: (error instanceof String ? error : error.toString()),
+                    value: error instanceof String ? error : error.toString(),
                     type: types.ERROR_FORM_RESPONSE,
                 });
             });
+    };
+
+    const valueArguments = (array) => {
+        dispatch({
+            type: types.WHITELIST_CHANGED,
+            value: array,
+        });
     };
 
     return (
@@ -137,8 +168,8 @@ export default function proposalForm({ ual, eosAccountName }) {
                             id="Title"
                             label="Title"
                             inputProps={{
-                                maxLength: 50
-                              }}
+                                maxLength: 50,
+                            }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.TITLE_CHANGED,
@@ -155,8 +186,8 @@ export default function proposalForm({ ual, eosAccountName }) {
                             variant="outlined"
                             multiline
                             inputProps={{
-                                maxLength: 200
-                              }}
+                                maxLength: 200,
+                            }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.SUMMARY_CHANGED,
@@ -188,8 +219,8 @@ export default function proposalForm({ ual, eosAccountName }) {
                             id="Category"
                             label="Category"
                             inputProps={{
-                                maxLength: 50
-                              }}
+                                maxLength: 50,
+                            }}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.CATEGORY_CHANGED,
@@ -205,7 +236,8 @@ export default function proposalForm({ ual, eosAccountName }) {
                             label="Vote Margin"
                             type="number"
                             onChange={(e) => {
-                                e.target.value > 0 && !isNaN(e.target.value) &&
+                                e.target.value > 0 &&
+                                !isNaN(e.target.value) &&
                                 parseInt(Number(e.target.value)) ==
                                     e.target.value &&
                                 !isNaN(parseInt(e.target.value, 10))
@@ -242,6 +274,38 @@ export default function proposalForm({ ual, eosAccountName }) {
                                 required
                             />
                         </LocalizationProvider>
+
+                        <RadioGroup
+                            row
+                            defaultValue="Public"
+                            onChange={(e) => {
+                                dispatch({
+                                    type: types.VOTETYPE_CHANGED,
+                                    value: e.target.value,
+                                });
+                            }}
+                        >
+                            <FormControlLabel
+                                value={"Public"}
+                                control={<Radio />}
+                                label="Public"
+                            />
+                            <FormControlLabel
+                                value={"Eden"}
+                                control={<Radio />}
+                                label="Eden members only"
+                            />
+                            <FormControlLabel
+                                value={"Custom"}
+                                control={<Radio />}
+                                label="Select users who can vote"
+                            />
+                        </RadioGroup>
+
+                        {state.voteType === "Custom" && (
+                          <UserList whiteList={state.whiteList} valueArguments={valueArguments} />
+                        )}
+
                         <Button
                             disabled={
                                 state.title === "" ||

@@ -9,7 +9,6 @@ export const formTemplate = {
     voteMargin: 0,
     expiredAt: "",
     status: "open",
-    integrity: true,
     author: "",
     news: {
         singleNews: [],
@@ -19,11 +18,11 @@ export const formTemplate = {
         totalVote: 0,
         vote: [],
     },
+    whiteList: [],
 };
 
 export const voteTemplate = {
     proposalID: "",
-    user: "",
     value: null,
 };
 
@@ -37,7 +36,6 @@ export const argumentTemplate = {
     proposalID: "",
     title: "",
     content: "",
-    author: "",
     value: null,
 };
 
@@ -65,15 +63,19 @@ export async function getProposals( eosAccountName, upperBound){
 export async function getProposal( primaryKey, eosAccountName){
     let contract = await setup();
 
-    const proposals = await contract.rpc.get_table_rows({
-        json: true,               // Get the response as json
-        code: eosAccountName,      // Contract that we target
-        scope: eosAccountName,     // Account that owns the data
-        table: 'proposals',        // Table name
-        lower_bound: parseInt(primaryKey),
-        limit: 1,                // Maximum number of rows that we want to get
-        reverse: false,           // Optional: Get reversed data
-      }).catch((e) => { throw  'Error fetching the proposals'});
+    const proposals = await contract.rpc
+        .get_table_rows({
+            json: true, // Get the response as json
+            code: eosAccountName, // Contract that we target
+            scope: eosAccountName, // Account that owns the data
+            table: "proposals", // Table name
+            lower_bound: parseInt(primaryKey),
+            limit: 1, // Maximum number of rows that we want to get
+            reverse: false, // Optional: Get reversed data
+        })
+        .catch((e) => {
+            throw "Error fetching the proposals";
+        });
     return proposals;
 }
 
@@ -100,32 +102,40 @@ export async function createProposal(
     eosAccountName
 ) {
     try {
-        const response =  await ual.activeUser.signTransaction(
-            {
-                actions: [{
-                    account: eosAccountName, //env variable
-                    name: "crtproposal",
-                    authorization: [
+        const response = await ual.activeUser
+            .signTransaction(
+                {
+                    actions: [
                         {
-                            actor: ual.activeUser.accountName,
-                            permission: "active",
+                            account: eosAccountName, //env variable
+                            name: "crtproposal",
+                            authorization: [
+                                {
+                                    actor: ual.activeUser.accountName,
+                                    permission: "active",
+                                },
+                            ],
+                            data: {
+                                from: ual.activeUser.accountName,
+                                title: formInformations.title,
+                                summary: formInformations.summary,
+                                content: formInformations.content,
+                                category: formInformations.category,
+                                voteMargin: formInformations.voteMargin,
+                                status: formInformations.status,
+                                whitelist: formInformations.whiteList,
+                                expiredAt: formInformations.expiredAt,
+                            },
                         },
                     ],
-                    data: {
-                        from: ual.activeUser.accountName,
-                        title: formInformations.title,
-                        summary: formInformations.summary,
-                        content: formInformations.content,
-                        category: formInformations.category,
-                        voteMargin: formInformations.voteMargin,
-                        status: formInformations.status,
-                        expiredAt: formInformations.expiredAt,
-                    },
-                }],
-              }
-            
-            , { broadcast: true }).catch((error) => {
-                throw "Error creating the proposal";
+                },
+                {
+                    blocksBehind: 3,
+                    expireSeconds: 30,
+                }
+            )
+            .catch((error) => {
+                throw error;
             });
     } catch (e) {
         throw e;
@@ -138,7 +148,8 @@ export async function vote(
     eosAccountName
 ) {
     try {
-        const response = await ual.activeUser.signTransaction(
+        const response = await ual.activeUser
+            .signTransaction(
                 {
                     actions: [
                         {
@@ -164,7 +175,7 @@ export async function vote(
                 }
             )
             .catch((error) => {
-                throw "Error voting";
+                throw error;
             });
     } catch (e) {
         throw e;
@@ -177,7 +188,8 @@ export async function createArgument(
     eosAccountName
 ) {
     try {
-        const response = await ual.activeUser.signTransaction(
+        const response = await ual.activeUser
+            .signTransaction(
                 {
                     actions: [
                         {
@@ -219,7 +231,8 @@ export async function voteArgument(
     eosAccountName
 ) {
     try {
-        const response = await ual.activeUser.signTransaction(
+        const response = await ual.activeUser
+            .signTransaction(
                 {
                     actions: [
                         {
@@ -259,7 +272,8 @@ export async function createSingleNews(
     eosAccountName
 ) {
     try {
-        const response = await ual.activeUser.signTransaction(
+        const response = await ual.activeUser
+            .signTransaction(
                 {
                     actions: [
                         {
@@ -273,7 +287,9 @@ export async function createSingleNews(
                             ],
                             data: {
                                 from: ual.activeUser.accountName,
-                                primaryKey: parseInt(singleNewsInformation.primaryKey),
+                                primaryKey: parseInt(
+                                    singleNewsInformation.primaryKey
+                                ),
                                 title: singleNewsInformation.title,
                                 content: singleNewsInformation.content,
                             },
@@ -286,7 +302,7 @@ export async function createSingleNews(
                 }
             )
             .catch((error) => {
-                throw "Error creating the news";
+                throw error;
             });
     } catch (e) {
         throw e;
@@ -299,6 +315,8 @@ async function setup() {
         .then((value) => {
             contract = value;
         })
-        .catch((error) => { throw 'Error setting up contract'});
+        .catch((error) => {
+            throw "Error setting up contract";
+        });
     return contract;
 }

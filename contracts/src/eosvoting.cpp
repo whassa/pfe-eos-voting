@@ -1,6 +1,8 @@
 #include <eosvoting.hpp>
 
-ACTION eosvoting::crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, time_point_sec expiredAt)
+
+
+ACTION eosvoting::crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt)
 {
 
   require_auth(from);
@@ -24,6 +26,7 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
       proposal_info.expiredAt = expiredAt;
       proposal_info.createdAt = time;
       proposal_info.updatedAt = time;
+      proposal_info.whitelist = whitelist;
       proposal_info.author = from; });
 }
 
@@ -38,8 +41,11 @@ ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, strin
 
   if (primary_key_itr != _proposals.end())
   {
+    auto proposals = _proposals.get(primaryKey);
+
+    check(proposals.author == name(from), "You can't change the information if you're not the owner");
     _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
-                      {
+      {
       proposal_info.primaryKey = primaryKey;
       proposal_info.title = title;
       proposal_info.summary = summary;
@@ -63,6 +69,11 @@ ACTION eosvoting::makevote(name from, uint64_t primaryKey, char value)
   {
     auto proposals = _proposals.get(primaryKey);
     bool found = 0;
+    
+    bool whitelisted = checkwhitelist(proposals.whitelist, from, proposals.author);
+    // Else everyone can vote
+    check(whitelisted == 1, "You can't vote if you're not on the whitelist. Ask the owner to change it.");
+
     for (size_t i = 0; i < proposals.votes.vote.size(); i++)
     {
       if (proposals.votes.vote[i].user == from)
@@ -115,6 +126,11 @@ ACTION eosvoting::crtargument(name from, uint64_t primaryKey, string title, stri
   {
 
     auto proposal = _proposals.get(primaryKey);
+
+    bool whitelisted = checkwhitelist(proposal.whitelist, from, proposal.author);
+    // Else everyone can vote
+    check(whitelisted == 1, "You can't create an argument if you're not on the whitelist. Ask the owner to change it.");
+
     // Generate the primary key based on other primary key
     uint64_t primaryKey = 0;
     for (size_t i = 0; i < proposal.arguments.argument.size(); i++)
@@ -144,6 +160,12 @@ ACTION eosvoting::voteargument(name from, uint64_t primaryKey, uint64_t argument
   if (primary_key_itr != _proposals.end())
   {
     auto proposals = _proposals.get(primaryKey);
+    
+    bool whitelisted = checkwhitelist(proposals.whitelist, from, proposals.author);
+    // Else everyone can vote
+    check(whitelisted == 1, "You can't vote on an argument if you're not on the whitelist. Ask the owner to change it.");
+
+
     bool found = 0;
     for (size_t i = 0; i < proposals.arguments.argument.size(); i++)
     {
@@ -207,7 +229,8 @@ ACTION eosvoting::crtnews(name from, uint64_t primaryKey, string title, string c
 
   if (primary_key_itr != _proposals.end())
   {
-
+    auto proposals = _proposals.get(primaryKey);
+    check(proposals.author == name(from), "You can't change the information if you're not the owner");
     time_point_sec time = current_time_point_sec();
 
     struct singlenews singleNews = {title, content, time, time};

@@ -34,9 +34,9 @@ const initialState = {
   loading: true,
 };
 const types = {
-  VIEW_CHANGED: "VIEW_CHANGED",
-  SORT_CHANGED: "SORT_CHANGED",
-  RESOLUTION_FETCHED: "RESOLUTION_FETCHED",
+    VIEW_CHANGED: "VIEW_CHANGED",
+    SORT_CHANGED: "SORT_CHANGED",
+    RESOLUTION_FETCHED: "RESOLUTION_FETCHED",
 };
 
 const reducer = (state, action) => {
