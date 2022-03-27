@@ -142,7 +142,6 @@ export default function proposalForm({ ual, eosAccountName }) {
     };
 
     const valueArguments = (array) => {
-        console.log(array)
         dispatch({
             type: types.WHITELIST_CHANGED,
             value: array,

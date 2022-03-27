@@ -16,7 +16,6 @@ function doTestTransaction(){
 }
 //TODO: implement validation service before allowing vote
 async function vote(eosAccountName, contract){
-    console.log(contract)
     await contract.api.transact(
         {
             actions: [
