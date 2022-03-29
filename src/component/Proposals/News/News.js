@@ -12,6 +12,10 @@ export default function News({
     refreshNews,
 }) {
     const theme = useTheme();
+    console.log("news object")
+    console.log(news)
+    console.log("refreshNews")
+    console.log(refreshNews)
     return (
         <>
             <Paper elevation={3} padding="dense" sx={{ padding: "10px" }}>
@@ -38,6 +42,11 @@ export default function News({
                             <NewsItem
                                 key={singleNew.createdAt}
                                 singleNew={singleNew}
+                                ual={ual}
+                                resolutionAuthor={resolutionAuthor}
+                                resolutionId={resolutionID}
+                                oldData = {{oldTitle: singleNew.title, oldContent: singleNew.content}}
+                                refreshNews = {refreshNews}
                             />
                         );
                     })}

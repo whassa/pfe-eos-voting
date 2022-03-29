@@ -156,11 +156,12 @@ export default function pid({
         state.resolution &&
         state.resolution.whitelist &&
         (
-            state.resolution.whitelist.length == 0 ||
-            state.resolution.author == ual.activeUser.accountName ||
-            state.resolution.whitelist.includes(ual.activeUser)
+            state.resolution.whitelist.length === 0 ||
+            state.resolution.author === ual.activeUser.accountName ||
+            state.resolution.whitelist.includes(ual.activeUser.accountName)
         )
-
+    console.log("is it votable?: " + votable)
+    console.log(state.resolution)
     return (
         <>
             <Header />

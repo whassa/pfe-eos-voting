@@ -183,6 +183,10 @@
                     "type": "uint64"
                 },
                 {
+                    "name": "author",
+                    "type": "name"
+                },
+                {
                     "name": "title",
                     "type": "string"
                 },
@@ -223,10 +227,6 @@
                     "type": "time_point_sec"
                 },
                 {
-                    "name": "author",
-                    "type": "name"
-                },
-                {
                     "name": "arguments",
                     "type": "arguments"
                 },
@@ -263,6 +263,32 @@
                 {
                     "name": "updatedAt",
                     "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "upnews",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "oldTitle",
+                    "type": "string"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
                 }
             ]
         },
@@ -395,6 +421,11 @@
         {
             "name": "makevote",
             "type": "makevote",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "upnews",
+            "type": "upnews",
             "ricardian_contract": ""
         },
         {

@@ -239,6 +239,35 @@ ACTION eosvoting::crtnews(name from, uint64_t primaryKey, string title, string c
   }
 }
 
+ACTION eosvoting::upnews(name from, uint64_t primaryKey, string oldTitle, string title, string content)
+{
+  // Init the _votes table
+  proposals_index _proposals(get_self(), get_self().value);
+  time_point_sec time = current_time_point_sec();
+  auto primary_key_itr = _proposals.find(primaryKey);
+  if (primary_key_itr != _proposals.end())
+  {
+    auto proposals = _proposals.get(primaryKey);
+
+    check(proposals.author == name(from), "You can't change the information if you're not the owner");
+    for (size_t i = 0; i < proposals.news.singlenews.size(); i++)
+    {
+      if (proposals.news.singlenews[i].title == oldTitle)
+      {
+      check(-1, "on l'a trouvé");
+        _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
+          {
+          proposal_info.news.singlenews[i].updatedAt = time;
+          proposal_info.news.singlenews[i].title = title;
+          proposal_info.news.singlenews[i].content = content;
+    
+          });
+        break;
+      }
+    }
+  }
+}
+
 ACTION eosvoting::clear()
 {
   require_auth(get_self());
@@ -253,4 +282,4 @@ ACTION eosvoting::clear()
   }
 }
 
-EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument)(voteargument)(crtnews));
+EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument)(voteargument)(crtnews)(upnews));

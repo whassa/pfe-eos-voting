@@ -309,6 +309,51 @@ export async function createSingleNews(
     }
 }
 
+export async function updateSingleNews(
+    ual,
+    singleNewsInformation,
+    eosAccountName, oldTitle
+) {
+    try {
+        console.log(arguments)
+        const response = await ual.activeUser
+            .signTransaction(
+                {
+                    actions: [
+                        {
+                            account: eosAccountName, //env variable
+                            name: "upnews",
+                            authorization: [
+                                {
+                                    actor: ual.activeUser.accountName,
+                                    permission: "active",
+                                },
+                            ],
+                            data: {
+                                from: ual.activeUser.accountName,
+                                primaryKey: parseInt(
+                                    singleNewsInformation.primaryKey
+                                ),
+                                oldTitle: singleNewsInformation.oldTitle,
+                                title: singleNewsInformation.title,
+                                content: singleNewsInformation.content,
+                            },
+                        },
+                    ],
+                },
+                {
+                    blocksBehind: 3,
+                    expireSeconds: 30,
+                }
+            )
+            .catch((error) => {
+                throw error;
+            });
+    } catch (e) {
+        throw e;
+    }
+}
+
 async function setup() {
     let contract;
     await setupContract()
