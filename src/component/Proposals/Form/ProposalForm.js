@@ -109,8 +109,6 @@ export default function proposalForm({ ual, eosAccountName }) {
             expiredAt: dayjs(state.expirationDate).format(
                 "YYYY-MM-DD HH:mm:ss"
             ),
-            status: "Open",
-            
         };
 
         switch (state.voteType) {
@@ -271,6 +269,7 @@ export default function proposalForm({ ual, eosAccountName }) {
                                         sx={{ marginBottom: "10px" }}
                                     />
                                 )}
+                                minDate={dayjs().toDate()}
                                 required
                             />
                         </LocalizationProvider>

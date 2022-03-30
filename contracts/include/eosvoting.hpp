@@ -51,8 +51,8 @@ public:
 
   struct votes
   {
-    int actualVote;
-    int totalVotes;
+    uint64_t actualVote;
+    uint64_t totalVotes;
     std::vector<vote> vote;
   };
 
@@ -73,13 +73,12 @@ public:
     std::vector<argument> argument;
   };
 
-  ACTION crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt);
-  ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, time_point_sec expiredAt);
+  ACTION crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, std::vector<name> whitelist, time_point_sec expiredAt);
+  ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, time_point_sec expiredAt);
   ACTION makevote(name from, uint64_t primaryKey, char value);
   ACTION crtargument(name from, uint64_t primaryKey, string title, string content, bool value);
   ACTION voteargument(name from, uint64_t primaryKey, uint64_t argumentKey, char value);
   ACTION crtnews(name from, uint64_t primaryKey, string title, string content);
-  ACTION clear();
 
 public:
   time_point_sec current_time_point_sec()
@@ -96,23 +95,23 @@ public:
     string content;
     string category;
     uint64_t voteMargin;
-    string status;
     time_point_sec expiredAt;
     time_point_sec createdAt;
     time_point_sec updatedAt;
-    time_point_sec deletedAt;
-
     arguments arguments;
     news news;
     votes votes;
     std::vector<name> whitelist;
     uint64_t primary_key() const { return primaryKey; }
-    uint64_t secondary_key() const { return author.value; }
+    uint128_t secondary_key() const { return (uint128_t{author.value}<<64) + uint64_t{primaryKey}; }
+    uint128_t third_key() const { return (uint128_t{votes.totalVotes}<<64) + uint64_t{primaryKey}; }
+    
   };
 
 
   typedef eosio::multi_index<name("proposals"), proposals, 
-    indexed_by<name("author"), const_mem_fun<proposals, uint64_t, &proposals::secondary_key>>
+    indexed_by<name("authors"), const_mem_fun<proposals, uint128_t, &proposals::secondary_key>>,
+    indexed_by<name("proposalvote"), const_mem_fun<proposals, uint128_t, &proposals::third_key>>
   > proposals_index;
 
 };
