@@ -231,7 +231,7 @@ export async function updateArgument(
     proposalId
 ) {
     console.log("kin ton arg")
-    console.log(argument)
+    console.log(arguments)
     console.log(proposalId)
     try {
         const response = await ual.activeUser

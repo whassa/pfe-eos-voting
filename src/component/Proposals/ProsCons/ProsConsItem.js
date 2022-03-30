@@ -20,7 +20,7 @@ import SnackbarAlert from 'common/SnackbarAlert/snackbarAlert';
 import {
     argumentVoteTemplate,
     voteArgument,
-    updateArgument
+    updateArgument,
 } from "../../../utils/ContractActions/Contract";
 
 
