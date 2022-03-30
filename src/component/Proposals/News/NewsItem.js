@@ -157,7 +157,7 @@ export default function NewsItem({ singleNew, resolutionAuthor, ual, resolutionI
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => {handleClose()}}>Cancel</Button>
-                            <Button onClick={updateNews}>Subscribe</Button>
+                            <Button onClick={updateNews}>Update</Button>
                         </DialogActions>
                     </Dialog>
                 </Stack>

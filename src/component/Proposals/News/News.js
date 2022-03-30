@@ -12,10 +12,6 @@ export default function News({
     refreshNews,
 }) {
     const theme = useTheme();
-    console.log("news object")
-    console.log(news)
-    console.log("refreshNews")
-    console.log(refreshNews)
     return (
         <>
             <Paper elevation={3} padding="dense" sx={{ padding: "10px" }}>

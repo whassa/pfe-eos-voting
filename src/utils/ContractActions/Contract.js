@@ -224,6 +224,51 @@ export async function createArgument(
     }
 }
 
+export async function updateArgument(
+    ual,
+    argument,
+    eosAccountName,
+    proposalId
+) {
+    console.log("kin ton arg")
+    console.log(argument)
+    console.log(proposalId)
+    try {
+        const response = await ual.activeUser
+            .signTransaction(
+                {
+                    actions: [
+                        {
+                            account: eosAccountName, //env variable
+                            name: "upargument",
+                            authorization: [
+                                {
+                                    actor: ual.activeUser.accountName,
+                                    permission: "active",
+                                },
+                            ],
+                            data: {
+                                from: ual.activeUser.accountName,
+                                primaryKey: proposalId,
+                                argumentKey: argument.primaryKey,
+                                title: argument.title,
+                                content: argument.content,
+                            },
+                        },
+                    ],
+                },
+                {
+                    blocksBehind: 3,
+                    expireSeconds: 30,
+                }
+            )
+            .catch((error) => {
+                throw error;
+            });
+    } catch (e) {
+        throw e;
+    }
+}
 
 export async function voteArgument(
     ual,

@@ -78,6 +78,7 @@ public:
   ACTION makevote(name from, uint64_t primaryKey, char value);
   ACTION crtargument(name from, uint64_t primaryKey, string title, string content, bool value);
   ACTION voteargument(name from, uint64_t primaryKey, uint64_t argumentKey, char value);
+  ACTION upargument(name from, uint64_t primaryKey, uint64_t argumentKey, string title, string content);
   ACTION crtnews(name from, uint64_t primaryKey, string title, string content);
   ACTION upnews(name from, uint64_t primaryKey, string oldTitle, string title, string content);
   ACTION clear();

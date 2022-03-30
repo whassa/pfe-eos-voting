@@ -267,6 +267,32 @@
             ]
         },
         {
+            "name": "upargument",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "argumentKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                }
+            ]
+        },
+        {
             "name": "upnews",
             "base": "",
             "fields": [
@@ -421,6 +447,11 @@
         {
             "name": "makevote",
             "type": "makevote",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "upargument",
+            "type": "upargument",
             "ricardian_contract": ""
         },
         {
