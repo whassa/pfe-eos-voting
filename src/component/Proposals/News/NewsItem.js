@@ -47,7 +47,7 @@ const reducer = (state, action) => {
             return { ...state };
     }
 };
-export default function NewsItem({ singleNew, resolutionAuthor, ual, resolutionId, oldData, refreshNews }) {
+export default function NewsItem({ singleNew, eosAccountName, resolutionAuthor, ual, resolutionId, oldData, refreshNews }) {
     const initialState = {
         content: oldData.oldContent,
         title: oldData.oldTitle,
@@ -70,7 +70,7 @@ export default function NewsItem({ singleNew, resolutionAuthor, ual, resolutionI
     }
 
     function updateNews(){
-        updateSingleNews(ual, {oldTitle: state.oldTitle, title: state.title, content: state.content, primaryKey: resolutionId}, ual.activeUser.accountName)
+        updateSingleNews(ual, {oldTitle: state.oldTitle, title: state.title, content: state.content, primaryKey: resolutionId}, eosAccountName)
             .then(() => {
                 handleClose();
                 refreshNews();

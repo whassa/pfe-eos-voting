@@ -108,7 +108,7 @@ export default function ListProsCons({ ual, pid, argument, eosAccountName, refre
     }
 
     function updateArg(){
-        updateArgument(ual, {title: state.title, content: state.content, primaryKey: argument.primaryKey}, ual.activeUser.accountName, pid)
+        updateArgument(ual, {title: state.title, content: state.content, primaryKey: argument.primaryKey}, eosAccountName, pid)
             .then(() => {
                 handleClose();
                 refreshProsCons();
