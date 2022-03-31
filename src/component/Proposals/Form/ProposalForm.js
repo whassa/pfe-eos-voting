@@ -51,8 +51,6 @@ const reducer = (state, action) => {
             return { ...state, content: action.value };
         case types.CATEGORY_CHANGED:
             return { ...state, category: action.value };
-        case types.TITLE_CHANGED:
-            return { ...state, title: action.value };
         case types.VOTEMARGIN_CHANGED:
             return { ...state, voteMargin: action.value };
         case types.WHITELIST_CHANGED:

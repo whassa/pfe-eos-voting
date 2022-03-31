@@ -185,7 +185,7 @@ export default function ListProsCons({ ual, pid, argument, eosAccountName, refre
                     Edit
                 </Button>)}
             <Dialog open={state.allowEdit} onClose={() => {handleClose}}>
-                <DialogTitle>Update News</DialogTitle>
+                <DialogTitle>Update Argument</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         You are currently editing an <b>Argument</b> post. You may only change the title and its content.
