@@ -353,7 +353,7 @@ export default function proposalForm({ ual, eosAccountName }) {
 
                         <RadioGroup
                             row
-                            defaultValue="Public"
+                            value={state.voteType}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.VOTETYPE_CHANGED,
