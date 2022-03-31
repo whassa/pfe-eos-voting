@@ -30,7 +30,7 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
       proposal_info.author = from; });
 }
 
-ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, time_point_sec expiredAt)
+ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt)
 {
   require_auth(from);
 
@@ -54,6 +54,7 @@ ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, strin
       proposal_info.voteMargin = voteMargin;
       proposal_info.status = status;
       proposal_info.expiredAt = expiredAt;
+      proposal_info.whitelist = whitelist;
       proposal_info.updatedAt = current_time_point_sec(); });
   }
 }
