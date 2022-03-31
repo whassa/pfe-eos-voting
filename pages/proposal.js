@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
 
 export default function Vote({ ual, eosAccountName }) {
+    
     return (
         <>
             <Header></Header>
@@ -20,7 +21,7 @@ export default function Vote({ ual, eosAccountName }) {
                 }}
             >
                 {ual.activeUser && (
-                    <Box
+                <Box
                         component="form"
                         sx={{
                             "& > :not(style)": { m: 1 },

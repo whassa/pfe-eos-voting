@@ -60,10 +60,6 @@ export default function NewsItem({ singleNew, eosAccountName, resolutionAuthor, 
 
     const theme = useTheme();
     const [state, dispatch] = useReducer(reducer, initialState);
-    console.log("voici la single new")
-    console.log(singleNew)
-    console.log("voici l'author" + resolutionAuthor)
-    console.log(ual.activeUser.accountName === resolutionAuthor)
 
     function handleClose(){
         dispatch({ type: types.CANCEL_EDIT, value: false });

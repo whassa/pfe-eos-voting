@@ -53,9 +53,7 @@ const types = {
     CATEGORY_CHANGED: "CATEGORY_CHANGED",
     VOTEMARGIN_CHANGED: "VOTEMARGIN_CHANGED",
     RESOLUTION_FETCHED: "RESOLUTION_FETCHED",
-    ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE",
-    ALLOW_EDIT: "ALLOW_EDIT",
-    CANCEL_EDIT: "CANCEL_EDIT"
+    ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE"
 };
 
 const reducer = (state, action) => {
@@ -101,12 +99,6 @@ const reducer = (state, action) => {
             return { ...state, open: false };
         case types.USER_VOTED:
             return { ...state };
-        case types.ALLOW_EDIT:
-            state.allowEdit = true;
-            console.log(state )
-            return { ...state, allowEdit: true, };
-        case types.CANCEL_EDIT:
-            return { ...state, allowEdit: false };
         default:
             return { ...state };
     }
@@ -186,14 +178,6 @@ export default function pid({
         }
     };
 
-    function handleClose(){
-        dispatch({ type: types.CANCEL_EDIT, value: false });
-    }
-
-    function updateProposal(){
-
-    }
-
     const votable =
         ual.activeUser &&
         state.resolution &&
@@ -203,7 +187,7 @@ export default function pid({
             state.resolution.author === ual.activeUser.accountName ||
             state.resolution.whitelist.includes(ual.activeUser.accountName)
         )
-    console.log("is it votable?: " + votable)
+
     return (
         <>
             <Header />
@@ -220,85 +204,6 @@ export default function pid({
                 ) : state.resolution ? (
                     <>
                         <Box sx={{ display: "flex" }}>
-                            <Dialog open={state.allowEdit} onClose={handleClose}>
-                                <DialogTitle>Update Proposal</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        You are currently editing this <b>Proposal</b> post. You may change the title, summary, content and vote margin.
-                                    </DialogContentText>
-                                    <TextField
-                                        id="Title"
-                                        label="Title"
-                                        inputProps={{
-                                            maxLength: 50,
-                                        }}
-                                        onChange={(e) => {
-                                            dispatch({
-                                                type: types.TITLE_CHANGED,
-                                                value: e.target.value,
-                                            });
-                                        }}
-                                        value={state.title}
-                                        sx={{ marginBottom: "10px" }}
-                                        required
-                                    />
-
-                                    <TextField
-                                        label="Summary"
-                                        variant="outlined"
-                                        multiline
-                                        inputProps={{
-                                            maxLength: 200,
-                                        }}
-                                        onChange={(e) => {
-                                            dispatch({
-                                                type: types.SUMMARY_CHANGED,
-                                                value: e.target.value,
-                                            });
-                                        }}
-                                        value={state.summary}
-                                        sx={{ marginBottom: "10px" }}
-                                        required
-                                    />
-
-                                    <TextField
-                                        label="Content"
-                                        variant="outlined"
-                                        onChange={(e) => {
-                                            dispatch({
-                                                type: types.CONTENT_CHANGED,
-                                                value: e.target.value,
-                                            });
-                                        }}
-                                        rows={4}
-                                        value={state.content}
-                                        sx={{ marginBottom: "10px" }}
-                                        multiline
-                                        required
-                                    />
-
-                                    <TextField
-                                        id="Category"
-                                        label="Category"
-                                        inputProps={{
-                                            maxLength: 50,
-                                        }}
-                                        onChange={(e) => {
-                                            dispatch({
-                                                type: types.CATEGORY_CHANGED,
-                                                value: e.target.value,
-                                            });
-                                        }}
-                                        sx={{ marginBottom: "10px" }}
-                                        value={state.category}
-                                    />
-
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={() => {handleClose()}}>Cancel</Button>
-                                    <Button onClick={updateProposal}>Update</Button>
-                                </DialogActions>
-                            </Dialog>
                             <Box sx={{ marginLeft: "10px" }}>
                                 <Image
                                     src="/Login/eos-logo.svg"
@@ -358,7 +263,7 @@ export default function pid({
                                                     state.resolution.author !== ual.activeUser.accountName
                                                 }
                                                 onClick={() => {
-                                                    dispatch({ type: types.ALLOW_EDIT });
+                                                   router.push('/proposal?update=true&proposal='+pid)
                                                 }}
                                                 type="submit"
                                                 variant="contained"

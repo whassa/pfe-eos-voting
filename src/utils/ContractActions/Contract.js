@@ -92,7 +92,6 @@ export async function getProposalsByUser( userName, eosAccountName, ){
         reverse: true,
         limit: 6,                // Maximum number of rows that we want to ge
       }).catch((e) => { throw  'Error fetching the proposals'});
-    console.log(proposals);
     return proposals;
 }
 
@@ -117,6 +116,53 @@ export async function createProposal(
                             ],
                             data: {
                                 from: ual.activeUser.accountName,
+                                title: formInformations.title,
+                                summary: formInformations.summary,
+                                content: formInformations.content,
+                                category: formInformations.category,
+                                voteMargin: formInformations.voteMargin,
+                                status: formInformations.status,
+                                whitelist: formInformations.whiteList,
+                                expiredAt: formInformations.expiredAt,
+                            },
+                        },
+                    ],
+                },
+                {
+                    blocksBehind: 3,
+                    expireSeconds: 30,
+                }
+            )
+            .catch((error) => {
+                throw error;
+            });
+    } catch (e) {
+        throw e;
+    }
+}
+
+export async function updateProposal(
+    ual,
+    formInformations,
+    eosAccountName
+) {
+    try {
+        const response = await ual.activeUser
+            .signTransaction(
+                {
+                    actions: [
+                        {
+                            account: eosAccountName, //env variable
+                            name: "upproposal",
+                            authorization: [
+                                {
+                                    actor: ual.activeUser.accountName,
+                                    permission: "active",
+                                },
+                            ],
+                            data: {
+                                from: ual.activeUser.accountName,
+                                primaryKey: formInformations.primaryKey,
                                 title: formInformations.title,
                                 summary: formInformations.summary,
                                 content: formInformations.content,
@@ -230,9 +276,6 @@ export async function updateArgument(
     eosAccountName,
     proposalId
 ) {
-    console.log("kin ton arg")
-    console.log(arguments)
-    console.log(proposalId)
     try {
         const response = await ual.activeUser
             .signTransaction(
@@ -360,7 +403,6 @@ export async function updateSingleNews(
     eosAccountName, oldTitle
 ) {
     try {
-        console.log(arguments)
         const response = await ual.activeUser
             .signTransaction(
                 {
