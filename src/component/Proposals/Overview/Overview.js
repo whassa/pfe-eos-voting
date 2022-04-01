@@ -66,6 +66,9 @@ export default function Overview({ resolution }) {
                     <Typography component="div" sx={{ textAlign: "center" }}>
                         Created on {dayjs(resolution.createdAt).format('MM-DD-YYYY').toString()}
                     </Typography>
+                    <Typography component="div" sx={{ textAlign: "center" }}>
+                        Expired at {dayjs(resolution.expiredAt).format('MM-DD-YYYY').toString()}
+                    </Typography>
                 </Paper>
             </Box>
         </Stack>

@@ -52,11 +52,6 @@
             ]
         },
         {
-            "name": "clear",
-            "base": "",
-            "fields": []
-        },
-        {
             "name": "crtargument",
             "base": "",
             "fields": [
@@ -133,10 +128,6 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "status",
-                    "type": "string"
-                },
-                {
                     "name": "whitelist",
                     "type": "name[]"
                 },
@@ -183,6 +174,10 @@
                     "type": "uint64"
                 },
                 {
+                    "name": "author",
+                    "type": "name"
+                },
+                {
                     "name": "title",
                     "type": "string"
                 },
@@ -203,10 +198,6 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "status",
-                    "type": "string"
-                },
-                {
                     "name": "expiredAt",
                     "type": "time_point_sec"
                 },
@@ -217,14 +208,6 @@
                 {
                     "name": "updatedAt",
                     "type": "time_point_sec"
-                },
-                {
-                    "name": "deletedAt",
-                    "type": "time_point_sec"
-                },
-                {
-                    "name": "author",
-                    "type": "name"
                 },
                 {
                     "name": "arguments",
@@ -299,10 +282,6 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "status",
-                    "type": "string"
-                },
-                {
                     "name": "expiredAt",
                     "type": "time_point_sec"
                 }
@@ -358,11 +337,11 @@
             "fields": [
                 {
                     "name": "actualVote",
-                    "type": "int32"
+                    "type": "uint64"
                 },
                 {
                     "name": "totalVotes",
-                    "type": "int32"
+                    "type": "uint64"
                 },
                 {
                     "name": "vote",
@@ -372,11 +351,6 @@
         }
     ],
     "actions": [
-        {
-            "name": "clear",
-            "type": "clear",
-            "ricardian_contract": ""
-        },
         {
             "name": "crtargument",
             "type": "crtargument",

@@ -19,7 +19,7 @@ import GridView from "../src/component/Proposals/Home/GridView/gridView";
 import { useState, useReducer, useEffect } from "react";
 import Header from "component/Head/Header";
 import { useRouter } from "next/router";
-import { getProposals } from "../src/utils/ContractActions/Contract";
+import { getProposals, getProposalsByVoteCount } from "../src/utils/ContractActions/Contract";
 import Loading from "/src/common/Loading";
 
 const initialState = {
@@ -78,14 +78,28 @@ export default function Home({ ual, eosAccountName }) {
   }, []);
 
   const fetchResolutinInfo = (page) => {
-    getProposals(eosAccountName, state.sortInfo.next_key).then((value) => {
-      dispatch({
-        type: types.RESOLUTION_FETCHED,
-        resolutions: value.rows,
-        sortInfo: { more: value.more, next_key: value.next_key, page },
-      });
-    });
+    if (state.sort === 'date') {
+      getProposals(eosAccountName, (page <= state.sortInfo.page ?  page - 1 : state.sortInfo.next_key)).then((value) => {
+        dispatch({
+          type: types.RESOLUTION_FETCHED,
+          resolutions: value.rows,
+          sortInfo: { more: value.more, next_key: value.next_key, page },
+        });
+      }); 
+    } else {
+      getProposalsByVoteCount(eosAccountName, (page !== 0 ? state.sortInfo.next_key: null)).then((value) => {
+        dispatch({
+          type: types.RESOLUTION_FETCHED,
+          resolutions: value.rows,
+          sortInfo: { more: value.more, next_key: value.next_key, page },
+        });
+      })
+    }
   };
+
+  useEffect( () => {
+    fetchResolutinInfo(0);
+  }, [state.sort])
 
   return (
     <>
@@ -116,15 +130,15 @@ export default function Home({ ual, eosAccountName }) {
                 </Typography>
                 <NativeSelect
                   defaultValue={"Date"}
-                  onChange={(e) => {
+                  onChange={ (e) => {
                     dispatch({
                       type: types.SORT_CHANGED,
                       value: e.target.value,
-                    });
+                    })
                   }}
                 >
-                  <option value={"Date"}>Date</option>
-                  <option value={"Vote"}>Vote</option>
+                  <option value={"date"}>Date</option>
+                  <option value={"vote"}>Vote</option>
                 </NativeSelect>
               </Box>
 
