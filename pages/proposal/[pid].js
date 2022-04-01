@@ -27,6 +27,7 @@ import VoteModal from "component/Proposals/VoteModal/VoteModal";
 import News from "component/Proposals/News/News";
 import { useRouter } from "next/router";
 import Loading from "/src/common/Loading";
+import dayjs from "dayjs"
 
 const views = ["Overview", "Pros & Cons", "Statistics", "News", "Live Chat"];
 
@@ -181,10 +182,11 @@ export default function pid({
     const votable =
         ual.activeUser &&
         state.resolution &&
+        dayjs(state.resolution.expiredAt) >= dayjs() &&
         state.resolution.whitelist &&
         (
-            state.resolution.whitelist.length === 0 ||
-            state.resolution.author === ual.activeUser.accountName ||
+            state.resolution.whitelist.length == 0 ||
+            state.resolution.author == ual.activeUser.accountName ||
             state.resolution.whitelist.includes(ual.activeUser.accountName)
         )
 
@@ -221,7 +223,6 @@ export default function pid({
                                 }}
                             >
                                 <Typography variant="h5">
-                                    {/**TODO change it to .title*/}
                                     {state.resolution.title}
                                 </Typography>
                                 <Typography variant="h6" onClick={() => {
@@ -229,7 +230,6 @@ export default function pid({
                                 }}
                                     sx={{ cursor: 'pointer' }}
                                 >
-                                    {/*TODO change it for .author.userName*/}
                                     {state.resolution.author}
                                 </Typography>
                             </Box>
@@ -247,7 +247,7 @@ export default function pid({
                                             variant="contained"
                                             color="secondary"
                                             sx={{ textTransform: "none" }}
-                                            onClick={(e) => {
+                                            onClick={() => {
                                                 dispatch({
                                                     type: types.OPEN_CHANGED,
                                                     value: true,

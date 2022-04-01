@@ -52,11 +52,6 @@
             ]
         },
         {
-            "name": "clear",
-            "base": "",
-            "fields": []
-        },
-        {
             "name": "crtargument",
             "base": "",
             "fields": [
@@ -133,10 +128,6 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "status",
-                    "type": "string"
-                },
-                {
                     "name": "whitelist",
                     "type": "name[]"
                 },
@@ -207,10 +198,6 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "status",
-                    "type": "string"
-                },
-                {
                     "name": "expiredAt",
                     "type": "time_point_sec"
                 },
@@ -220,10 +207,6 @@
                 },
                 {
                     "name": "updatedAt",
-                    "type": "time_point_sec"
-                },
-                {
-                    "name": "deletedAt",
                     "type": "time_point_sec"
                 },
                 {
@@ -267,58 +250,6 @@
             ]
         },
         {
-            "name": "upargument",
-            "base": "",
-            "fields": [
-                {
-                    "name": "from",
-                    "type": "name"
-                },
-                {
-                    "name": "primaryKey",
-                    "type": "uint64"
-                },
-                {
-                    "name": "argumentKey",
-                    "type": "uint64"
-                },
-                {
-                    "name": "title",
-                    "type": "string"
-                },
-                {
-                    "name": "content",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "upnews",
-            "base": "",
-            "fields": [
-                {
-                    "name": "from",
-                    "type": "name"
-                },
-                {
-                    "name": "primaryKey",
-                    "type": "uint64"
-                },
-                {
-                    "name": "oldTitle",
-                    "type": "string"
-                },
-                {
-                    "name": "title",
-                    "type": "string"
-                },
-                {
-                    "name": "content",
-                    "type": "string"
-                }
-            ]
-        },
-        {
             "name": "upproposal",
             "base": "",
             "fields": [
@@ -349,14 +280,6 @@
                 {
                     "name": "voteMargin",
                     "type": "uint64"
-                },
-                {
-                    "name": "status",
-                    "type": "string"
-                },
-                {
-                    "name": "whitelist",
-                    "type": "name[]"
                 },
                 {
                     "name": "expiredAt",
@@ -414,11 +337,11 @@
             "fields": [
                 {
                     "name": "actualVote",
-                    "type": "int32"
+                    "type": "uint64"
                 },
                 {
                     "name": "totalVotes",
-                    "type": "int32"
+                    "type": "uint64"
                 },
                 {
                     "name": "vote",
@@ -428,11 +351,6 @@
         }
     ],
     "actions": [
-        {
-            "name": "clear",
-            "type": "clear",
-            "ricardian_contract": ""
-        },
         {
             "name": "crtargument",
             "type": "crtargument",
@@ -451,16 +369,6 @@
         {
             "name": "makevote",
             "type": "makevote",
-            "ricardian_contract": ""
-        },
-        {
-            "name": "upargument",
-            "type": "upargument",
-            "ricardian_contract": ""
-        },
-        {
-            "name": "upnews",
-            "type": "upnews",
             "ricardian_contract": ""
         },
         {

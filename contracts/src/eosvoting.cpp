@@ -2,8 +2,11 @@
 
 
 
-ACTION eosvoting::crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt)
+ACTION eosvoting::crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, std::vector<name> whitelist, time_point_sec expiredAt)
 {
+
+  check( title.length() <= 50, "The title size is higher than 50 please take a smaller name");
+  check( summary.length() <= 200, "The summary size is higher than 200 please write a smaller summary");
 
   require_auth(from);
 
@@ -22,7 +25,6 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
       proposal_info.content = content;
       proposal_info.category =  category;
       proposal_info.voteMargin = voteMargin;
-      proposal_info.status = status;
       proposal_info.expiredAt = expiredAt;
       proposal_info.createdAt = time;
       proposal_info.updatedAt = time;
@@ -32,6 +34,10 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
 
 ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt)
 {
+
+  check( title.length() <= 50, "The title size is higher than 50 please take a smaller name");
+  check( summary.length() <= 200, "The summary size is higher than 200 please write a smaller summary");
+
   require_auth(from);
 
   // Init the _votes table
@@ -43,6 +49,7 @@ ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, strin
   {
     auto proposals = _proposals.get(primaryKey);
 
+
     check(proposals.author == name(from), "You can't change the information if you're not the owner");
     _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
       {
@@ -52,7 +59,6 @@ ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, strin
       proposal_info.content = content;
       proposal_info.category =  category;
       proposal_info.voteMargin = voteMargin;
-      proposal_info.status = status;
       proposal_info.expiredAt = expiredAt;
       proposal_info.whitelist = whitelist;
       proposal_info.updatedAt = current_time_point_sec(); });
@@ -74,6 +80,10 @@ ACTION eosvoting::makevote(name from, uint64_t primaryKey, char value)
     bool whitelisted = checkwhitelist(proposals.whitelist, from, proposals.author);
     // Else everyone can vote
     check(whitelisted == 1, "You can't vote if you're not on the whitelist. Ask the owner to change it.");
+
+    time_point_sec time = current_time_point_sec();
+    // Check if proposal is not expired
+    check( time <= proposals.expiredAt, "The voting is expired and the user can't vote");
 
     for (size_t i = 0; i < proposals.votes.vote.size(); i++)
     {
@@ -116,7 +126,8 @@ ACTION eosvoting::makevote(name from, uint64_t primaryKey, char value)
 
 ACTION eosvoting::crtargument(name from, uint64_t primaryKey, string title, string content, bool value)
 {
-
+  check( title.length() <= 50, "The title size is higher than 50 please take a smaller name");
+  check( content.length() <= 5000, "The argument content size is higher than 5000 please reduce the number of character");
   require_auth(from);
   // Init the _votes table
   proposals_index _proposals(get_self(), get_self().value);
@@ -215,6 +226,7 @@ ACTION eosvoting::voteargument(name from, uint64_t primaryKey, uint64_t argument
     }
     if (!found)
     {
+      check(false, "Vote argument not found");
       // Not found
     }
   }
@@ -260,7 +272,7 @@ ACTION eosvoting::upnews(name from, uint64_t primaryKey, string oldTitle, string
           proposal_info.news.singlenews[i].updatedAt = time;
           proposal_info.news.singlenews[i].title = title;
           proposal_info.news.singlenews[i].content = content;
-    
+
           });
         break;
       }

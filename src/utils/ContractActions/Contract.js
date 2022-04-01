@@ -1,4 +1,5 @@
 import setupContract from "../../../contracts/contract";
+import getTableBoundsForName from './ContractHelperFunction';
 
 export const formTemplate = {
     primaryKey: "",
@@ -8,7 +9,6 @@ export const formTemplate = {
     category: "",
     voteMargin: 0,
     expiredAt: "",
-    status: "open",
     author: "",
     news: {
         singleNews: [],
@@ -45,6 +45,9 @@ export const newsTemplate = {
     content: "",
 };
 
+
+const numberToFetch = 12;
+
 export async function getProposals( eosAccountName, upperBound){
     let contract = await setup();
     const proposals = await contract.rpc.get_table_rows({
@@ -52,7 +55,7 @@ export async function getProposals( eosAccountName, upperBound){
         code: eosAccountName,      // Contract that we target
         scope: eosAccountName,     // Account that owns the data
         table: 'proposals',        // Table name
-        limit: 3,                // Maximum number of rows that we want to get
+        limit: numberToFetch,                // Maximum number of rows that we want to get
         ...(upperBound && { upper_bound: upperBound}),
         reverse: true,           // Optional: Get reversed data
       }).catch((e) => { throw  'Error fetching the proposals'});
@@ -79,21 +82,48 @@ export async function getProposal( primaryKey, eosAccountName){
     return proposals;
 }
 
-export async function getProposalsByUser( userName, eosAccountName, ){
+export async function getProposalsByUser( userName, eosAccountName, nextKey = null){
+    let contract = await setup();
+
+    const user = getTableBoundsForName(userName);
+ 
+    const lowerBound = BigInt(`0x${user.lower_bound}${`0`.repeat(16)}`).toString();
+    const upperBound = ( nextKey ? nextKey : BigInt(`0x${user.upper_bound}${`0`.repeat(16)}`).toString());
+    const bounds = {
+        lower_bound: lowerBound,
+        upper_bound: upperBound,
+    }
+    
+    const proposals = await contract.rpc.get_table_rows({
+        code: eosAccountName,      // Contract that we target
+        scope: eosAccountName,     // Account that owns the data
+        table: 'proposals',        // Table name
+        key_type: 'i128',
+        index_position: 2,
+        limit: numberToFetch,      // Maximum number of rows that we want to ge
+        reverse: true,
+        ...bounds
+      }).catch((e) => { throw  'Error fetching the proposals'});
+
+    return proposals;
+}
+
+export async function getProposalsByVoteCount( eosAccountName, upperBound ){
     let contract = await setup();
     const proposals = await contract.rpc.get_table_rows({
         code: eosAccountName,      // Contract that we target
         scope: eosAccountName,     // Account that owns the data
         table: 'proposals',        // Table name
-        key_type: 'name',
-        index_position: 2,
-        lower_bound: userName,
-        upper_bound: userName,
+        index_position: 3,
+        key_type: 'i128',
+        ...(upperBound && { upper_bound: upperBound}),
         reverse: true,
-        limit: 6,                // Maximum number of rows that we want to ge
+        limit: numberToFetch,                // Maximum number of rows that we want to ge
       }).catch((e) => { throw  'Error fetching the proposals'});
     return proposals;
 }
+
+
 
 export async function createProposal(
     ual,
@@ -121,7 +151,6 @@ export async function createProposal(
                                 content: formInformations.content,
                                 category: formInformations.category,
                                 voteMargin: formInformations.voteMargin,
-                                status: formInformations.status,
                                 whitelist: formInformations.whiteList,
                                 expiredAt: formInformations.expiredAt,
                             },

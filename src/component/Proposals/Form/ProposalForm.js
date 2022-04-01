@@ -64,7 +64,7 @@ const reducer = (state, action) => {
             return { ...state, submitDisable: false };
         case types.RESOLUTION_FETCHED:
             return {
-                ...state, 
+                ...state,
                 title: action.title,
                 summary: action.summary,
                 content: action.content,
@@ -125,7 +125,7 @@ export default function proposalForm({ ual, eosAccountName }) {
     if (router.query.update && router.query.proposal) {
         initialState.formType = 'update';
         initialState.proposalId = router.query.proposal;
-    } 
+    }
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -143,8 +143,6 @@ export default function proposalForm({ ual, eosAccountName }) {
             expiredAt: dayjs(state.expirationDate).format(
                 "YYYY-MM-DD HH:mm:ss"
             ),
-            status: "Open",
-            ...(state.formType === 'update' ? {primaryKey: state.proposalId}: {})
         };
 
         switch (state.voteType) {
@@ -222,8 +220,8 @@ export default function proposalForm({ ual, eosAccountName }) {
                 });
             });
         }, []);
-    } 
-   
+    }
+
     return (
         <Grid
             container
@@ -347,6 +345,7 @@ export default function proposalForm({ ual, eosAccountName }) {
                                         sx={{ marginBottom: "10px" }}
                                     />
                                 )}
+                                minDate={dayjs().toDate()}
                                 required
                             />
                         </LocalizationProvider>
