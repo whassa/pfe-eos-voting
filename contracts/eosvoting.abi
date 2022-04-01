@@ -52,6 +52,11 @@
             ]
         },
         {
+            "name": "clear",
+            "base": "",
+            "fields": []
+        },
+        {
             "name": "crtargument",
             "base": "",
             "fields": [
@@ -250,6 +255,58 @@
             ]
         },
         {
+            "name": "upargument",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "argumentKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "upnews",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "primaryKey",
+                    "type": "uint64"
+                },
+                {
+                    "name": "oldTitle",
+                    "type": "string"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                }
+            ]
+        },
+        {
             "name": "upproposal",
             "base": "",
             "fields": [
@@ -280,6 +337,14 @@
                 {
                     "name": "voteMargin",
                     "type": "uint64"
+                },
+                {
+                    "name": "status",
+                    "type": "string"
+                },
+                {
+                    "name": "whitelist",
+                    "type": "name[]"
                 },
                 {
                     "name": "expiredAt",
@@ -352,6 +417,11 @@
     ],
     "actions": [
         {
+            "name": "clear",
+            "type": "clear",
+            "ricardian_contract": ""
+        },
+        {
             "name": "crtargument",
             "type": "crtargument",
             "ricardian_contract": ""
@@ -369,6 +439,16 @@
         {
             "name": "makevote",
             "type": "makevote",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "upargument",
+            "type": "upargument",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "upnews",
+            "type": "upnews",
             "ricardian_contract": ""
         },
         {

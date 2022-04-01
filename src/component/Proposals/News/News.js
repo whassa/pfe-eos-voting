@@ -38,6 +38,12 @@ export default function News({
                             <NewsItem
                                 key={singleNew.createdAt}
                                 singleNew={singleNew}
+                                ual={ual}
+                                eosAccountName={eosAccountName}
+                                resolutionAuthor={resolutionAuthor}
+                                resolutionId={resolutionID}
+                                oldData = {{oldTitle: singleNew.title, oldContent: singleNew.content}}
+                                refreshNews = {refreshNews}
                             />
                         );
                     })}

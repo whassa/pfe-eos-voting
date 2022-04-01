@@ -219,6 +219,7 @@ export default function Home({ ual, eosAccountName }) {
 }
 
 export async function getStaticProps(context) {
+  
   return {
     props: {
       eosAccountName: process.env.EOS_ACCOUNT_NAME,

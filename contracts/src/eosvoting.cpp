@@ -32,7 +32,7 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
       proposal_info.author = from; });
 }
 
-ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, time_point_sec expiredAt)
+ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt)
 {
 
   check( title.length() <= 50, "The title size is higher than 50 please take a smaller name");
@@ -49,7 +49,7 @@ ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, strin
   {
     auto proposals = _proposals.get(primaryKey);
 
-    
+
     check(proposals.author == name(from), "You can't change the information if you're not the owner");
     _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
       {
@@ -60,6 +60,7 @@ ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, strin
       proposal_info.category =  category;
       proposal_info.voteMargin = voteMargin;
       proposal_info.expiredAt = expiredAt;
+      proposal_info.whitelist = whitelist;
       proposal_info.updatedAt = current_time_point_sec(); });
   }
 }
@@ -219,6 +220,7 @@ ACTION eosvoting::voteargument(name from, uint64_t primaryKey, uint64_t argument
             proposal_info.arguments.argument[i].votes.actualVote = proposal_info.arguments.argument[i].votes.actualVote + value;
             proposal_info.arguments.argument[i].votes.vote.insert(proposal_info.arguments.argument[i].votes.vote.end(), vote); });
         }
+        // Vote not found in argument
         break;
       }
     }
@@ -250,4 +252,71 @@ ACTION eosvoting::crtnews(name from, uint64_t primaryKey, string title, string c
   }
 }
 
-EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument)(voteargument)(crtnews));
+ACTION eosvoting::upnews(name from, uint64_t primaryKey, string oldTitle, string title, string content)
+{
+  // Init the _votes table
+  proposals_index _proposals(get_self(), get_self().value);
+  time_point_sec time = current_time_point_sec();
+  auto primary_key_itr = _proposals.find(primaryKey);
+  if (primary_key_itr != _proposals.end())
+  {
+    auto proposals = _proposals.get(primaryKey);
+
+    check(proposals.author == name(from), "You can't change the information if you're not the owner");
+    for (size_t i = 0; i < proposals.news.singlenews.size(); i++)
+    {
+      if (proposals.news.singlenews[i].title == oldTitle)
+      {
+        _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
+          {
+          proposal_info.news.singlenews[i].updatedAt = time;
+          proposal_info.news.singlenews[i].title = title;
+          proposal_info.news.singlenews[i].content = content;
+
+          });
+        break;
+      }
+    }
+  }
+}
+
+ACTION eosvoting::upargument(name from, uint64_t primaryKey, uint64_t argumentKey, string title, string content)
+{
+// Init the _votes table
+  proposals_index _proposals(get_self(), get_self().value);
+  time_point_sec time = current_time_point_sec();
+  auto primary_key_itr = _proposals.find(primaryKey);
+  if (primary_key_itr != _proposals.end())
+  {
+    auto proposals = _proposals.get(primaryKey);
+    for (size_t i = 0; i < proposals.arguments.argument.size(); i++)
+    {
+      if (proposals.arguments.argument[i].primaryKey == argumentKey)
+      {
+        _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
+          {
+          proposal_info.arguments.argument[i].updatedAt = time;
+          proposal_info.arguments.argument[i].title = title;
+          proposal_info.arguments.argument[i].content = content;
+          });
+        break;
+      }
+    }
+  }
+}
+
+ACTION eosvoting::clear()
+{
+  require_auth(get_self());
+
+  proposals_index _proposals(get_self(), get_self().value);
+
+  // Delete all records in _messages table
+  auto msg_itr = _proposals.begin();
+  while (msg_itr != _proposals.end())
+  {
+    msg_itr = _proposals.erase(msg_itr);
+  }
+}
+
+EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument)(voteargument)(crtnews)(upnews)(upargument));

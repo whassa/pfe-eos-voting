@@ -74,11 +74,14 @@ public:
   };
 
   ACTION crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, std::vector<name> whitelist, time_point_sec expiredAt);
-  ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, time_point_sec expiredAt);
+  ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt);
   ACTION makevote(name from, uint64_t primaryKey, char value);
   ACTION crtargument(name from, uint64_t primaryKey, string title, string content, bool value);
   ACTION voteargument(name from, uint64_t primaryKey, uint64_t argumentKey, char value);
+  ACTION upargument(name from, uint64_t primaryKey, uint64_t argumentKey, string title, string content);
   ACTION crtnews(name from, uint64_t primaryKey, string title, string content);
+  ACTION upnews(name from, uint64_t primaryKey, string oldTitle, string title, string content);
+  ACTION clear();
 
 public:
   time_point_sec current_time_point_sec()
@@ -105,7 +108,7 @@ public:
     uint64_t primary_key() const { return primaryKey; }
     uint128_t secondary_key() const { return (uint128_t{author.value}<<64) + uint64_t{primaryKey}; }
     uint128_t third_key() const { return (uint128_t{votes.totalVotes}<<64) + uint64_t{primaryKey}; }
-    
+
   };
 
 

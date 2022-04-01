@@ -8,18 +8,18 @@ import {
     RadioGroup,
     FormControlLabel,
     Radio,
-    Checkbox,
 } from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import { v4 as uuidv4 } from "uuid";
-import { useState, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { useRouter } from "next/router";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import {
     formTemplate,
     createProposal,
+    getProposal,
+    updateProposal
 } from "../../../utils/ContractActions/Contract";
 import SnackbarAlert from "common/SnackbarAlert/snackbarAlert";
 import UserList from './UserList';
@@ -37,8 +37,9 @@ const types = {
     ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE",
     CLOSE_SNACKBAR: "CLOSE_SNACKBAR",
     VOTEMARGIN_CHANGED: "VOTEMARGIN_CHANGED",
-    WHITELIST_CHANGED: "WHITELIST_CHANGED",
     VOTETYPE_CHANGED: "VOTETYPE_CHANGED",
+    RESOLUTION_FETCHED: "RESOLUTION_FETCHED",
+    WHITELIST_CHANGED: "WHITELIST_CHANGED",
 };
 
 const reducer = (state, action) => {
@@ -51,8 +52,6 @@ const reducer = (state, action) => {
             return { ...state, content: action.value };
         case types.CATEGORY_CHANGED:
             return { ...state, category: action.value };
-        case types.TITLE_CHANGED:
-            return { ...state, title: action.value };
         case types.VOTEMARGIN_CHANGED:
             return { ...state, voteMargin: action.value };
         case types.WHITELIST_CHANGED:
@@ -63,6 +62,32 @@ const reducer = (state, action) => {
             return { ...state, submitDisable: true };
         case types.SUBMIT_BUTTON_RESPONSE:
             return { ...state, submitDisable: false };
+        case types.RESOLUTION_FETCHED:
+            return {
+                ...state,
+                title: action.title,
+                summary: action.summary,
+                content: action.content,
+                category: action.category,
+                voteMargin: action.voteMargin,
+                expirationDate: action.expiredAt,
+                ...(action.whiteList && action.whiteList.length === 0 ?
+                    {
+                        voteType: "Public",
+                        whiteList: [],
+                    }
+                    : (action.whiteList.length === 1 && action.whiteList[0] && action.whiteList[0] === 'eden' ?
+                    {
+                        voteType: "Eden",
+                        whiteList: [],
+                    }
+                    : {
+                        voteType: "Custom",
+                        whiteList: (action.whiteList ? action.whiteList : []),
+                    })
+                )
+            };
+
         case types.ERROR_FORM_RESPONSE:
             return {
                 ...state,
@@ -89,11 +114,20 @@ const initialState = {
     submitDisable: false,
     error: "",
     open: false,
+    formType: 'create',
+    proposalId: null,
 };
 
 export default function proposalForm({ ual, eosAccountName }) {
-    const [state, dispatch] = useReducer(reducer, initialState);
+
     const router = useRouter();
+
+    if (router.query.update && router.query.proposal) {
+        initialState.formType = 'update';
+        initialState.proposalId = router.query.proposal;
+    }
+
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     const sendForm = () => {
         dispatch({
@@ -124,7 +158,23 @@ export default function proposalForm({ ual, eosAccountName }) {
                 
         }
         
-        createProposal(ual, formInformations, eosAccountName)
+        if (state.formType === 'update') {
+
+            updateProposal(ual, formInformations, eosAccountName)
+            .then(() => {
+                dispatch({
+                    type: types.SUBMIT_BUTTON_RESPONSE,
+                });
+                router.push("/proposal/"+state.proposalId);
+            })
+            .catch((error) => {
+                dispatch({
+                    value: error instanceof String ? error : error.toString(),
+                    type: types.ERROR_FORM_RESPONSE,
+                });
+            });
+        } else  {
+            createProposal(ual, formInformations, eosAccountName)
             .then(() => {
                 dispatch({
                     type: types.SUBMIT_BUTTON_RESPONSE,
@@ -137,6 +187,7 @@ export default function proposalForm({ ual, eosAccountName }) {
                     type: types.ERROR_FORM_RESPONSE,
                 });
             });
+        }
     };
 
     const valueArguments = (array) => {
@@ -145,6 +196,31 @@ export default function proposalForm({ ual, eosAccountName }) {
             value: array,
         });
     };
+
+    if (router.query.update && router.query.proposal) {
+        useEffect( () => {
+            getProposal(router.query.proposal, eosAccountName).then( (value) => {
+                dispatch({
+                    type: types.RESOLUTION_FETCHED,
+                    ...( value.rows[0] ? {
+                        title: value.rows[0].title,
+                        summary: value.rows[0].summary,
+                        content: value.rows[0].content,
+                        category: value.rows[0].category,
+                        voteMargin: value.rows[0].voteMargin,
+                        whiteList: value.rows[0].whitelist,
+                        voteType: value.rows[0].voteType,
+                        expirationDate: value.rows[0].expiredAt,
+                    } : {})
+                });
+            }).catch((error) => {
+                dispatch({
+                    value: error instanceof String ? error : error.toString(),
+                    type: types.ERROR_FORM_RESPONSE,
+                });
+            });
+        }, []);
+    }
 
     return (
         <Grid
@@ -276,7 +352,7 @@ export default function proposalForm({ ual, eosAccountName }) {
 
                         <RadioGroup
                             row
-                            defaultValue="Public"
+                            value={state.voteType}
                             onChange={(e) => {
                                 dispatch({
                                     type: types.VOTETYPE_CHANGED,
@@ -320,7 +396,7 @@ export default function proposalForm({ ual, eosAccountName }) {
                             type="submit"
                             variant="contained"
                         >
-                            Create
+                            {state.formType === 'update' ? 'Update' : 'Create'}
                         </Button>
                     </FormControl>
                 </Paper>

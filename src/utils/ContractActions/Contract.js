@@ -170,6 +170,53 @@ export async function createProposal(
     }
 }
 
+export async function updateProposal(
+    ual,
+    formInformations,
+    eosAccountName
+) {
+    try {
+        const response = await ual.activeUser
+            .signTransaction(
+                {
+                    actions: [
+                        {
+                            account: eosAccountName, //env variable
+                            name: "upproposal",
+                            authorization: [
+                                {
+                                    actor: ual.activeUser.accountName,
+                                    permission: "active",
+                                },
+                            ],
+                            data: {
+                                from: ual.activeUser.accountName,
+                                primaryKey: formInformations.primaryKey,
+                                title: formInformations.title,
+                                summary: formInformations.summary,
+                                content: formInformations.content,
+                                category: formInformations.category,
+                                voteMargin: formInformations.voteMargin,
+                                status: formInformations.status,
+                                whitelist: formInformations.whiteList,
+                                expiredAt: formInformations.expiredAt,
+                            },
+                        },
+                    ],
+                },
+                {
+                    blocksBehind: 3,
+                    expireSeconds: 30,
+                }
+            )
+            .catch((error) => {
+                throw error;
+            });
+    } catch (e) {
+        throw e;
+    }
+}
+
 export async function vote(
     ual,
     voteInformation,
@@ -252,6 +299,48 @@ export async function createArgument(
     }
 }
 
+export async function updateArgument(
+    ual,
+    argument,
+    eosAccountName,
+    proposalId
+) {
+    try {
+        const response = await ual.activeUser
+            .signTransaction(
+                {
+                    actions: [
+                        {
+                            account: eosAccountName, //env variable
+                            name: "upargument",
+                            authorization: [
+                                {
+                                    actor: ual.activeUser.accountName,
+                                    permission: "active",
+                                },
+                            ],
+                            data: {
+                                from: ual.activeUser.accountName,
+                                primaryKey: proposalId,
+                                argumentKey: argument.primaryKey,
+                                title: argument.title,
+                                content: argument.content,
+                            },
+                        },
+                    ],
+                },
+                {
+                    blocksBehind: 3,
+                    expireSeconds: 30,
+                }
+            )
+            .catch((error) => {
+                throw error;
+            });
+    } catch (e) {
+        throw e;
+    }
+}
 
 export async function voteArgument(
     ual,
@@ -318,6 +407,50 @@ export async function createSingleNews(
                                 primaryKey: parseInt(
                                     singleNewsInformation.primaryKey
                                 ),
+                                title: singleNewsInformation.title,
+                                content: singleNewsInformation.content,
+                            },
+                        },
+                    ],
+                },
+                {
+                    blocksBehind: 3,
+                    expireSeconds: 30,
+                }
+            )
+            .catch((error) => {
+                throw error;
+            });
+    } catch (e) {
+        throw e;
+    }
+}
+
+export async function updateSingleNews(
+    ual,
+    singleNewsInformation,
+    eosAccountName, oldTitle
+) {
+    try {
+        const response = await ual.activeUser
+            .signTransaction(
+                {
+                    actions: [
+                        {
+                            account: eosAccountName, //env variable
+                            name: "upnews",
+                            authorization: [
+                                {
+                                    actor: ual.activeUser.accountName,
+                                    permission: "active",
+                                },
+                            ],
+                            data: {
+                                from: ual.activeUser.accountName,
+                                primaryKey: parseInt(
+                                    singleNewsInformation.primaryKey
+                                ),
+                                oldTitle: singleNewsInformation.oldTitle,
                                 title: singleNewsInformation.title,
                                 content: singleNewsInformation.content,
                             },

@@ -1,5 +1,16 @@
 import { useEffect, useReducer } from "react";
-import { Box, Paper, IconButton, Typography, Stack,} from "@mui/material";
+import {
+    Box,
+    Paper,
+    IconButton,
+    Typography,
+    Stack,
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText, Input, TextField, DialogActions,
+} from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
@@ -9,20 +20,20 @@ import SnackbarAlert from 'common/SnackbarAlert/snackbarAlert';
 import {
     argumentVoteTemplate,
     voteArgument,
+    updateArgument,
 } from "../../../utils/ContractActions/Contract";
 
-const initialState = {
-    vote: 0,
-    snackBarOpen: false,
-    snackBarMessage: "",
-    snackBarStatus: "error",
-};
+
 
 const types = {
     ARGUMENT_VOTED: "ARGUMENT_VOTED",
     ARGUMENT_NOT_VOTED: "ARGUMENT_NOT_VOTED",
+    TITLE_CHANGED: "TITLE_CHANGED",
+    CONTENT_CHANGED: "CONTENT_CHANGED",
     CLOSE_SNACKBAR: "CLOSE_SNACKBAR",
     VOTE_CHANGE: "VOTE_CHANGE",
+    ALLOW_EDIT: "ALLOW_EDIT",
+    CANCEL_EDIT: "CANCEL_EDIT"
 };
 
 const reducer = (state, action) => {
@@ -34,6 +45,10 @@ const reducer = (state, action) => {
                 snackBarMessage: "Argument Voted successfully",
                 snackBarStatus: "success",
             };
+        case types.TITLE_CHANGED:
+            return { ...state, title: action.value };
+        case types.CONTENT_CHANGED:
+            return { ...state, content: action.value };
         case types.ARGUMENT_NOT_VOTED:
             return {
                 ...state,
@@ -46,6 +61,10 @@ const reducer = (state, action) => {
                 ...state,
                 vote: action.value,
             }
+        case types.ALLOW_EDIT:
+            return { ...state, allowEdit: true}
+        case types.CANCEL_EDIT:
+            return { ...state, allowEdit: false}
         case types.CLOSE_SNACKBAR:
             return { ...state, snackBarOpen: false };
         default:
@@ -57,6 +76,15 @@ const reducer = (state, action) => {
 
 export default function ListProsCons({ ual, pid, argument, eosAccountName, refreshProsCons, canVote }) {
     const theme = useTheme();
+    const initialState = {
+        title: argument.title,
+        content: argument.content,
+        vote: 0,
+        snackBarOpen: false,
+        snackBarMessage: "",
+        snackBarStatus: "error",
+        allowEdit: false,
+    };
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -75,6 +103,19 @@ export default function ListProsCons({ ual, pid, argument, eosAccountName, refre
         });
     }
 
+    function handleClose(){
+        dispatch({ type: types.CANCEL_EDIT, value: false });
+    }
+
+    function updateArg(){
+        updateArgument(ual, {title: state.title, content: state.content, primaryKey: argument.primaryKey}, eosAccountName, pid)
+            .then(() => {
+                handleClose();
+                refreshProsCons();
+            }).catch(error => {
+            console.log(error)
+        })
+    }
     useEffect( () => {
         if ( argument && argument.votes && argument.votes.vote)
         {
@@ -106,6 +147,7 @@ export default function ListProsCons({ ual, pid, argument, eosAccountName, refre
                     ) : (
                         <RemoveCircleOutlineIcon sx={{ fontSize: 40 }} />
                     )}
+
                 </Box>
                 <Box sx={{ flex: 1 }}>
                     <Typography variant="h5" display="block">{argument.title}</Typography>
@@ -127,6 +169,64 @@ export default function ListProsCons({ ual, pid, argument, eosAccountName, refre
                     </IconButton>
                 </Box>
             </Stack>
+            {(ual.activeUser.accountName === argument.author) && (
+                <Button
+                    sx={{
+                        alignItems: 'right' }}
+                    disabled={
+                        argument.author !== ual.activeUser.accountName
+                    }
+                    onClick={() => {
+                        dispatch({ type: types.ALLOW_EDIT });
+                    }}
+                    type="submit"
+                    variant="contained"
+                >
+                    Edit
+                </Button>)}
+            <Dialog open={state.allowEdit} onClose={() => {handleClose}}>
+                <DialogTitle>Update Argument</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        You are currently editing an <b>Argument</b> post. You may only change the title and its content.
+                    </DialogContentText>
+                    <Input
+                        id="Title"
+                        label="Title"
+                        placeholder="Title"
+                        inputProps={{
+                            maxLength: 50,
+                        }}
+                        onChange={(e) => {
+                            dispatch({
+                                type: types.TITLE_CHANGED,
+                                value: e.target.value,
+                            });
+                        }}
+                        value={state.title}
+                        sx={{ marginBottom: "10px", maxWidth: "200px" }}
+                        fullWidth={false}
+                        required
+                    />
+                    <TextField
+                        label="Content"
+                        onChange={(e) => {
+                            dispatch({
+                                type: types.CONTENT_CHANGED,
+                                value: e.target.value,
+                            });
+                        }}
+                        value={state.content}
+                        multiline
+                        fullWidth
+                        required
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {handleClose()}}>Cancel</Button>
+                    <Button onClick={updateArg}>Update</Button>
+                </DialogActions>
+            </Dialog>
             <SnackbarAlert severity={state.snackBarStatus} open={state.snackBarOpen}  onClose={() => { dispatch({type: types.CLOSE_SNACKBAR})}} message={state.snackBarMessage} />
         </Paper>
     );

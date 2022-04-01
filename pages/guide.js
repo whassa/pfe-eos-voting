@@ -25,6 +25,11 @@ const data = {
             other users can vote for or against them. Arguments are a good way to highlight important aspects of a proposal.`,
         },
         {
+            title: "News",
+            content: `The creator of a proposal can create "News" posts. These posts can be seen by anyone by clicking a proposal and selecting the News
+            tab. By using the News functionality, a proposal creator can update interested users with new information.`,
+        },
+        {
             title: "What is the package version",
             content: <p>current version is 1.2.1</p>,
         },
