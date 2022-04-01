@@ -74,7 +74,7 @@ public:
   };
 
   ACTION crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt);
-  ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, time_point_sec expiredAt);
+  ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt);
   ACTION makevote(name from, uint64_t primaryKey, char value);
   ACTION crtargument(name from, uint64_t primaryKey, string title, string content, bool value);
   ACTION voteargument(name from, uint64_t primaryKey, uint64_t argumentKey, char value);

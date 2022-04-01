@@ -355,6 +355,10 @@
                     "type": "string"
                 },
                 {
+                    "name": "whitelist",
+                    "type": "name[]"
+                },
+                {
                     "name": "expiredAt",
                     "type": "time_point_sec"
                 }
