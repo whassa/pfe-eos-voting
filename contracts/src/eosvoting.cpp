@@ -32,7 +32,7 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
       proposal_info.author = from; });
 }
 
-ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt)
+ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, std::vector<name> whitelist, time_point_sec expiredAt)
 {
 
   check( title.length() <= 50, "The title size is higher than 50 please take a smaller name");
