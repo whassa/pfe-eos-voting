@@ -70,7 +70,7 @@ const reducer = (state, action) => {
                 content: action.content,
                 category: action.category,
                 voteMargin: action.voteMargin,
-                expirationDate: action.expiredAt,
+                expirationDate: action.expirationDate,
                 ...(action.whiteList && action.whiteList.length === 0 ?
                     {
                         voteType: "Public",
@@ -135,6 +135,7 @@ export default function proposalForm({ ual, eosAccountName }) {
         });
         const formInformations = {
             ...formTemplate,
+            
             title: state.title,
             summary: state.summary,
             content: state.content,
@@ -143,6 +144,7 @@ export default function proposalForm({ ual, eosAccountName }) {
             expiredAt: dayjs(state.expirationDate).format(
                 "YYYY-MM-DD HH:mm:ss"
             ),
+            ...( state.formType === 'update' ? {primaryKey: Number(state.proposalId)} : {}),
         };
 
         switch (state.voteType) {
@@ -159,7 +161,6 @@ export default function proposalForm({ ual, eosAccountName }) {
         }
         
         if (state.formType === 'update') {
-
             updateProposal(ual, formInformations, eosAccountName)
             .then(() => {
                 dispatch({
@@ -210,7 +211,7 @@ export default function proposalForm({ ual, eosAccountName }) {
                         voteMargin: value.rows[0].voteMargin,
                         whiteList: value.rows[0].whitelist,
                         voteType: value.rows[0].voteType,
-                        expirationDate: value.rows[0].expiredAt,
+                        expirationDate: dayjs(value.rows[0].expiredAt).toDate(),
                     } : {})
                 });
             }).catch((error) => {
@@ -221,6 +222,8 @@ export default function proposalForm({ ual, eosAccountName }) {
             });
         }, []);
     }
+    
+    console.log(state.expirationDate);
 
     return (
         <Grid

@@ -14,18 +14,20 @@ export default function News({
     const theme = useTheme();
     return (
         <>
-            <Paper elevation={3} padding="dense" sx={{ padding: "10px" }}>
-                {ual && resolutionAuthor === ual.activeUser.accountName && (
-                    <Box sx={{ flex: 1 }}>
-                        <FormNews
-                            ual={ual}
-                            resolutionID={resolutionID}
-                            eosAccountName={eosAccountName}
-                            refreshNews={refreshNews}
-                        />
-                    </Box>
-                )}
-            </Paper>
+            {ual && resolutionAuthor === ual.activeUser.accountName && (
+                <Paper elevation={3} padding="dense" sx={{ padding: "10px" }}>
+                
+                        <Box sx={{ flex: 1 }}>
+                            <FormNews
+                                ual={ual}
+                                resolutionID={resolutionID}
+                                eosAccountName={eosAccountName}
+                                refreshNews={refreshNews}
+                            />
+                        </Box>
+                
+                </Paper>
+             )}
             <Stack
                 direction="column"
                 justifyContent="space-between"
