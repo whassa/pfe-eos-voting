@@ -176,6 +176,18 @@ export async function updateProposal(
     eosAccountName
 ) {
     try {
+        console.log({
+            from: ual.activeUser.accountName,
+            primaryKey: formInformations.primaryKey,
+            title: formInformations.title,
+            summary: formInformations.summary,
+            content: formInformations.content,
+            category: formInformations.category,
+            voteMargin: formInformations.voteMargin,
+            status: formInformations.status,
+            whitelist: formInformations.whiteList,
+            expiredAt: formInformations.expiredAt,
+        });
         const response = await ual.activeUser
             .signTransaction(
                 {

@@ -143,7 +143,7 @@ export default function pid({
     }, []);
 
     useEffect(() => {
-        if (ual.activeUser && state.resolution.votes) {
+        if (ual.activeUser && state.resolution && state.resolution.votes) {
             const vote = state.resolution.votes.vote.find((vote) => {
                 if (ual.activeUser.accountName === vote.user) {
                     return vote;
@@ -185,8 +185,8 @@ export default function pid({
         dayjs(state.resolution.expiredAt) >= dayjs() &&
         state.resolution.whitelist &&
         (
-            state.resolution.whitelist.length == 0 ||
-            state.resolution.author == ual.activeUser.accountName ||
+            state.resolution.whitelist.length === 0 ||
+            state.resolution.author === ual.activeUser.accountName ||
             state.resolution.whitelist.includes(ual.activeUser.accountName)
         )
 
@@ -233,7 +233,7 @@ export default function pid({
                                     {state.resolution.author}
                                 </Typography>
                             </Box>
-                            {ual.activeUser && votable && (
+                            
                                 <>
                                     <Box
                                         sx={{
@@ -243,6 +243,7 @@ export default function pid({
                                             marginLeft: "auto",
                                         }}
                                     >
+                                        {ual.activeUser && votable && (
                                         <Button
                                             variant="contained"
                                             color="secondary"
@@ -256,7 +257,8 @@ export default function pid({
                                         >
                                             Vote for this Resolution
                                         </Button>
-                                        {(ual.activeUser.accountName === state.resolution.author) && (
+                                        )}
+                                        {(ual.activeUser && ual.activeUser.accountName === state.resolution.author) && (
                                             <Button
                                                 sx={{ marginTop: "5px" }}
                                                 disabled={
@@ -280,7 +282,6 @@ export default function pid({
                                         position={state.position}
                                     />
                                 </>
-                            )}
                         </Box>
 
                         <Box>

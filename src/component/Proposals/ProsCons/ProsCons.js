@@ -26,18 +26,18 @@ export default function Menu({ ual, resolution, eosAccountName, refreshProsCons 
         resolution &&
         resolution.whitelist &&
         (
-            resolution.whitelist.length == 0 ||
-            resolution.author == ual.activeUser.accountName ||
+            resolution.whitelist.length === 0 ||
+            resolution.author === ual.activeUser.accountName ||
             resolution.whitelist.includes(ual.activeUser)
         )
-
+        
     
     // pros and cons
     return (
         <Box>
             <ListBestProsCons prosList={prosList.slice(0, 5)} consList={consList.slice(0, 5)} />
-            <FormProsCons ual={ual} resolution={resolution} eosAccountName={eosAccountName} refreshProsCons={refreshProsCons} />
-            { resolution.arguments && <ListProsCons pid={resolution.primaryKey} ual={ual} eosAccountName={eosAccountName} prosAndCons={resolution.arguments.argument} refreshProsCons={refreshProsCons} />}
+            { canCreateVoteArgument && (<FormProsCons ual={ual} resolution={resolution} eosAccountName={eosAccountName} refreshProsCons={refreshProsCons} />)}
+            { resolution.arguments && <ListProsCons pid={resolution.primaryKey} ual={ual} eosAccountName={eosAccountName} prosAndCons={resolution.arguments.argument} refreshProsCons={refreshProsCons} canVote={!canCreateVoteArgument} />}
         </Box>
     );
 }
