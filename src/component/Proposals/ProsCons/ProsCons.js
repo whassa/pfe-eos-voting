@@ -3,7 +3,7 @@ import FormProsCons from "./FormProsCons";
 import ListBestProsCons from "./ListBestProsCons";
 import ListProsCons from "./ListProsCons";
 
-export default function Menu({ ual, resolution, eosAccountName, refreshProsCons }) {
+export default function Menu({ ual, resolution, eosAccountName, refreshProsCons, canCreateVoteArgument = false }) {
     // list
     let prosList = [];
     let consList = [];
@@ -20,17 +20,6 @@ export default function Menu({ ual, resolution, eosAccountName, refreshProsCons 
 
     prosList.sort((a, b) => b.vote - a.vote);
     consList.sort((a, b) => b.vote - a.vote);
-
-    const canCreateVoteArgument =
-        ual.activeUser &&
-        resolution &&
-        resolution.whitelist &&
-        (
-            resolution.whitelist.length === 0 ||
-            resolution.author === ual.activeUser.accountName ||
-            resolution.whitelist.includes(ual.activeUser)
-        )
-        
     
     // pros and cons
     return (

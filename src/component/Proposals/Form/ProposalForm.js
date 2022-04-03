@@ -160,7 +160,6 @@ export default function proposalForm({ ual, eosAccountName }) {
                 formInformations.whiteList = []; break;
                 
         }
-        console.log(formInformations);
 
         if (state.formType === 'update') {
             updateProposal(ual, formInformations, eosAccountName)
@@ -224,8 +223,6 @@ export default function proposalForm({ ual, eosAccountName }) {
             });
         }, []);
     }
-    
-    console.log(state.expirationDate);
 
     return (
         <Grid

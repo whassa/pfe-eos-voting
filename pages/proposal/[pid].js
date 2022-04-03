@@ -165,11 +165,10 @@ export default function pid({
     useEffect(() => {
         if (ual.activeUser) {
             getEdenMember(ual.activeUser.accountName).then((value) => {
-                dispatch({type: types.USER_IS_EDEN, });
-
-            }).catch((err) => {
-                console.log('err :', err);
-            })
+                if ( value.rows.length > 0 ) {
+                    dispatch({type: types.USER_IS_EDEN, });
+                }
+            });
         }
     }, [ual]);
 
@@ -207,7 +206,6 @@ export default function pid({
             state.resolution.whitelist.includes(ual.activeUser.accountName) ||
             ( state.resolution.whitelist.includes('eden') && state.userIsEden)
         )
-    console.log(state.userIsEden);
     
     return (
         <>
@@ -340,6 +338,7 @@ export default function pid({
                                         });
                                     });
                                 }}
+                                canCreateVoteArgument={votable}
                             ></ProsCons>
                         )}
                         {state.view === views[2] && (

@@ -113,7 +113,6 @@ export default function ListProsCons({ ual, pid, argument, eosAccountName, refre
                 handleClose();
                 refreshProsCons();
             }).catch(error => {
-            console.log(error)
         })
     }
     useEffect( () => {
