@@ -125,6 +125,19 @@ export async function getProposalsByVoteCount( eosAccountName, upperBound ){
 
 
 
+export async function getEdenMember( userName ){
+    let contract = await setup();
+    const proposals = await contract.rpc.get_table_rows({
+        code: process.env.NEXT_PUBLIC_EDEN_TABLE_NAME,      // Contract that we target
+        table: 'member',        // Table name
+        lower_bound: userName,
+        upper_bound: userName,
+        limit: 1,                // Maximum number of rows that we want to ge
+      }).catch((e) => { throw  'Error fetching the proposals'});
+    return proposals;
+}
+
+
 export async function createProposal(
     ual,
     formInformations,

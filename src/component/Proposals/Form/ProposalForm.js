@@ -147,19 +147,21 @@ export default function proposalForm({ ual, eosAccountName }) {
             ...( state.formType === 'update' ? {primaryKey: Number(state.proposalId)} : {}),
         };
 
+        console.log(state.voteType);
         switch (state.voteType) {
             case 'Public': 
                 formInformations.whiteList = []; break;
             case 'Eden': 
             //TODO change logic when eden is implemented
-                formInformations.whiteList = []; break;
+                formInformations.whiteList = ['eden']; break;
             case 'Custom': 
                 formInformations.whiteList = state.whiteList; break;
             default:
                 formInformations.whiteList = []; break;
                 
         }
-        
+        console.log(formInformations);
+
         if (state.formType === 'update') {
             updateProposal(ual, formInformations, eosAccountName)
             .then(() => {
