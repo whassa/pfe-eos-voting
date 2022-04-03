@@ -1,8 +1,89 @@
 #include <eosio/eosio.hpp>
+#include <eosio/permission.hpp> 
 #include <eosio/system.hpp>
 
 using namespace std;
 using namespace eosio;
+using eosio::public_key;
+
+namespace eosio {
+
+    constexpr name eden_account{"genesisdeden"_n}; 
+
+    using member_status_type = uint8_t;
+    enum member_status : member_status_type {
+        pending_membership = 0,
+        active_member = 1
+    };
+
+    using election_participation_status_type = uint8_t;
+    enum election_participation_status : election_participation_status_type {
+        not_in_election = 0,
+        in_election = 1
+    };
+
+    struct member_v0
+    {
+      eosio::name account;
+      std::string name;
+      member_status_type status;
+      uint64_t nft_template_id;
+      // Only reflected in v1
+      election_participation_status_type election_participation_status = not_in_election;
+      uint8_t election_rank = 0;
+      eosio::name representative{uint64_t(-1)};
+      std::optional<eosio::public_key> encryption_key;
+
+      uint64_t primary_key() const { return account.value; }
+      uint128_t by_representative() const
+      {
+          return (static_cast<uint128_t>(election_rank) << 64) | representative.value;
+      }
+    };
+
+
+    struct member_v1
+    {
+      eosio::name account;
+      std::string name;
+      member_status_type status;
+      uint64_t nft_template_id;
+      // Only reflected in v1
+      election_participation_status_type election_participation_status = not_in_election;
+      uint8_t election_rank = 0;
+      eosio::name representative{uint64_t(-1)};
+      std::optional<eosio::public_key> encryption_key;
+
+      uint64_t primary_key() const { return account.value; }
+      uint128_t by_representative() const
+      {
+          return (static_cast<uint128_t>(election_rank) << 64) | representative.value;
+      }
+    };
+    using member_variant = std::variant<member_v0, member_v1>;
+
+    struct member
+    {
+        member_variant value;
+        member_v1 memberv;
+        uint64_t primary_key() const { return memberv.account.value; }
+        uint128_t by_representative() const
+        {
+          return (static_cast<uint128_t>(memberv.election_rank) << 64) | memberv.representative.value;
+        }
+        EOSLIB_SERIALIZE(member, (value)(memberv))
+    };
+
+    using member_table_type = eosio::multi_index<"member"_n, member>;
+
+    bool is_eden(name account) {
+      member_table_type member_tb(eden_account, 0);
+      auto it = member_tb.find(account.value);
+      if (it != member_tb.end() && it->memberv.status) return true;
+      else return false;
+    }
+  };
+
 
 CONTRACT eosvoting : public contract
 {
@@ -15,6 +96,10 @@ public:
     }
     if (whitelist.size() >= 1)
     {
+      if (whitelist.size() == 1 && whitelist[0].to_string() == "eden") {
+        return is_eden(from);
+      }
+
       for (size_t i = 0; i < whitelist.size(); i++)
       {
         if ( whitelist[i] == from)
@@ -74,13 +159,14 @@ public:
   };
 
   ACTION crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, std::vector<name> whitelist, time_point_sec expiredAt);
-  ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt);
+  ACTION upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, std::vector<name> whitelist, time_point_sec expiredAt);
   ACTION makevote(name from, uint64_t primaryKey, char value);
   ACTION crtargument(name from, uint64_t primaryKey, string title, string content, bool value);
   ACTION voteargument(name from, uint64_t primaryKey, uint64_t argumentKey, char value);
   ACTION upargument(name from, uint64_t primaryKey, uint64_t argumentKey, string title, string content);
   ACTION crtnews(name from, uint64_t primaryKey, string title, string content);
   ACTION upnews(name from, uint64_t primaryKey, string oldTitle, string title, string content);
+  ACTION iseden(name from);
   ACTION clear();
 
 public:
@@ -88,7 +174,7 @@ public:
   {
     return time_point_sec(current_time_point());
   }
-
+  
   TABLE proposals
   {
     uint64_t primaryKey;

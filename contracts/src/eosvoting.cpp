@@ -1,7 +1,6 @@
 #include <eosvoting.hpp>
 
 
-
 ACTION eosvoting::crtproposal(name from, string title, string summary, string content, string category, uint64_t voteMargin, std::vector<name> whitelist, time_point_sec expiredAt)
 {
 
@@ -32,7 +31,7 @@ ACTION eosvoting::crtproposal(name from, string title, string summary, string co
       proposal_info.author = from; });
 }
 
-ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, string status, std::vector<name> whitelist, time_point_sec expiredAt)
+ACTION eosvoting::upproposal(name from, uint64_t primaryKey, string title, string summary, string content, string category, uint64_t voteMargin, std::vector<name> whitelist, time_point_sec expiredAt)
 {
 
   check( title.length() <= 50, "The title size is higher than 50 please take a smaller name");
@@ -293,6 +292,8 @@ ACTION eosvoting::upargument(name from, uint64_t primaryKey, uint64_t argumentKe
     {
       if (proposals.arguments.argument[i].primaryKey == argumentKey)
       {
+        check(proposals.arguments.argument[i].author == name(from) || proposals.author == name(from), "You can't change the news if you're not the owner");
+  
         _proposals.modify(primary_key_itr, get_self(), [&](auto &proposal_info)
           {
           proposal_info.arguments.argument[i].updatedAt = time;
@@ -304,6 +305,13 @@ ACTION eosvoting::upargument(name from, uint64_t primaryKey, uint64_t argumentKe
     }
   }
 }
+
+
+ACTION eosvoting::iseden(name from)
+{
+  check(is_eden(from), "The user is not a eden member");
+}
+
 
 ACTION eosvoting::clear()
 {
@@ -319,4 +327,4 @@ ACTION eosvoting::clear()
   }
 }
 
-EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument)(voteargument)(crtnews)(upnews)(upargument));
+EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument)(voteargument)(crtnews)(upnews)(upargument)(iseden));
