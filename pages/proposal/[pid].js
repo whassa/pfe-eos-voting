@@ -20,6 +20,7 @@ import Statistics from "component/Proposals/Statistic/Statistic";
 import SnackbarAlert from "common/SnackbarAlert/snackbarAlert";
 import {
     getProposal,
+    getEdenMember,
     vote,
     voteTemplate,
 } from "../../src/utils/ContractActions/Contract";
@@ -41,6 +42,7 @@ const initialState = {
     submitDisable: false,
     error: "",
     allowEdit: false,
+    userIsEden: false,
 };
 
 const types = {
@@ -54,7 +56,8 @@ const types = {
     CATEGORY_CHANGED: "CATEGORY_CHANGED",
     VOTEMARGIN_CHANGED: "VOTEMARGIN_CHANGED",
     RESOLUTION_FETCHED: "RESOLUTION_FETCHED",
-    ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE"
+    ERROR_FORM_RESPONSE: "ERROR_FORM_RESPONSE",
+    USER_IS_EDEN: "USER_IS_EDEN"
 };
 
 const reducer = (state, action) => {
@@ -100,6 +103,8 @@ const reducer = (state, action) => {
             return { ...state, open: false };
         case types.USER_VOTED:
             return { ...state };
+        case types.USER_IS_EDEN:
+            return { ...state, userIsEden: true }
         default:
             return { ...state };
     }
@@ -156,6 +161,17 @@ export default function pid({
         }
     }, [ual, state.resolution]);
 
+
+    useEffect(() => {
+        if (ual.activeUser) {
+            getEdenMember(ual.activeUser.accountName).then((value) => {
+                if ( value.rows.length > 0 ) {
+                    dispatch({type: types.USER_IS_EDEN, });
+                }
+            });
+        }
+    }, [ual]);
+
     const userVoted = () => {
         if (state.position >= -1) {
             const voteInformation = {
@@ -187,9 +203,10 @@ export default function pid({
         (
             state.resolution.whitelist.length === 0 ||
             state.resolution.author === ual.activeUser.accountName ||
-            state.resolution.whitelist.includes(ual.activeUser.accountName)
+            state.resolution.whitelist.includes(ual.activeUser.accountName) ||
+            ( state.resolution.whitelist.includes('eden') && state.userIsEden)
         )
-
+    
     return (
         <>
             <Header />
@@ -321,6 +338,7 @@ export default function pid({
                                         });
                                     });
                                 }}
+                                canCreateVoteArgument={votable}
                             ></ProsCons>
                         )}
                         {state.view === views[2] && (

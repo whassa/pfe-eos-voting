@@ -143,6 +143,16 @@
             ]
         },
         {
+            "name": "iseden",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                }
+            ]
+        },
+        {
             "name": "makevote",
             "base": "",
             "fields": [
@@ -430,6 +440,11 @@
         {
             "name": "crtproposal",
             "type": "crtproposal",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "iseden",
+            "type": "iseden",
             "ricardian_contract": ""
         },
         {
