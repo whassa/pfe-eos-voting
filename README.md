@@ -1,6 +1,6 @@
 ## Getting Started
 
-First you need to put the good environnement variable for the project to run on the desired network.
+First you need to put the good environnement variable for the project to run on the desired blockchain network.
 
 ```bash
     cp default.env .env
