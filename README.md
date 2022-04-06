@@ -1,7 +1,7 @@
 ## Getting Started
 
 First you need to put the good environnement variable for the project to run on the desired blockchain network.
-You could cp the default env or the jungle default .env.jungle.text
+You could cp the default.env or the jungle default .env.jungle.text file into the .env file for the project to have the good environnement variable.
 
 ```bash
     cp default.env .env
