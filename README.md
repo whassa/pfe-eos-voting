@@ -1,7 +1,7 @@
 ## Getting Started
 
-First you need to put the good environnement variable for the project to run on the desired blockchain network.
-You could cp the default.env or the jungle default .env.jungle.text file into the .env file for the project to have the good environnement variable.
+First, you need to put the good environment variable for the project to run on the desired blockchain network.
+You could cp the default.env or the jungle default .env.jungle.text file into the .env file for the project to have the good environment variable.
 
 ```bash
     cp default.env .env
@@ -27,7 +27,11 @@ You can start editing the page by modifying `pages/index.js`. The page auto-upda
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-## Learn More
+## Contract
+
+All the contract files are situated in the contracts folder of the project. We used the eos studio compiler to compile using the CDT v1.8.1. The application uses the contract on a certain account defined in the environment variable. You can decide to deploy your own on another user if desired.
+
+## Next.js
 
 To learn more about Next.js, take a look at the following resources:
 
