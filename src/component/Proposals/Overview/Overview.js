@@ -1,12 +1,12 @@
-import { Grid, Paper, Box, Stack, Typography } from "@mui/material";
+import { Link, Paper, Box, Stack, Typography } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { useTheme } from "@mui/styles";
 import dayjs from 'dayjs';
+import { useRouter } from "next/router";
 
 export default function Overview({ resolution }) {
     const theme = useTheme();
+    const router = useRouter();
     return (
         <Stack
             direction="row"
@@ -42,8 +42,9 @@ export default function Overview({ resolution }) {
                         />
                     </Box>
                     <Typography component="div" sx={{ textAlign: "center" }}>
-                        {/*TODO change it for .author.userName*/}
-                        {resolution.author}
+                        <Link href="#" color="inherit" onClick={() => {router.push('/user/'+resolution.author)}} sx={{textDecoration: 'none'}}>
+                            {resolution.author}
+                        </Link>
                     </Typography>
                 </Paper>
 

@@ -55,10 +55,10 @@ export default function loginComponent({ ual }) {
           <Container maxWidth="sm">
             <Paper elevation={3} padding="dense">
               <Grid container spacing={3} style={{ padding: "12px" }}>
-                <Grid item xs={12}>
+                <Grid item xs={12} sx={{textAlign: 'center'}}>
                   <img
                     alt="Cryptosys Logo"
-                    src="Login/cryptosys_logo.png"
+                    src="Login/eos_nation.png"
                     style={{ maxWidth: "100%", maxHeight: "250px" }}
                   />
                 </Grid>

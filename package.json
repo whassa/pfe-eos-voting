@@ -1,5 +1,5 @@
 {
-  "name": "pfe-eos-voting",
+  "name": "eos-proposals",
   "private": true,
   "scripts": {
     "dev": "next dev",
