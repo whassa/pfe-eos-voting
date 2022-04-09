@@ -9,14 +9,13 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import LogoutIcon from "@mui/icons-material/Logout";
-import HowToVoteIcon from '@mui/icons-material/HowToVote';
+import HowToVoteIcon from "@mui/icons-material/HowToVote";
 import { useRouter } from "next/router";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ContactSupportIcon from "@mui/icons-material/ContactSupport"
+import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import { Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { useTheme } from "@mui/styles";
-
 
 export const drawerWidth = 240;
 
@@ -29,21 +28,27 @@ export default function Menu({ ual }) {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box", backgroundColor: theme.palette.primary.main },
-        [`& .MuiListItemIcon-root`]: { color: theme.palette.colors.white, },
-        [`& .MuiTypography-root`]: { color: theme.palette.colors.white, }
+        [`& .MuiDrawer-paper`]: {
+          width: drawerWidth,
+          boxSizing: "border-box",
+          backgroundColor: theme.palette.primary.main,
+        },
+        [`& .MuiListItemIcon-root`]: { color: theme.palette.colors.white },
+        [`& .MuiTypography-root`]: { color: theme.palette.colors.white },
       }}
     >
-      <Box >
+      <Box>
         <List>
-          <ListItem button key={"Avatar"}
+          <ListItem
+            button
+            key={"Avatar"}
             onClick={() => {
-              if (ual.activeUser ) {
-                router.push("/user/"+ual.activeUser.accountName);
+              if (ual.activeUser) {
+                router.push("/user/" + ual.activeUser.accountName);
               } else {
                 router.push("/login");
               }
-            }}>
+            }}
           >
             <ListItemAvatar>
               <Avatar>
@@ -55,26 +60,32 @@ export default function Menu({ ual }) {
             ) : (
               <ListItemText primary="Anonymous" />
             )}
-          </ListItem>          
+          </ListItem>
         </List>
       </Box>
 
       <Box sx={{ overflow: "auto" }}>
         <List>
-          <ListItem button key={"Home"}
+          <ListItem
+            button
+            key={"Home"}
             onClick={() => {
               router.push("/");
-            }}>
+            }}
+          >
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
             <ListItemText primary={"Home"} />
           </ListItem>
           {ual.activeUser && (
-            
-            <ListItem button key={"Create proposal"}  onClick={() => {
+            <ListItem
+              button
+              key={"Create proposal"}
+              onClick={() => {
                 router.push("/proposal");
-              }}>
+              }}
+            >
               <ListItemIcon>
                 <HowToVoteIcon />
               </ListItemIcon>
@@ -83,22 +94,20 @@ export default function Menu({ ual }) {
           )}
         </List>
         <Divider />
-        {ual.activeUser ? (
-          <List>
-            {ual.activeUser && (
-                <ListItem
-                    button
-                    key={"User guide"}
-                    onClick={() => {
-                      router.push("/guide");
-                    }}
-                >
-                  <ListItemIcon>
-                    <ContactSupportIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={"User guide"} />
-                </ListItem>
-            )}
+        <List>
+          <ListItem
+            button
+            key={"User guide"}
+            onClick={() => {
+              router.push("/guide");
+            }}
+          >
+            <ListItemIcon>
+              <ContactSupportIcon />
+            </ListItemIcon>
+            <ListItemText primary={"User guide"} />
+          </ListItem>
+          {ual.activeUser ? (
             <ListItem
               button
               key={"Logout"}
@@ -112,9 +121,7 @@ export default function Menu({ ual }) {
               </ListItemIcon>
               <ListItemText primary={"Logout"} />
             </ListItem>
-          </List>
-        ) : (
-          <List>
+          ) : (
             <ListItem
               button
               key={"login"}
@@ -127,8 +134,8 @@ export default function Menu({ ual }) {
               </ListItemIcon>
               <ListItemText primary={"login"} />
             </ListItem>
-          </List>
-        )}
+          )}
+        </List>
       </Box>
     </Drawer>
   );

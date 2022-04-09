@@ -136,7 +136,7 @@ public:
 
   struct votes
   {
-    uint64_t actualVote;
+    int64_t actualVote;
     uint64_t totalVotes;
     std::vector<vote> vote;
   };
@@ -167,7 +167,6 @@ public:
   ACTION crtnews(name from, uint64_t primaryKey, string title, string content);
   ACTION upnews(name from, uint64_t primaryKey, string oldTitle, string title, string content);
   ACTION iseden(name from);
-  ACTION clear();
 
 public:
   time_point_sec current_time_point_sec()

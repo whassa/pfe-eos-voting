@@ -10,6 +10,7 @@ import {
     DialogTitle,
     DialogContent,
     DialogContentText, Input, TextField, DialogActions,
+    Link,
 } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -22,6 +23,7 @@ import {
     voteArgument,
     updateArgument,
 } from "../../../utils/ContractActions/Contract";
+import { useRouter } from "next/router";
 
 
 
@@ -76,6 +78,7 @@ const reducer = (state, action) => {
 
 export default function ListProsCons({ ual, pid, argument, eosAccountName, refreshProsCons, canVote }) {
     const theme = useTheme();
+    const router = useRouter();
     const initialState = {
         title: argument.title,
         content: argument.content,
@@ -152,7 +155,9 @@ export default function ListProsCons({ ual, pid, argument, eosAccountName, refre
                     <Typography variant="h5" display="block">{argument.title}</Typography>
                     {/*TODO change for argument.author.userName*/}
                     <Typography display="block" variant="caption" sx={{ color: theme.palette.grey[400], marginTop: '-2px'}}>
-                        {argument.author} -{" "}
+                        <Link href="#" color="inherit" onClick={() => {router.push('/user/'+argument.author)}} sx={{textDecoration: 'none'}}>
+                            {argument.author}
+                        </Link> -{" "}
                         {argument.createdAt}
                     </Typography>
                     <Typography display="block" sx={{ marginTop: '5px'}}>{argument.content}

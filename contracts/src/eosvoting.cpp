@@ -312,19 +312,4 @@ ACTION eosvoting::iseden(name from)
   check(is_eden(from), "The user is not a eden member");
 }
 
-
-ACTION eosvoting::clear()
-{
-  require_auth(get_self());
-
-  proposals_index _proposals(get_self(), get_self().value);
-
-  // Delete all records in _messages table
-  auto msg_itr = _proposals.begin();
-  while (msg_itr != _proposals.end())
-  {
-    msg_itr = _proposals.erase(msg_itr);
-  }
-}
-
 EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument)(voteargument)(crtnews)(upnews)(upargument)(iseden));

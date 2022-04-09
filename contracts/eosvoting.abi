@@ -52,11 +52,6 @@
             ]
         },
         {
-            "name": "clear",
-            "base": "",
-            "fields": []
-        },
-        {
             "name": "crtargument",
             "base": "",
             "fields": [
@@ -408,7 +403,7 @@
             "fields": [
                 {
                     "name": "actualVote",
-                    "type": "uint64"
+                    "type": "int64"
                 },
                 {
                     "name": "totalVotes",
@@ -422,11 +417,6 @@
         }
     ],
     "actions": [
-        {
-            "name": "clear",
-            "type": "clear",
-            "ricardian_contract": ""
-        },
         {
             "name": "crtargument",
             "type": "crtargument",
