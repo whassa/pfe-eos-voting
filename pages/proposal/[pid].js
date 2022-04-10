@@ -110,7 +110,7 @@ const reducer = (state, action) => {
     }
 };
 
-export default function pid({
+export default function Pid({
     ual,
     encryptionKey,
     pid,
