@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import GUN from "gun";
+import GUN from "gun/gun";
 import LiveChatMessage from "./LiveChatMessage";
 import { useTheme } from "@mui/styles";
 import dayjs from 'dayjs';
