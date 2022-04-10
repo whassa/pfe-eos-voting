@@ -14,7 +14,7 @@ export default function News({
     const theme = useTheme();
     return (
         <>
-            {ual && resolutionAuthor === ual.activeUser.accountName && (
+            {ual && ual.activeUser &&resolutionAuthor === ual.activeUser.accountName && (
                 <Paper elevation={3} padding="dense" sx={{ padding: "10px" }}>
                 
                         <Box sx={{ flex: 1 }}>

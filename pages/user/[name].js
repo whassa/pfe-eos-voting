@@ -57,7 +57,7 @@ const reducer = (state, action) => {
   }
 };
 
-export default function pid({ ual, userName, eosAccountName }) {
+export default function Name({ ual, userName, eosAccountName }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
 
