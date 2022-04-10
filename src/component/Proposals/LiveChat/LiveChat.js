@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import GUN, { SEA } from "gun";
+import GUN from "gun";
 import LiveChatMessage from "./LiveChatMessage";
 import { useTheme } from "@mui/styles";
 import dayjs from 'dayjs';
@@ -30,7 +30,7 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
       message: newMessage,
       userName: ual.activeUser.accountName,
     };
-    const secret = await SEA.encrypt(messageToEncrypt, encryptionKey);
+    const secret = messageToEncrypt;
     // const message = user.get('all').set({ what: secret });
     gun.get("liveChat:" + resolution.primaryKey).put({ [index]: secret });
     setNewMessage("");
@@ -45,7 +45,7 @@ export default function LiveChat({ ual, resolution, encryptionKey }) {
       .once(async (data, id) => {
         if (data) {
           // Key for end-to-end encryption
-          const messageDecrypted = await SEA.decrypt(data, encryptionKey);
+          const messageDecrypted = data;
           var message = {
             // transform the data
             who: messageDecrypted.userName,
