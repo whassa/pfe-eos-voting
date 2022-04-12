@@ -6,83 +6,80 @@ using namespace std;
 using namespace eosio;
 using eosio::public_key;
 
+
+#define EDEN_ACCOUNT name("genesisdeden")
+
+#define EDEN_FORWARD_MEMBER(var, member)                                                    \
+   decltype(auto) member()                                                                  \
+   {                                                                                        \
+      return std::visit([](auto& value) -> decltype(auto) { return (value.member); }, var); \
+   }                                                                                        \
+   decltype(auto) member() const                                                            \
+   {                                                                                        \
+      return std::visit([](auto& value) -> decltype(auto) { return (value.member); }, var); \
+   }
+
+#define EDEN_FORWARD_FUNCTION(var, fun)                                \
+   auto fun() const                                                    \
+   {                                                                   \
+      return std::visit([](auto& value) { return value.fun(); }, var); \
+   }
+
 namespace eosio {
+  using member_status_type = uint8_t;
+  enum member_status : member_status_type {
+    pending_membership = 0,
+    active_member = 1
+  };
 
-    constexpr name eden_account{"genesisdeden"_n};
+  using election_participation_status_type = uint8_t;
+  enum election_participation_status : election_participation_status_type {
+    not_in_election = 0,
+    in_election = 1
+  };
 
-    using member_status_type = uint8_t;
-    enum member_status : member_status_type {
-        pending_membership = 0,
-        active_member = 1
-    };
+  struct member_v0 {
+    eosio::name account;
+    std::string name;
+    member_status_type status;
+    uint64_t nft_template_id;
 
-    using election_participation_status_type = uint8_t;
-    enum election_participation_status : election_participation_status_type {
-        not_in_election = 0,
-        in_election = 1
-    };
-
-    struct member_v0
-    {
-      eosio::name account;
-      std::string name;
-      member_status_type status;
-      uint64_t nft_template_id;
-      // Only reflected in v1
-      election_participation_status_type election_participation_status = not_in_election;
-      uint8_t election_rank = 0;
-      eosio::name representative{uint64_t(-1)};
-      std::optional<eosio::public_key> encryption_key;
-
-      uint64_t primary_key() const { return account.value; }
-      uint128_t by_representative() const
-      {
-          return (static_cast<uint128_t>(election_rank) << 64) | representative.value;
-      }
-    };
-
-
-    struct member_v1
-    {
-      eosio::name account;
-      std::string name;
-      member_status_type status;
-      uint64_t nft_template_id;
-      // Only reflected in v1
-      election_participation_status_type election_participation_status = not_in_election;
-      uint8_t election_rank = 0;
-      eosio::name representative{uint64_t(-1)};
-      std::optional<eosio::public_key> encryption_key;
-
-      uint64_t primary_key() const { return account.value; }
-      uint128_t by_representative() const
-      {
-          return (static_cast<uint128_t>(election_rank) << 64) | representative.value;
-      }
-    };
-    using member_variant = std::variant<member_v0, member_v1>;
-
-    struct member
-    {
-        member_variant value;
-        member_v1 memberv;
-        uint64_t primary_key() const { return memberv.account.value; }
-        uint128_t by_representative() const
-        {
-          return (static_cast<uint128_t>(memberv.election_rank) << 64) | memberv.representative.value;
-        }
-        EOSLIB_SERIALIZE(member, (value)(memberv))
-    };
-
-    using member_table_type = eosio::multi_index<"member"_n, member>;
-
-    bool is_eden(name account) {
-      member_table_type member_tb(eden_account, 0);
-      auto it = member_tb.find(account.value);
-      if (it != member_tb.end() && it->memberv.status) return true;
-      else return false;
+    uint64_t primary_key() const { 
+      return account.value; 
     }
   };
+
+  struct member_v1 {
+    eosio::name account;
+    std::string name;
+    member_status_type status;
+    uint64_t nft_template_id;
+    election_participation_status_type election_participation_status = not_in_election;
+    uint8_t election_rank;
+    eosio::name representative{uint64_t(-1)};
+    std::optional<eosio::public_key> encryption_key;
+
+    uint64_t primary_key() const { 
+      return account.value; 
+    }
+  };
+  
+  using member_variant = std::variant<member_v0, member_v1>;
+
+  struct member {
+    member_variant value;
+    EDEN_FORWARD_MEMBER(value, status);
+    EDEN_FORWARD_FUNCTION(value, primary_key);
+  };
+  using member_table_type = eosio::multi_index<"member"_n, member>;
+
+  bool is_eden(name account) {
+    member_table_type member_tb(EDEN_ACCOUNT, 0);
+    auto it = member_tb.find(account.value);
+    if(it==member_tb.end() || !it->status()) return false;
+    else return true;
+  }
+}
 
 
 CONTRACT eosvoting : public contract
