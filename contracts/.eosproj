@@ -6,7 +6,7 @@
   "cdt": "v1.8.1",
   "output": "",
   "scripts": {
-    "build": ""
+    "build": "eosio-cpp -I ./include src/eosvoting.cpp -o eosvoting.wasm"
   },
   "deploy": {
     "target": "both",

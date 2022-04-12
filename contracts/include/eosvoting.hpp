@@ -7,7 +7,7 @@ using namespace eosio;
 using eosio::public_key;
 
 
-#define EDEN_ACCOUNT name("genesisdeden")
+#define EDEN_ACCOUNT name("genesis.eden")
 
 #define EDEN_FORWARD_MEMBER(var, member)                                                    \
    decltype(auto) member()                                                                  \
@@ -25,7 +25,7 @@ using eosio::public_key;
       return std::visit([](auto& value) { return value.fun(); }, var); \
    }
 
-namespace eosio {
+namespace edenmember {
   using member_status_type = uint8_t;
   enum member_status : member_status_type {
     pending_membership = 0,
@@ -94,7 +94,7 @@ public:
     if (whitelist.size() >= 1)
     {
       if (whitelist.size() == 1 && whitelist[0].to_string() == "eden") {
-        return is_eden(from);
+        return edenmember::is_eden(from);
       }
 
       for (size_t i = 0; i < whitelist.size(); i++)

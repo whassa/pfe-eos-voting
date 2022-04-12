@@ -309,7 +309,7 @@ ACTION eosvoting::upargument(name from, uint64_t primaryKey, uint64_t argumentKe
 
 ACTION eosvoting::iseden(name from)
 {
-  check(is_eden(from), "The user is not a eden member");
+  check(edenmember::is_eden(from), "The user is not a eden member");
 }
 
 EOSIO_DISPATCH(eosvoting, (crtproposal)(makevote)(upproposal)(crtargument)(voteargument)(crtnews)(upnews)(upargument)(iseden));
