@@ -8,7 +8,17 @@ import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
 
 export default function Vote({ ual, eosAccountName }) {
-    
+    const router = useRouter();
+
+    const initialState = {
+        formType: 'create',
+    }
+
+    if (router.query.update && router.query.proposal) {
+        initialState.formType = 'update';
+        initialState.proposalId = router.query.proposal;
+    }
+
     return (
         <>
             <Header></Header>
@@ -29,7 +39,7 @@ export default function Vote({ ual, eosAccountName }) {
                         noValidate
                         autoComplete="off"
                     >
-                        <ProposalForm ual={ual} eosAccountName={eosAccountName}></ProposalForm>
+                        <ProposalForm ual={ual} eosAccountName={eosAccountName} stateForm={initialState} ></ProposalForm>
                     </Box>
                 )}
             </Container>

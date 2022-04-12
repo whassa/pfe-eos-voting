@@ -118,14 +118,12 @@ const initialState = {
     proposalId: null,
 };
 
-export default function proposalForm({ ual, eosAccountName }) {
+export default function proposalForm({ ual, eosAccountName,  stateForm }) {
 
     const router = useRouter();
-
-    if (router.query.update && router.query.proposal) {
-        initialState.formType = 'update';
-        initialState.proposalId = router.query.proposal;
-    }
+    
+    initialState.formType = stateForm.formType;
+    initialState.proposalId = stateForm.proposalId;
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -147,7 +145,6 @@ export default function proposalForm({ ual, eosAccountName }) {
             ...( state.formType === 'update' ? {primaryKey: Number(state.proposalId)} : {}),
         };
 
-        console.log(state.voteType);
         switch (state.voteType) {
             case 'Public': 
                 formInformations.whiteList = []; break;
@@ -199,7 +196,7 @@ export default function proposalForm({ ual, eosAccountName }) {
         });
     };
 
-    if (router.query.update && router.query.proposal) {
+    if (state.formType === 'update') {
         useEffect( () => {
             getProposal(router.query.proposal, eosAccountName).then( (value) => {
                 dispatch({
@@ -277,7 +274,7 @@ export default function proposalForm({ ual, eosAccountName }) {
 
                         <TextField
                             label="Content"
-                            variant="outlined"
+                        variant="outlined"
                             onChange={(e) => {
                                 dispatch({
                                     type: types.CONTENT_CHANGED,
