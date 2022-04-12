@@ -99,7 +99,7 @@ export default function NewsItem({ singleNew, eosAccountName, resolutionAuthor, 
                 {singleNew.content}
                 </Typography>
                 <Stack spacing={2} direction="row">
-                {(ual.activeUser.accountName === resolutionAuthor) && (
+                {(ual.activeUser) && (ual.activeUser.accountName === resolutionAuthor) && (
                 <Button
                     sx={{ marginTop: "5px" }}
                     disabled={

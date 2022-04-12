@@ -8,7 +8,7 @@ using eosio::public_key;
 
 namespace eosio {
 
-    constexpr name eden_account{"genesis.eden"_n}; 
+    constexpr name eden_account{"genesisdeden"_n};
 
     using member_status_type = uint8_t;
     enum member_status : member_status_type {

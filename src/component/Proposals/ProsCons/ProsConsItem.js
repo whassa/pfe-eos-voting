@@ -123,7 +123,7 @@ export default function ListProsCons({ ual, pid, argument, eosAccountName, refre
         {
             const vote = argument.votes.vote.find((vote) => {
                 if (
-                    ual.activeUser.accountName === vote.user
+                    ual.activeUser && ual.activeUser.accountName === vote.user
                 ) {
                     return vote;
                 }
@@ -173,7 +173,7 @@ export default function ListProsCons({ ual, pid, argument, eosAccountName, refre
                     </IconButton>
                 </Box>
             </Stack>
-            {(ual.activeUser.accountName === argument.author) && (
+            {(ual.activeUser) && (ual.activeUser.accountName === argument.author) && (
                 <Button
                     sx={{
                         alignItems: 'right' }}

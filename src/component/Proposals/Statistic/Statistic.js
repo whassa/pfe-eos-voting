@@ -84,7 +84,7 @@ export default function Statistics({ resolution }) {
                     >
                         {(prosVotes / resolution.voteMargin > 1 || resolution.voteMargin == 0)
                             ? 100
-                            : (prosVotes / resolution.voteMargin) * 100}
+                            : ((prosVotes / resolution.voteMargin) * 100).toFixed(2)}
                         %
                     </Typography>
                     <Typography sx={{ textAlign: "center" }}>
